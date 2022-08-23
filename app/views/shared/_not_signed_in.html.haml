@@ -1,0 +1,7 @@
+.flex.h-screen.justify-center.items-center
+  .flex-grow.max-w-sm.overflow-hidden.bg-white.rounded-lg.shadow-xl.dark:bg-gray-800
+    = image_tag 'providentia.jpg', class: 'w-full', alt: 'Providentia'
+
+    .flex.justify-center.items-center.my-4
+      = button_to user_sso_omniauth_authorize_path, class: 'flex items-center justify-center text-gray-600 rounded-lg shadow-md dark:bg-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-600', data: { turbo: false } do
+        %span.px-4.py-3.font-bold.text-center Sign in using SSO

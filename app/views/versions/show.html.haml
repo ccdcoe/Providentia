@@ -1,0 +1,27 @@
+- provide(:heading) { "Audit log" }
+
+.p-2.pb-6.text-center.text-lg
+  = link_to_if @version.item, @version.full_name, @version.link, class: 'text-indigo-600 hover:text-indigo-900 dark:text-indigo-400'
+  event
+  %strong= @version.event
+  on
+  = @version.created_at
+
+= render TableComponent.new do |c|
+  - c.column { 'attribute' }
+  - c.column { 'before' }
+  - c.column { 'after' }
+
+  - @version.changeset.each do |row, (before, after)|
+    - c.table_row do
+      %td.px-6.py-4= row
+      %td.px-6.py-4
+        - if before.nil?
+          %em.text-gray (null)
+        - else
+          = before
+      %td.px-6.py-4
+        - if after.nil?
+          %em (null)
+        - else
+          = after

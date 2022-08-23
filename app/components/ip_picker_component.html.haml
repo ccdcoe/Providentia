@@ -1,0 +1,29 @@
+- if address_pool.ip_network.prefix >= 22
+  - if @form.is_a?(SimpleForm::FormBuilder)
+    = @form.input @field, collection: collection, include_blank: '(None)', input_html: { data: { controller: 'select' }}
+  - else
+    - if label
+      = @form.label @field, class: 'block font-bold text-gray-700 dark:text-gray-200'
+    = @form.select @field, collection, { include_blank: '(None)' }, { data: { controller: 'select' }}
+
+- elsif label
+  = @form.label "#{@field}_address", @form.object.class.human_attribute_name(@field), class: 'font-bold text-gray-700 dark:text-gray-200'
+  .mt-1.flex.rounded-md.shadow-sm
+    .flex.rounded-md.shadow-sm.w-full
+      = @form.text_field "#{@field}_address", class: 'focus:ring-indigo-500 focus:border-indigo-500 flex-1 block rounded-l-md border-gray-300 dark:bg-gray-500 dark:border-black'
+      %span.inline-flex.items-center.px-3.rounded-r-md.border.border-l-0.border-gray-300.bg-gray-50.text-gray-500.dark:bg-gray-600.dark:text-current.dark:border-black.text-sm<
+        \/
+        = address_pool.ip_network.prefix
+
+    - if @form.object.errors["#{@field}_address"].any? || @form.object.errors[@field].any?
+      %span.text-red-600= (@form.object.errors["#{@field}_address"] + @form.object.errors[@field]).join ', '
+
+- else
+  .flex.rounded-md.shadow-sm
+    = @form.text_field "#{@field}_address", class: 'focus:ring-indigo-500 focus:border-indigo-500 flex-1 block w-full rounded-l-md border-gray-300 dark:bg-gray-500 dark:border-black dark:placeholder:text-gray-400', placeholder: address_pool.ip_network.to_s
+    %span.inline-flex.items-center.px-3.rounded-r-md.border.border-l-0.border-gray-300.bg-gray-50.text-gray-500.dark:bg-gray-600.dark:text-current.dark:border-black.text-sm<
+      \/
+      = address_pool.ip_network.prefix
+
+  - if @form.object.errors["#{@field}_address"].any? || @form.object.errors[@field].any?
+    %span.text-red-600= (@form.object.errors["#{@field}_address"] + @form.object.errors[@field]).join ', '

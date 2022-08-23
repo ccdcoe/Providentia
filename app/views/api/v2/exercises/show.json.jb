@@ -1,0 +1,7 @@
+# frozen_string_literal: true
+
+{
+  common: common_vars,
+  hosts: hosts,
+  groups: (sequential_groups + network_groups + os_groups + team_groups + numbered_team_groups),
+}

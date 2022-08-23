@@ -1,0 +1,26 @@
+- if vm.connection_nic
+  .border.shadow-lg.p-4.bg-zinc-100.dark:bg-gray-600
+    .flex.items-center.mb-3
+      %h2.text-xl.grow Connection information
+      = render ModalComponent.new(header: "Network addresses") do |c|
+        - c.body do
+          = render 'virtual_machines/address_preview', vm: vm
+        = link_to 'Preview', 'javascript:;', class: 'form-submit text-sm', data: { action: "click->modal#open" }
+
+    .grid.grid-flow-col.gap-4
+      %div
+        %dt.text-sm.font-medium.text-gray-500.dark:text-gray-400 Primary zone
+        %dd.mt-1.text-sm.text-gray-900.dark:text-white.mt-0= vm.connection_nic.network.name
+
+      %div
+        %dt.text-sm.font-medium.text-gray-500.dark:text-gray-400= NetworkInterface.human_attribute_name(:fqdn)
+        %dd.mt-1.text-sm.text-gray-900.dark:text-white.mt-0
+          = render LiquidFQDNComponent.new(object: vm)
+
+      - vm.connection_nic.addresses.for_search.each do |address|
+        %div
+          %dt.text-sm.font-medium.text-gray-500.dark:text-gray-400
+            = I18n.t("ip_families.#{address.ip_family}")
+            address
+          %dd.mt-1.text-sm.text-gray-900.dark:text-white.mt-0
+            = render LiquidAddressComponent.new(object: address)

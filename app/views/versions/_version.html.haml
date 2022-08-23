@@ -1,0 +1,21 @@
+.pb-2.flex[version]
+  .pr-4
+    %time.text-gray-500.font-bold= version.created_at.strftime("%H:%m:%S")
+
+  .tile-content.flex-grow
+    %span.chip
+      %i.fas{class: version.item_class.to_icon}
+
+      = link_to_if version.item, version.full_name, version.link
+
+    event
+    %strong= version.event
+    by
+
+    %strong= version.user.name
+
+    %br
+    %em= version.changeset.keys.join ', '
+
+  .justify-end
+    = link_to 'Show', version_path(version), class: 'form-submit'

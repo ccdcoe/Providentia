@@ -1,0 +1,5 @@
+= turbo_stream.replace dom_id(@address_pool) do
+  = render @address_pool
+
+= turbo_stream.update "address_preview" do
+  = render "networks/address_preview", network: @network

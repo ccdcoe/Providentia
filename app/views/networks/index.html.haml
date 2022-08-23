@@ -1,0 +1,60 @@
+- if policy(Network.new(exercise: @exercise)).create?
+  - provide :new_url do
+    = url_for [:new, @exercise, :network]
+
+- if @networks.any?
+  - @networks.group_by(&:team).each do |team, networks|
+    .py-4.text-center.text-lg.leading-5.font-semibold
+      = render TeamChipComponent.new(team: team)
+    .pb-5
+      .border-t.border-gray-200.dark:border-gray-600
+
+    = render TableComponent.new do |c|
+      - c.column do
+        = Network.human_attribute_name(:name)
+        \/
+        = Network.human_attribute_name(:abbreviation)
+
+      - c.column { 'Network' }
+      - c.column { Network.human_attribute_name(:domain) }
+      - c.column { Network.human_attribute_name(:description) }
+      - c.column { '' }
+
+      - networks.each do |network|
+        - c.table_row do
+          %td.px-6.py-4
+            .text-sm.font-medium
+              = link_to_if policy(network).show?, network.name, [network.exercise, network], class: 'text-indigo-600 hover:text-indigo-900 dark:text-indigo-400'
+            .text-sm.text-gray-500.dark:text-gray-50
+              = network.abbreviation
+
+          %td.px-6.py-4.whitespace-nowrap
+            .text-sm.font-medium.light:text-gray-900
+              - if network.cloud_id
+                = render LiquidTextComponent.new(object: network.cloud_id, exercise: network.exercise)
+              - else
+                %em (None)
+            .text-sm.text-gray-500.dark:text-gray-400.gap-x-6.flex
+              .only:block.hidden
+                %em (None)
+              - network.address_pools.group_by(&:ip_family).each do |_mode, pools|
+                %div
+                  - pools.each do |pool|
+                    %p= render LiquidPoolNetworkComponent.new(object: pool)
+
+          %td.px-6.py-4.whitespace-nowrap
+            - if network.domain.present?
+              %strong<>
+                = render LiquidTextComponent.new(object: network.domain, exercise: network.exercise)
+              - unless network.ignore_root_domain
+                \.
+                %span>= network.exercise.root_domain
+            - else
+              %span.text-gray{title: 'Default from exercise'}= network.exercise.root_domain
+          %td.px-6.py-4= network.description
+          %td.px-6.py-4.whitespace-nowrap.text-right
+            - if policy(network).destroy?
+              = link_to [network.exercise, network], method: :delete, data: { confirm: 'Are you sure?' } do
+                %i.fas.fa-times-circle.text-red-600
+- else
+  = render 'shared/empty', klass: Network

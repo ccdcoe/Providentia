@@ -1,0 +1,80 @@
+en:
+  errors:
+    messages:
+      label_begins_or_ends_with_hyphen: label begins or ends with a hyphen
+      missing_in_path: is missing for this record or its parent(s)
+  activerecord:
+    models:
+      exercise: Environment
+    errors:
+      models:
+        virtual_machine:
+          hostname_conflict: is conflicting with another hostname
+          attributes:
+            name:
+              invalid: is invalid (must not contain _)
+        address:
+          attributes:
+            offset:
+              overlap: overlaps with reserved address(es)
+    attributes:
+      exercise:
+        dev_team_count: Developer teams count
+        dev_resource_name: SSO resource name for GT access
+        dev_red_resource_name: SSO resource name for RT access
+        local_admin_resource_name: SSO resource name for exercise administration
+      virtual_machine:
+        role: Customization role name
+        cpu: vCPU count
+        ram: RAM
+        custom_instance_count: Sequential instances
+        bt_visible: Visible to BT
+      network:
+        cloud_id: ID in cloud
+      network_interface:
+        fqdn: FQDN
+      address:
+        offset: Address
+        dns_enabled: Publish to DNS
+      service_check:
+        ip_family: IP family
+        network: Source network
+      operating_system:
+        cpu: vCPU count
+        ram: RAM
+      address_pool:
+        mode: IP family
+
+  pool_scopes:
+    default: Default
+    mgmt: Management
+    other: Other
+
+  deploy_modes:
+    single: Team independent
+    bt: Instance for each blue team
+
+  address_modes:
+    ipv4_static: IPv4 static
+    ipv4_dhcp: IPv4 DHCP
+    ipv6_static: IPv6 static
+    ipv6_slaac: IPv6 SLAAC
+    ipv6_dhcp: IPv6 DHCPv6
+    ipv6_linklocal: IPv6 link-local
+    ipv6_uniqlocal: IPv6 unique local
+    ipv4_vip: IPv4 virtual
+    ipv6_vip: IPv6 virtual
+
+  protocols:
+    icmp: ICMP
+    tcp: TCP
+    udp: UDP
+    tcp_and_udp: TCP + UDP
+    sctp: SCTP
+
+  ip_families:
+    v4v6: IPv4 + IPv6
+    v4: IPv4
+    v6: IPv6
+    ipv4: IPv4
+    ipv6: IPv6

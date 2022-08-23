@@ -1,0 +1,89 @@
+%article[@virtual_machine]
+  = simple_form_for([@exercise, @virtual_machine], html: { autocomplete: "off", data: { controller: 'model', action: "change->model#update" } }) do |f|
+    = f.error_notification
+    = f.error_notification message: f.object.errors[:base].to_sentence if f.object.errors[:base].present?
+
+    = render ColumnFormSectionComponent.new(disabled: !policy(@virtual_machine).update?) do |c|
+      - c.description do
+        %h3.text-lg.font-medium.leading-6.text-gray-900.dark:text-gray-50 Identity
+        %p.mt-1.text-gray-600.dark:text-gray-400
+          Name, owner and other identity information for this VM
+
+      - c.main do
+        .px-4.py-5.bg-white.dark:bg-gray-800.space-y-6.p-6
+          .grid.gap-6.grid-cols-2.xl:grid-cols-4
+            .col-span-2= f.input :name
+            = f.association :team, collection: policy_scope(Team), input_html: { data: { controller: 'select' } }
+            - if @virtual_machine.team&.green?
+              = f.input :bt_visible, wrapper_class: 'mt-6 p-2.5'
+
+          .grid.gap-6.grid-cols-2
+            %div= f.input :hostname, hint: 'Name will be used by default', placeholder: @virtual_machine.name
+            %div= f.input :role, hint: 'Name will be used by default', placeholder: @virtual_machine.name
+
+            .col-span-2= f.association :system_owner, collection: policy_scope(User).order(:name), input_html: { data: { controller: 'select' } }
+            .col-span-2= f.input :description
+
+    .py-5
+      .border-t.border-gray-200.dark:border-gray-600
+
+    = render ColumnFormSectionComponent.new(disabled: !policy(@virtual_machine).update?) do |c|
+      - c.description do
+        %h3.text-lg.font-medium.leading-6.text-gray-900.dark:text-gray-50 Services & Capabilities
+        %p.mt-1.text-gray-600.dark:text-gray-400
+          %strong Capabilities
+          this VM is part of
+
+        %p.mt-1.text-gray-600.dark:text-gray-400
+          Required
+          %strong BT
+          services for this VM
+
+      - c.main do
+        .px-4.py-5.bg-white.dark:bg-gray-800.space-y-6.p-6
+          = f.association :capabilities, collection: policy_scope(@exercise.capabilities), input_html: { data: { controller: 'select' }}
+          = f.association :services, collection: policy_scope(@exercise.services), disabled: !current_user.admin? && @exercise.services_read_only, input_html: { data: { controller: 'select' }}
+
+    .py-5
+      .border-t.border-gray-200.dark:border-gray-600
+
+    = render ColumnFormSectionComponent.new(disabled: !policy(@virtual_machine).update?) do |c|
+      - c.description do
+        %h3.text-lg.font-medium.leading-6.text-gray-900.dark:text-gray-50 Hardware
+        %p.mt-1.text-gray-600.dark:text-gray-400 Resources for this VM
+        %p.mt-1.text-gray-600.dark:text-gray-400 Default vCPU and RAM for operating system will be used, if left blank
+
+      - c.main do
+        .px-4.py-5.bg-white.dark:bg-gray-800.space-y-6.p-6
+          .grid.gap-6.grid-cols-3
+            .col-span-3= f.association :operating_system, collection: sorted_os_options, input_html: { data: { controller: 'select' } }
+            = f.input :cpu, placeholder: @virtual_machine.operating_system&.applied_cpu.to_s
+            %div
+              = f.label :ram
+              .mt-1.flex.rounded-md.shadow-sm
+                = f.number_field :ram, placeholder: @virtual_machine.operating_system&.applied_ram.to_s, class: 'focus:ring-indigo-500 focus:border-indigo-500 flex-1 block w-full rounded-none rounded-l-md sm border-gray-300 dark:bg-gray-500 dark:border-black dark:placeholder:text-gray-400'
+                %span.inline-flex.items-center.px-3.rounded-r-md.border.border-l-0.border-gray-300.bg-gray-50.text-gray-500.dark:bg-gray-600.dark:text-current.dark:border-black
+                  GB
+
+            %div
+              = f.label :primary_disk_size
+              .mt-1.flex.rounded-md.shadow-sm
+                = f.number_field :primary_disk_size, placeholder: @virtual_machine.operating_system&.applied_primary_disk_size.to_s, class: 'focus:ring-indigo-500 focus:border-indigo-500 flex-1 block w-full rounded-none rounded-l-md sm border-gray-300 dark:bg-gray-500 dark:border-black dark:placeholder:text-gray-400'
+                %span.inline-flex.items-center.px-3.rounded-r-md.border.border-l-0.border-gray-300.bg-gray-50.text-gray-500.dark:bg-gray-600.dark:text-current.dark:border-black
+                  GB
+
+    .py-5
+      .border-t.border-gray-200.dark:border-gray-600
+
+    = render ColumnFormSectionComponent.new(disabled: !policy(@virtual_machine).update?) do |c|
+      - c.description do
+        %h3.text-lg.font-medium.leading-6.text-gray-900.dark:text-gray-50 Deployment
+        %p.mt-1.text-gray-600.dark:text-gray-400
+          Strategy and count of VM-s to be deployed
+
+      - c.main do
+        .px-4.py-5.bg-white.dark:bg-gray-800.space-y-6.p-6
+          .gap-6{class: 'w-1/2'}
+            .col-span-3= f.input :deploy_mode, collection: deploy_modes, include_blank: false, disabled: @virtual_machine.forced_bt_numbering?, input_html: { data: { controller: 'select' } }
+          .gap-6{class: 'w-1/2'}
+            .col-span-3= f.input :custom_instance_count

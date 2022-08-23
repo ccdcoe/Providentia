@@ -1,0 +1,21 @@
+%header.sticky.top-0.bg-white.dark:bg-gray-600.border-b.border-gray-200.dark:border-gray-500.z-30
+  .px-4.sm:px-6.lg:px-8
+    .flex.items-center.h-16.-mb-px.gap-x-1
+      %button.lg:hidden{"aria-controls" => "sidebar", "data-action" => "click->slideover#toggle click@window->slideover#hide"}
+        %svg.w-6.h-6.fill-current{:viewBox => "0 0 24 24"}
+          %rect{:height => "2", :width => "16", :x => "4", :y => "5"}
+          %rect{:height => "2", :width => "16", :x => "4", :y => "11"}
+          %rect{:height => "2", :width => "16", :x => "4", :y => "17"}
+
+      .flex.text-2xl.font-bold.font-lusitana.grow
+        = render HeaderTextComponent.new(exercise: @exercise, text: content_for(:heading))
+
+      .flex.items-center
+        -# = render 'shared/search'
+        - if content_for?(:new_url)
+          = link_to content_for(:new_url), class: 'form-submit-add h-10' do
+            %i.fas.fa-plus.self-center
+            Add
+
+          %hr.w-px.h-6.bg-gray-200.dark:bg-gray-400.dark:border-gray-400.mx-3/
+        = render 'shared/user_menu'

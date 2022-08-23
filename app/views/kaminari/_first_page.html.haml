@@ -1,0 +1,6 @@
+.relative.inline-flex.items-center.px-3.py-2.border.border-gray-300.rounded-l-md.bg-white.text-sm.font-medium.text-gray-500.hover:bg-gray-50
+  - if current_page.first?
+    %i.fas.fa-angle-double-left
+  - else
+    = link_to url, { rel: 'next', remote: remote } do
+      %i.fas.fa-angle-double-left

@@ -1,0 +1,57 @@
+.px-4.py-5.sm:p-6[address_pool]
+  = form_with(model: AddressPoolForm.new(address_pool), url: [address_pool.exercise, address_pool.network, address_pool], data: { controller: 'model', action: "change->model#update"}) do |form|
+    .flex.flex-row.flex-wrap.gap-x-4.gap-y-2
+      %div
+        = form.label :name, class: 'block font-bold text-gray-700 dark:text-gray-200'
+        = form.text_field :name, class: 'form-input'
+
+        - if address_pool.errors[:name].any?
+          %span.text-red-600= address_pool.errors[:name].join(', ')
+
+      %div
+        = form.label :ip_family, class: 'block font-bold text-gray-700 dark:text-gray-200'
+        = form.select :ip_family, pool_ip_families, { include_blank: false }, { data: { controller: 'select' } }
+
+        - if address_pool.errors[:mode].any?
+          %span.text-red-600= address_pool.errors[:mode].join(', ')
+
+      %div
+        = form.label :scope, class: 'block font-bold text-gray-700 dark:text-gray-200'
+        = form.select :scope, pool_scopes, { include_blank: false }, { data: { controller: 'select' } }
+
+        - if address_pool.errors[:scope].any?
+          %span.text-red-600= address_pool.errors[:scope].join(', ')
+
+      %div
+        %span.block.font-bold.text-gray-700.dark:text-gray-200 API ID
+        %p.my-3= address_pool.slug
+
+      .text-right.grow
+        = link_to 'javascript:;', data: { action: "model#delete", confirm: 'Are you sure?' } do
+          %i.fas.fa-times-circle.text-red-600
+
+      .h-0.basis-full
+      .flex-1
+        = form.label :network_address, class: 'block font-bold text-gray-700 dark:text-gray-200'
+        = form.text_field :network_address, class: 'form-input'
+
+        - if address_pool.errors[:network_address].any?
+          %span.text-red-600= address_pool.errors[:network_address].join(', ')
+
+      - if address_pool.persisted? && address_pool.network_address
+        - if address_pool.ip_v4?
+          .grow= render IPPickerComponent.new(form: form, field: :gateway, label: true)
+          .h-0.basis-full
+          .grow= render IPPickerComponent.new(form: form, field: :range_start, label: true)
+          .grow= render IPPickerComponent.new(form: form, field: :range_end, label: true)
+
+        - else
+          .flex-1
+            = form.label :gateway, class: 'block font-bold text-gray-700 dark:text-gray-200'
+            .mt-1.flex.rounded-md.shadow-sm
+              %span.inline-flex.items-center.px-3.rounded-l-md.border.border-r-0.border-gray-300.bg-gray-50.text-gray-500.dark:bg-gray-600.dark:text-current.dark:border-black.text-sm
+                = render LiquidAddressComponent.new(object: address_pool.gateway_address_object, net_only: true)
+              = form.text_field :gateway6, class: 'focus:ring-indigo-500 focus:border-indigo-500 flex-1 block w-full rounded-none border-gray-300 dark:bg-gray-500 dark:border-black'
+              %span.inline-flex.items-center.px-3.rounded-r-md.border.border-l-0.border-gray-300.bg-gray-50.text-gray-500.dark:bg-gray-600.dark:text-current.dark:border-black.text-sm<>
+                \/
+                = address_pool.ip_network.prefix

@@ -1,0 +1,132 @@
+-# frozen_string_literal: true
+
+= simple_form_for(@exercise, html: { autocomplete: "off" }) do |f|
+  = f.error_notification
+  = f.error_notification message: f.object.errors[:base].to_sentence if f.object.errors[:base].present?
+
+  = render ColumnFormSectionComponent.new(disabled: !policy(@exercise).update?) do |c|
+    - c.description do
+      %h3.text-lg.font-medium.leading-6.text-gray-900.dark:text-gray-50 Identity
+      %p.mt-1.text-sm.text-gray-600.dark:text-gray-400
+        Name and abbreviation for this environment
+
+    - c.main do
+      .px-4.py-5.bg-white.dark:bg-gray-800.space-y-6.sm:p-6
+        .grid.grid-cols-3.gap-6
+          .col-span-3.sm:col-span-2= f.input :name
+          .col-span-1.sm:col-span-1= f.input :abbreviation
+
+        = f.input :description
+
+      - if policy(@exercise).update?
+        .px-4.py-3.bg-slate-200.dark:bg-gray-500.text-right.sm:px-6
+          = f.button :submit, 'Save', class: 'form-submit'
+
+  .py-5
+    .border-t.border-gray-200
+
+  = render ColumnFormSectionComponent.new(disabled: !policy(@exercise).update?) do |c|
+    - c.description do
+      %h3.text-lg.font-medium.leading-6.text-gray-900.dark:text-gray-50 Teams
+      %p.mt-1.text-sm.text-gray-600.dark:text-gray-400
+        Blue team settings
+
+    - c.main do
+      .px-4.py-5.bg-white.dark:bg-gray-800.space-y-6.sm:p-6
+        .grid.grid-cols-2.gap-6
+          = f.input :blue_team_count
+          = f.input :dev_team_count
+
+      - if policy(@exercise).update?
+        .px-4.py-3.bg-slate-200.dark:bg-gray-500.text-right.sm:px-6
+          = f.button :submit, 'Save', class: 'form-submit'
+
+  .py-5
+    .border-t.border-gray-200
+
+  = render ColumnFormSectionComponent.new(disabled: !policy(@exercise).update?) do |c|
+    - c.description do
+      %h3.text-lg.font-medium.leading-6.text-gray-900.dark:text-gray-50 Access
+      %p.mt-1.text-sm.text-gray-600.dark:text-gray-400
+        Control who gets access to this environment
+
+    - c.main do
+      .px-4.py-5.bg-white.dark:bg-gray-800.space-y-6.sm:p-6
+        .grid.grid-cols-3.gap-6
+          .col-span-3.sm:col-span-2
+            = f.label :dev_resource_name
+            .mt-1.flex.rounded-md.shadow-sm
+              %span.inline-flex.items-center.px-3.rounded-l-md.border.border-r-0.border-gray-300.bg-gray-50.dark:bg-gray-600.dark:text-current.dark:border-black.text-sm
+                = Rails.configuration.resource_prefix
+              = f.text_field :dev_resource_name, class: 'focus:ring-indigo-500 focus:border-indigo-500 flex-1 block w-full rounded-none rounded-r-md sm:text-sm border-gray-300 dark:bg-gray-500 dark:border-black'
+
+          .col-span-3.sm:col-span-2
+            = f.label :dev_red_resource_name
+            .mt-1.flex.rounded-md.shadow-sm
+              %span.inline-flex.items-center.px-3.rounded-l-md.border.border-r-0.border-gray-300.bg-gray-50.dark:bg-gray-600.dark:text-current.dark:border-black.text-sm
+                = Rails.configuration.resource_prefix
+              = f.text_field :dev_red_resource_name, class: 'focus:ring-indigo-500 focus:border-indigo-500 flex-1 block w-full rounded-none rounded-r-md sm:text-sm border-gray-300 dark:bg-gray-500 dark:border-black'
+
+          .col-span-3.sm:col-span-2
+            = f.label :local_admin_resource_name
+            .mt-1.flex.rounded-md.shadow-sm
+              %span.inline-flex.items-center.px-3.rounded-l-md.border.border-r-0.border-gray-300.bg-gray-50.dark:bg-gray-600.dark:text-current.dark:border-black.text-sm
+                = Rails.configuration.resource_prefix
+              = f.text_field :local_admin_resource_name, class: 'focus:ring-indigo-500 focus:border-indigo-500 flex-1 block w-full rounded-none rounded-r-md sm:text-sm border-gray-300 dark:bg-gray-500 dark:border-black'
+
+      - if policy(@exercise).update?
+        .px-4.py-3.bg-slate-200.dark:bg-gray-500.text-right.sm:px-6
+          = f.button :submit, 'Save', class: 'form-submit'
+
+  .py-5
+    .border-t.border-gray-200
+
+  = render ColumnFormSectionComponent.new(disabled: !policy(@exercise).update?) do |c|
+    - c.description do
+      %h3.text-lg.font-medium.leading-6.text-gray-900.dark:text-gray-50 Networking
+      %p.mt-1.text-sm.text-gray-600.dark:text-gray-400
+        Enable/disable specific functionality for this environment
+
+    - c.main do
+      .px-4.py-5.bg-white.dark:bg-gray-800.space-y-6.sm:p-6
+        .grid.grid-cols-3.gap-6
+          .col-span-3.sm:col-span-2= f.input :services_read_only
+
+      - if policy(@exercise).update?
+        .px-4.py-3.bg-slate-200.dark:bg-gray-500.text-right.sm:px-6
+          = f.button :submit, 'Save', class: 'form-submit'
+
+  - if policy(@exercise).update?
+    .py-5
+      .border-t.border-gray-200
+
+    = render ColumnFormSectionComponent.new(disabled: !policy(@exercise).update?) do |c|
+      - c.description do
+        %h3.text-lg.font-medium.leading-6.text-gray-900.dark:text-gray-50 Feature toggles
+        %p.mt-1.text-sm.text-gray-600.dark:text-gray-400
+          Enable/disable specific functionality for this environment
+      - c.main do
+        .px-4.py-5.bg-white.dark:bg-gray-800.space-y-6.sm:p-6
+          .grid.grid-cols-3.gap-6
+            .col-span-3.sm:col-span-2= f.input :mode, collection: Exercise.modes.map { |a, b| [a.capitalize, a] }, default: 0
+            .col-span-3.sm:col-span-2= f.input :root_domain, hint: 'Will be used as default for all machines'
+
+        - if policy(@exercise).update?
+          .px-4.py-3.bg-slate-200.dark:bg-gray-500.text-right.sm:px-6
+            = f.button :submit, 'Save', class: 'form-submit'
+
+    - if @exercise.persisted?
+      .py-5
+        .border-t.border-gray-200
+
+      = render ColumnFormSectionComponent.new(disabled: !policy(@exercise).update?, shadow: false) do |c|
+        - c.description do
+          %h3.text-lg.font-medium.leading-6.text-gray-900.dark:text-gray-50 Archival
+          %p.mt-1.text-sm.text-gray-600.dark:text-gray-400
+            If this environment is no longer in active use, it can be archived
+
+        - c.main do
+          .text-right.leading-8
+            = link_to exercise_path(@exercise, exercise: { archived: true }), method: :put, class: 'inline-flex items-center justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500', data: { confirm: "Are you sure you want to archive #{@exercise.name}?"} do
+              Archive
+              %i.fas.fa-box.ml-2

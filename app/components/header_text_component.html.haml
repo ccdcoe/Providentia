@@ -1,0 +1,8 @@
+- if text
+  = text
+- else
+  - breadcrumb_items.each_with_index do |(icon, text, link), index|
+    %i.fas.mr-2.mt-1{class: icon}
+    = link_to_if link.present?, text, link
+    - unless index+1 == breadcrumb_items.size
+      %hr.w-px.h-auto.bg-gray-200.dark:bg-gray-400.dark:border-gray-400.mx-3/

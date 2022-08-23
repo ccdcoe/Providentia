@@ -1,0 +1,16 @@
+- cache([network, 'address_preview']) do
+  = render TableComponent.new do |c|
+    - c.column { '' }
+    - c.column { 'IPv4' }
+    - c.column { 'IPv6' }
+
+    - pools = network.address_pools.group_by(&:ip_family)
+    - network.exercise.all_blue_teams.each do |bt|
+      - c.table_row do
+        %td.px-6.py-4= "BT#{bt.to_s.rjust(2, "0")}"
+        %td.px-6.py-4
+          - (pools['ipv4'] || []).each do |pool|
+            %p= pool.ip_network(bt)&.to_string
+        %td.px-6.py-4
+          - (pools['ipv6'] || []).each do |pool|
+            %p= pool.ip_network(bt)&.to_string

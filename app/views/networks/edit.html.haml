@@ -1,0 +1,6 @@
+- if policy(Network.new(exercise: @exercise)).create?
+  - provide :new_url do
+    = url_for [:new, @exercise, :network]
+
+= render 'form'
+= render 'addressing' if @network.persisted?

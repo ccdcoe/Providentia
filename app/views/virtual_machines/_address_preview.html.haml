@@ -1,0 +1,18 @@
+- cache([vm, 'address_preview']) do
+  = render TableComponent.new do |c|
+    - vm.deployable_instances(AddressPreviewPresenter).group_by(&:team_number).each do |team, instances|
+      - c.table_row do
+        %td.text-center.font-lg.font-bold.py-2.bg-sky-200.text-sky-800.dark:bg-sky-500.dark:text-sky-700{colspan: 100}
+          = "BT#{team.to_s.rjust(2, "0")}"
+
+      - instances.each do |instance|
+        - c.table_row do
+          %td.px-6.py-4.align-top.text-lg= instance.name
+          %td.px-6.py-4.space-y-3
+            - instance.interfaces.each do |interface|
+              %div
+                %h4= interface[:name]
+                .grid.grid-flow-col.auto-cols-max.space-x-4.text-sm
+                  - interface[:addresses].each do |address|
+                    %span.rounded.bg-gray-700.text-white.px-2.py-1
+                      = address[:address] || I18n.t("address_modes.#{address[:mode]}")

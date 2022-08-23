@@ -1,0 +1,46 @@
+.mt-5.md:mt-0.shadow.bg-white.dark:bg-gray-800.rounded-md[@service]
+  = form_with(model: [@service.exercise, @service], html: { autocomplete: "off" }, class: 'p-6', data: { controller: 'model', action: "change->model#update"}) do |f|
+    -# = f.error_notification
+    -# = f.error_notification message: f.object.errors[:base].to_sentence if f.object.errors[:base].present?
+    .space-y-6
+      %div
+        = f.label :name, class: 'block font-bold text-gray-700 dark:text-gray-200'
+        = f.text_field :name, class: 'form-input'
+        - if @service.errors[:name].any?
+          %span.text-red-600= @service.errors[:name].join(', ')
+
+      %div
+        = f.label :description, class: 'block font-bold text-gray-700 dark:text-gray-200'
+        = f.text_area :description, class: 'form-input'
+        - if @service.errors[:description].any?
+          %span.text-red-600= @service.errors[:description].join(', ')
+
+  .border-t.border-gray-200.dark:border-gray-500
+
+  .space-y-6.p-6
+    .flex.w-full.pb-6
+      %h1.text-xl.font-bold Checks
+      .flex-grow.text-right.space-x-2
+        - if @service.persisted? && policy(@service).update?
+          = form_with(url: [@service.exercise, @service, :service_checks], class: 'inline-block') do |form|
+            %button.leading-5.p-1.px-2.rounded-sm.text-white.bg-indigo-500{type: 'submit'} Add network check
+
+          = form_with(url: [@service.exercise, @service, :special_checks], class: 'inline-block') do |form|
+            %button.leading-5.p-1.px-2.rounded-sm.text-white.bg-indigo-500{type: 'submit'} Add special check
+
+
+    .flex.flex-col.align-middle
+      %table.min-w-full.divide-y.divide-gray-200.dark:divide-gray-500.border.border-gray-200.dark:border-gray-500.rounded-lg
+        %thead.text-left.text-xs.uppercase.tracking-wider.bg-gray-50.dark:bg-gray-600.text-gray-500.dark:text-gray-50
+          %tr
+            %th.px-5.py-3.font-medium{scope: "col", colspan: 4}
+              .flex.flex-row.space-x-8
+                %div{class: 'basis-1/4'}= ServiceCheck.human_attribute_name(:network)
+                %div{class: 'basis-1/4'}= ServiceCheck.human_attribute_name(:protocol)
+                %div{class: 'basis-1/4'}= ServiceCheck.human_attribute_name(:ip_family)
+                %div{class: 'basis-1/4'}= ServiceCheck.human_attribute_name(:destination_port)
+            %th.px-6.py-3.font-medium{scope: "col"}
+
+        %tbody#checks-table.bg-white.dark:bg-gray-700.divide-y.divide-gray-200.dark:divide-gray-500
+          = render @service.service_checks.order(:created_at)
+          = render @service.special_checks.order(:created_at)

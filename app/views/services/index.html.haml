@@ -1,0 +1,24 @@
+- if policy(@exercise.services.build).create?
+  - provide :new_url do
+    = url_for [:new, @exercise, :service]
+
+- if @services.any?
+  = render TableComponent.new do |c|
+    - c.column { Service.human_attribute_name(:name) }
+    - c.column { ServiceCheck.model_name.human.pluralize }
+    - c.column { '' }
+
+    - @services.each do |service|
+      - c.table_row do
+        %td.px-6.py-4= link_to service.name, [@exercise, service], class: 'text-indigo-600 hover:text-indigo-900 dark:text-indigo-400'
+        %td.px-6.py-4.addresses.space-y-3
+          - all_checks = service.service_checks + service.special_checks
+          - all_checks.group_by(&:network).each do |network, checks|
+            .inline-block{title: network.name}
+              = render TeamChipComponent.new(team: network.team, text: checks.map(&:display_name).join(', '))
+
+        %td.px-6.py-4.text-right
+          = link_to [@exercise, service], method: :delete, data: { confirm: 'Are you sure?' } do
+            %i.fas.fa-times-circle.text-red-600
+- else
+  = render 'shared/empty', klass: Service

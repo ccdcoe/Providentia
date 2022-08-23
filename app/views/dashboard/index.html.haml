@@ -1,0 +1,18 @@
+- provide :heading do
+  %i.fas.mr-2.mt-1{class: Exercise.to_icon}
+  List of environments
+
+- if policy(:exercise).create?
+  - provide :new_url do
+    = url_for [:new, :exercise]
+
+.flex.justify-end.gap-1
+  - if current_user.admin? && !params[:archived]
+    = link_to 'Show archived', root_path(archived: true), class: 'form-submit h-10'
+
+- if @exercises.any?
+  .grid.grid-cols-4.gap-6.py-6
+    = render partial: 'shared/environment_card', collection: @exercises, as: :environment
+
+- else
+  = render 'shared/empty', klass: Exercise

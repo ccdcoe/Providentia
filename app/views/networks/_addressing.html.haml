@@ -1,0 +1,26 @@
+.py-5
+  .border-t.border-gray-200.dark:border-gray-600
+
+= render ColumnFormSectionComponent.new(disabled: !policy(@network).update?) do |c|
+  - c.description do
+    %h3.text-lg.font-medium.leading-6.text-gray-900.dark:text-gray-50 Addressing
+    %p.mt-1.text-sm.text-gray-600.dark:text-gray-400
+      The addressing is handled by creating address pools. There can be multiple pools in each IP family.
+
+  - c.main do
+    .bg-white.dark:bg-gray-800
+      .flex.py-2.px-3.gap-2.items-center.bg-gray-50.dark:bg-gray-500
+        = render ModalComponent.new(header: "Network addresses") do |c|
+          - c.body do
+            = turbo_stream_from ["network_addresses", @network.id]
+            #address_preview= render 'address_preview', network: @network
+
+          %h1.grow.text-2xl.font-bold.m-2 Address pools
+          = form_with(url: [@network.exercise, @network, :address_pools]) do |_form|
+            %button.form-submit-add.text-sm.h-8{type: 'submit'}
+              %i.fas.fa-plus.self-center
+              Add pool
+          = link_to 'Preview', 'javascript:;', class: 'form-submit text-sm h-8', data: { action: "click->modal#open" }
+
+      #address_pools.divide-y-4.divide-double.divide-gray-200.dark:divide-gray-500
+        = render @network.address_pools

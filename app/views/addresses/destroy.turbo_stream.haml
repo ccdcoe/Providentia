@@ -1,0 +1,3 @@
+= turbo_stream.remove dom_id(@address)
+= turbo_stream.update "connection_info" do
+  = render "virtual_machines/connection_info", vm: @address.virtual_machine

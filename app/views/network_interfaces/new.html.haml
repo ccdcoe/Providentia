@@ -1,0 +1,3 @@
+= turbo_frame_tag :new_nic, class: 'contents' do
+  = render NetworkInterfaceFormComponent.new(network_interface: @network_interface, network_interface_counter: @virtual_machine.network_interfaces.size)
+  = render 'virtual_machines/new_nic'

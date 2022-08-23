@@ -1,0 +1,44 @@
+.shadow.rounded-md.flex.flex-col[network_interface]
+  .py-4.flex.flex-row.leading-5{class: team_classes}
+    .flex-grow.items-center.px-6.text-3xl
+      %span.opacity-60= network_interface_counter
+      = network_interface.network&.name || '-'
+
+    .flex.justify-end.items-center.px-6.text-lg.font-semibold.items-center.space-x-2
+      - if network_interface.persisted?
+        - if network_interface.egress?
+          .flex.items-center.justify-center.rounded-full.bg-blue-200.text-blue-800.w-7.h-7{title: 'Egress interface'}
+            %i.fas.fa-cloud-upload-alt.text-sm
+        - if network_interface.connection?
+          .flex.items-center.justify-center.rounded-full.bg-orange-200.text-orange-800.w-7.h-7{title: 'Connection interface'}
+            %i.fas.fa-cogs.text-sm
+
+      - if network_interface.persisted?
+        = form_with(url: [network_interface.exercise, network_interface.virtual_machine, network_interface], method: :delete, data: { confirm: 'Are you sure?' }) do |form|
+          %button{type: 'submit'}
+            %i.fas.fa-times-circle.text-red-500
+
+  .bg-white.dark:bg-gray-800.flex-grow
+    = form_with(model: [network_interface.exercise, network_interface.virtual_machine, network_interface], class: 'px-4 py-5', data: { controller: 'model', action: "change->model#update"}) do |form|
+      .text-sm.font-medium.text-gray-500.dark:text-gray-400= form.label :network_id
+
+      .flex.gap-4.items-center
+        .flex-grow= form.grouped_collection_select :network_id, networks.for_grouped_select, :last, :first, :id, :abbreviation, {include_blank: true},  { data: { controller: 'select' }}
+
+        - if network_interface.persisted?
+          %label.mt-1.text-sm.text-gray-900.dark:text-white{id: form.field_id(:connection, network_interface.id)}
+            %a.form-submit.text-xs= egress_toggle_text
+            = form.check_box :egress, class: 'hidden'
+
+    - if network_interface.persisted?
+      .text-center.text-lg.font-semibold Addresses
+
+      .border.border-gray-200.dark:border-gray-500.mt-4{data: { controller: 'model' }}
+        .bg-white.dark:bg-gray-700.divide-y-4.divide-double.divide-gray-200.dark:divide-gray-800{id: "#{dom_id(network_interface)}_addresses"}
+          = render network_interface.addresses.order(:created_at), network_interface: network_interface
+
+      .text-center.p-6
+        = form_with(url: [network_interface.exercise, network_interface.virtual_machine, network_interface, network_interface.addresses.build]) do |form|
+          %button.form-submit-add.text-sm{type: 'submit'}
+            %i.fas.fa-plus.mr-1
+            Add new

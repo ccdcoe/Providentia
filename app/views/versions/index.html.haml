@@ -1,0 +1,9 @@
+- provide(:heading) { "Audit log" }
+
+%div{class: 'w-3/5'}
+  - @versions.group_by { |version| version.created_at.to_date }.each do |day, versions|
+    %h1.text-2xl.font-bold.py-6= l day
+    .shadow.rounded-lg.bg-white.dark:bg-gray-800.space-y-6.p-4= render versions
+
+  .pt-6.flex.justify-center
+    .flex.flex-shrink= paginate @versions

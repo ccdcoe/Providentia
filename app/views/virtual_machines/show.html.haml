@@ -1,0 +1,15 @@
+- if policy(@exercise.virtual_machines.build).create?
+  - provide :new_url do
+    = url_for [:new, @exercise, :virtual_machine]
+
+= render 'form'
+
+.mt-5
+  %h1.text-2xl.font-bold.py-3.pb-6 Network configuration
+
+  = turbo_stream_from ["vm_connection_info", @virtual_machine.id]
+  #connection_info= render "connection_info", vm: @virtual_machine
+
+  .grid.grid-cols-1.gap-6.py-6.auto-rows-auto.2xl:grid-cols-2.2xl:auto-rows-auto
+    = render(NetworkInterfaceFormComponent.with_collection(@virtual_machine.network_interfaces))
+    = render 'new_nic'

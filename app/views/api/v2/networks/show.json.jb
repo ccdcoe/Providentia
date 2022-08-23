@@ -1,0 +1,17 @@
+# frozen_string_literal: true
+
+Rails.cache.fetch(['apiv2', @exercise, 'networks']) do
+  @exercise.networks.map do |network|
+    network.slice(
+      :name,
+      :abbreviation,
+      :cloud_id,
+      :ipv4,
+      :ipv6
+    ).merge(
+      team: network.team.name,
+      zone: network.api_short_name,
+      domain: network.full_domain
+    )
+  end
+end

@@ -1,0 +1,6 @@
+- if @check.persisted?
+  = turbo_stream.replace "service_check_new" do
+    = render @check
+- else
+  = turbo_stream.append "checks-table" do
+    = render @check

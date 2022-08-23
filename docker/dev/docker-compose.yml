@@ -1,0 +1,163 @@
+version: "3"
+
+services:
+  keycloak_db:
+    image: "postgres:14-alpine"
+    volumes:
+      - "postgres_keycloak:/var/lib/postgresql/data"
+    ports:
+      - "5433:5432"
+    environment:
+      - POSTGRES_USER=keycloak
+      - POSTGRES_PASSWORD=secret
+      - POSTGRES_DB=keycloak
+
+  keycloak:
+    image: bitnami/keycloak:18.0.2
+    depends_on:
+      - keycloak_db
+    ports:
+      - "8080:8080"
+      - "8443:8443"
+    environment:
+      - KEYCLOAK_PROXY_ADDRESS_FORWARDING=true
+      - KEYCLOAK_ADMIN_USER=admin
+      - KEYCLOAK_ADMIN_PASSWORD=adminsecret
+      - KEYCLOAK_MANAGEMENT_USER=mgmt
+      - KEYCLOAK_MANAGEMENT_PASSWORD=mgmtsecret
+      - KEYCLOAK_DATABASE_HOST=keycloak_db
+      - KEYCLOAK_DATABASE_PORT=5432
+      - KEYCLOAK_DATABASE_NAME=keycloak
+      - KEYCLOAK_DATABASE_USER=keycloak
+      - KEYCLOAK_DATABASE_PASSWORD=secret
+      - KEYCLOAK_REALM=ruby
+      - KEYCLOAK_CLIENT_URL=http://providentia.localhost
+      - KEYCLOAK_CLIENT_ID=Providentia
+      - KEYCLOAK_CLIENT_SECRET=00000000-0000-0000-0000-000000000000
+      - KEYCLOAK_CLIENT_SCOPE=resources
+      - VIRTUAL_HOST=keycloak.localhost
+      - VIRTUAL_PORT=8080
+
+  keycloak_config:
+    image: adorsys/keycloak-config-cli:latest-18.0.2
+    depends_on:
+      - keycloak
+    volumes:
+      - ./providentia.yaml:/config/providentia.yaml
+    environment:
+      - KEYCLOAK_URL=http://keycloak:8080/
+      - KEYCLOAK_USER=admin
+      - KEYCLOAK_PASSWORD=adminsecret
+      - KEYCLOAK_AVAILABILITYCHECK_ENABLED=true
+      - KEYCLOAK_AVAILABILITYCHECK_TIMEOUT=30s
+      - IMPORT_FILES='/config/*'
+
+  db:
+    image: "postgres:14-alpine"
+    volumes:
+      - "postgres_providentia:/var/lib/postgresql/data"
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_USER=providentia
+      - POSTGRES_PASSWORD=secret
+      - POSTGRES_DB=providentia
+
+  redis:
+    image: "redis:alpine"
+    ports:
+      - "6379:6379"
+    volumes:
+      - "redis:/data"
+
+  web:
+    depends_on:
+      - "db"
+      - "redis"
+    build:
+      context: ../../
+      dockerfile: Dockerfile
+    stdin_open: true
+    tty: true
+    volumes:
+      - /etc/ssl/certs/ca-certificates.crt:/etc/ssl/certs/ca-certificates.crt
+      - ../../:/srv/app
+    entrypoint: ["/srv/app/docker/dev/docker-entrypoint.sh"]
+    command: ["rails", "server", "-b", "0.0.0.0"]
+    ports:
+      - "3000:3000"
+    environment:
+      - DATABASE_URL=postgres://providentia:secret@db/providentia?pool=5
+      - REDIS_URL=redis://redis:6379/0
+      - OIDC_ISSUER=http://keycloak.localhost/realms/Providentia
+      - KEYCLOAK_CLIENT_ID=Providentia
+      - KEYCLOAK_CLIENT_SECRET=00000000-0000-0000-0000-000000000000
+      - BASE_URI=http://providentia.localhost
+      - RESOURCE_PREFIX=Providentia_
+      - AUTH_MODE=resource_access
+      - VIRTUAL_HOST=providentia.localhost
+      - VIRTUAL_PORT=3000
+      - RUBY_GC_HEAP_INIT_SLOTS=1000000
+      - RUBY_HEAP_SLOTS_INCREMENT=1000000
+      - RUBY_HEAP_SLOTS_GROWTH_FACTOR=1
+      - RUBY_GC_MALLOC_LIMIT=100000000
+      - RUBY_HEAP_FREE_MIN=500000
+
+  esbuild:
+    depends_on:
+      - web
+    build:
+      context: ../../
+      dockerfile: Dockerfile
+    restart: on-failure
+    tty: true
+    volumes:
+      - ../../:/srv/app
+    command: ["yarn", "start", "--watch"]
+    ports:
+      - "8082:8082"
+
+  postcss:
+    depends_on:
+      - web
+    build:
+      context: ../../
+      dockerfile: Dockerfile
+    restart: on-failure
+    tty: true
+    volumes:
+      - ../../:/srv/app
+    command: ["yarn", "build:css", "--watch"]
+
+  omgwtfssl:
+    image: paulczar/omgwtfssl
+    restart: "no"
+    volumes:
+      - certs:/certs
+    environment:
+      - SSL_CERT=localhost.crt
+      - SSL_KEY=localhost.key
+      - SSL_SUBJECT=*.localhost
+
+  nginx-proxy:
+    image: nginxproxy/nginx-proxy
+    ports:
+      - "80:80"
+      - "443:443"
+    networks:
+      default:
+        aliases:
+          - nginx-proxy
+          - proxy
+          - keycloak.localhost
+    environment:
+      - HTTPS_METHOD=noredirect
+    volumes:
+      - certs:/etc/nginx/certs
+      - /var/run/docker.sock:/tmp/docker.sock:ro
+
+volumes:
+  redis:
+  certs:
+  postgres_providentia:
+  postgres_keycloak:

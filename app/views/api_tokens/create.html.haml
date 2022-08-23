@@ -1,0 +1,9 @@
+.container.mx-auto.px-5.py-24.text-center
+  .text-3xl.mb-4.font-medium.text-gray-700.dark:text-gray-50
+    %p.py-6
+      Your token has been created. It is only shown to you once, make sure to keep it safe!
+
+  %p.text-lg
+    = text_field_tag :token, @api_token.token, disabled: true, class: 'w-3/12 text-center dark:bg-gray-500 dark:border-black'
+
+  %p.m-4= link_to 'Go back', api_tokens_path, class: 'text-indigo-600 hover:text-indigo-900 dark:text-indigo-400'

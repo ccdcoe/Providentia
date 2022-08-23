@@ -1,0 +1,16 @@
+-# frozen_string_literal: true
+.bg-white.dark:bg-gray-800.shadow{class: 'w-5/12'}
+  = simple_form_for(MergeOsForm.new(source_id: @operating_system.id), url: merge_operating_systems_path, html: { autocomplete: "off" }) do |f|
+    = f.error_notification
+    = f.error_notification message: f.object.errors[:base].to_sentence if f.object.errors[:base].present?
+
+    .px-4.py-5.space-y-6.sm:p-6
+      %h3.text-lg.font-bold.leading-6 Merging
+      %p
+        Merges this operating system into another. All VM references will be updated.
+
+      = f.input :source_id, as: :hidden
+      = f.input :destination_id, collection: sorted_os_options(@operating_systems), input_html: { data: { controller: 'select' } }
+
+    .px-4.py-3.bg-slate-200.dark:bg-gray-500.text-right.sm:px-6
+      = f.button :submit, 'Merge', class: 'form-submit'

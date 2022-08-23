@@ -1,0 +1,54 @@
+-# frozen_string_literal: true
+.bg-white.dark:bg-gray-800.shadow{class: 'w-7/12'}
+  = simple_form_for(@operating_system, html: { autocomplete: "off", disabled: !policy(@operating_system).update? }) do |f|
+    = f.error_notification
+    = f.error_notification message: f.object.errors[:base].to_sentence if f.object.errors[:base].present?
+
+    .px-4.py-5.space-y-6.sm:p-6
+      = f.input :name
+      = f.input :parent_id, collection: sorted_os_options(@operating_systems), input_html: { data: { controller: 'select' } }
+
+    .px-4.py-5.space-y-1.sm:p-6
+      %h2.text-xl Hardware
+
+      .grid.gap-6.grid-cols-3
+        = f.input :cpu
+        %div
+          = f.label :ram
+          .mt-1.flex.rounded-md.shadow-sm
+            = f.number_field :ram, class: 'focus:ring-indigo-500 focus:border-indigo-500 flex-1 block w-full rounded-none rounded-l-md sm border-gray-300 dark:bg-gray-500 dark:border-black'
+            %span.inline-flex.items-center.px-3.rounded-r-md.border.border-l-0.border-gray-300.bg-gray-50.text-gray-500.dark:bg-gray-600.dark:text-current.dark:border-black
+              GB
+
+          - if @operating_system.errors[:ram].any?
+            %span.text-red-600= @operating_system.errors[:ram].join ', '
+
+        %div
+          = f.label :primary_disk_size
+          .mt-1.flex.rounded-md.shadow-sm
+            = f.number_field :primary_disk_size, class: 'focus:ring-indigo-500 focus:border-indigo-500 flex-1 block w-full rounded-none rounded-l-md sm border-gray-300 dark:bg-gray-500 dark:border-black'
+            %span.inline-flex.items-center.px-3.rounded-r-md.border.border-l-0.border-gray-300.bg-gray-50.text-gray-500.dark:bg-gray-600.dark:text-current.dark:border-black
+              GB
+
+          - if @operating_system.errors[:primary_disk_size].any?
+            %span.text-red-600= @operating_system.errors[:primary_disk_size].join ', '
+
+
+
+    - unless f.object.new_record?
+      .py-1
+        .border-t.border-gray-200.dark:border-gray-500
+
+      %dl
+        .px-6.py-3
+          %dt.text-sm.font-medium.text-gray-500.dark:text-gray-400= OperatingSystem.human_attribute_name(:api_short_name)
+          %dd.text-sm.text-gray-900.dark:text-white.mt-0.col-span-2= @operating_system.api_short_name
+
+        .px-6.py-3
+          %dt.text-sm.font-medium.text-gray-500.dark:text-gray-400= OperatingSystem.human_attribute_name(:api_v2_short_name)
+          %dd.text-sm.text-gray-900.dark:text-white.mt-0.col-span-2= @operating_system.api_v2_short_name
+
+
+    - if policy(@operating_system).update?
+      .px-4.py-3.bg-slate-200.dark:bg-gray-500.text-right.sm:px-6
+        = f.button :submit, class: 'form-submit'

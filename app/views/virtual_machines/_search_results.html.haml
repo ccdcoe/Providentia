@@ -1,0 +1,55 @@
+- if @virtual_machines.any?
+  = render TableComponent.new do |c|
+    - c.column { VirtualMachine.human_attribute_name(:name) }
+    - c.column { Team.model_name.human }
+    - c.column { VirtualMachine.human_attribute_name(:system_owner) }
+    - c.column { Capability.model_name.human.pluralize }
+    - c.column { OperatingSystem.model_name.human }
+    - c.column { '' }
+
+    - @virtual_machines.each do |machine|
+      - c.table_row do
+        - cache([machine.exercise, machine, 'index_fragment_1']) do
+          %td.px-6.py-4
+            %div= link_to machine.name, [machine.exercise, machine], class: 'text-indigo-600 hover:text-indigo-900 dark:text-indigo-400 dark:text-indigo-400', data: { turbo_frame: '_top'}
+            .text-sm.text-gray-500.dark:text-gray-50
+              = render LiquidFQDNComponent.new(object: machine)
+          %td.px-6.py-4.text-sm= render TeamChipComponent.new(team: machine.team)
+          %td.px-6.py-4= machine.system_owner&.name
+          %td.px-6.py-4
+            .flex.flex-wrap.gap-1= render(CapabilityChipComponent.with_collection(machine.capabilities.pluck(:name)))
+          %td.px-6.py-4
+            - if machine.operating_system
+              %i{class: machine.operating_system.to_icon}
+              = machine.operating_system&.name
+
+
+          %td.px-6.py-4.text-right
+            = link_to [machine.exercise, machine], method: :delete, data: { confirm: 'Are you sure?' } do
+              %i.fas.fa-times-circle.text-red-600
+
+      - c.table_row(classes: '!border-t-0') do
+        - cache([machine.exercise, machine, 'index_fragment_2']) do
+          %td.px-6.pb-4.text-sm.text-gray-500.dark:text-gray-50{colspan: 6}
+            .flex.flex-wrap.gap-2
+              - machine.network_interfaces.each do |nic|
+                .shrink-0{title: nic_tooltip(nic)}
+                  - addresses = nic.addresses.for_search
+                  - next if addresses.empty?
+                  = render TeamChipComponent.new(team: nic.network.team, text: '') do
+                    - if nic.egress?
+                      %i.fas.fa-cloud-upload-alt.text-sm
+                    - if nic.connection?
+                      %i.fas.fa-cogs.text-sm
+
+                    %span.space-x-2
+                      - if addresses.size > 1
+                        - addresses.each do |address|
+                          %span.rounded.px-2{class: 'bg-zinc-400/30 dark:bg-gray-600/40'}
+                            = render(LiquidAddressComponent.new(object: address))
+                      - else
+                        %span= render(LiquidAddressComponent.new(object: addresses.first))
+
+
+- else
+  = render 'shared/empty', klass: VirtualMachine

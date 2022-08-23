@@ -1,0 +1,15 @@
+@import url("https://fonts.googleapis.com/css2?family=Lusitana:wght@400;700&family=Raleway:wght@400;600;700&display=swap");
+@import "tippy.js/dist/tippy.css";
+@import "./tailwind.css";
+@import "./tomselect.css";
+@import "./highlight.css";
+
+/* Chrome, Safari and Opera */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.no-scrollbar {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}

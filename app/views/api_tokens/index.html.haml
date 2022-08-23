@@ -1,0 +1,21 @@
+- provide(:heading) { "Your API tokens" }
+
+.my-2.text-right
+  = link_to({ action: :new }, class: 'form-submit-add') do
+    %i.fas.fa-plus
+    Add new
+
+- if @api_tokens.any?
+  = render TableComponent.new do |c|
+    - c.column { APIToken.human_attribute_name(:name) }
+    - c.column { APIToken.human_attribute_name(:token) }
+    - c.column { '' }
+
+    - @api_tokens.each do |api_token|
+      - c.table_row do
+        %td.px-6.py-4= api_token.name
+        %td.px-6.py-4 ***********
+        %td.px-6.py-4.text-right= link_to 'Revoke', api_token_path(api_token), { id: api_token.id, method: :delete, remote: true, class: 'p-1 px-2 rounded-sm text-white bg-red-500', data: { confirm: 'Are you sure?' } }
+
+- else
+  = render 'shared/empty', klass: APIToken

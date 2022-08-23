@@ -1,0 +1,21 @@
+- if policy(Capability.new(exercise: @exercise)).create?
+  - provide :new_url do
+    = url_for [:new, @exercise, :capability]
+
+- if @capabilities.any?
+  = render TableComponent.new do |c|
+    - c.column { Capability.human_attribute_name(:name) }
+    - c.column { '' }
+
+    - @capabilities.each do |capability|
+      - c.table_row do
+        %td.px-6.py-4
+          .text-sm.font-medium
+            = link_to_if policy(capability).show?, capability.name, [capability.exercise, capability], class: 'text-indigo-600 hover:text-indigo-900 dark:text-indigo-400'
+
+        %td.px-6.py-4.whitespace-nowrap.text-right
+          - if policy(capability).destroy?
+            = link_to [capability.exercise, capability], method: :delete, data: { confirm: 'Are you sure?' } do
+              %i.fas.fa-times-circle.text-red-600
+- else
+  = render 'shared/empty', klass: Capability

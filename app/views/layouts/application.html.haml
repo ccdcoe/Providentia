@@ -1,0 +1,28 @@
+!!!
+%html
+  %head
+    %meta{:content => "text/html; charset=UTF-8", "http-equiv" => "Content-Type"}/
+    %title Providentia
+    = csrf_meta_tags
+    = csp_meta_tag
+    = stylesheet_link_tag "application", "data-turbo-track": "reload"
+    = javascript_include_tag "application", "data-turbo-track": "reload", defer: true
+
+    %link{rel: "apple-touch-icon", sizes: "180x180", href: "/apple-touch-icon.png"}
+    %link{rel: "icon", type: "image/png", sizes: "32x32", href: "/favicon-32x32.png"}
+    %link{rel: "icon", type: "image/png", sizes: "16x16", href: "/favicon-16x16.png"}
+    %link{rel: "manifest", href: "/site.webmanifest"}
+  %body.w-full.font-raleway.antialiased.bg-gray-100.text-gray-600.dark:bg-gray-900.dark:text-gray-200
+    - if user_signed_in?
+      .flex.h-screen.overflow-hidden{data: {controller: "slideover"}}
+        = render 'shared/sidebar'
+
+        .relative.flex.flex-col.flex-1.overflow-y-auto.overflow-x-hidden
+          = render 'shared/header' if current_user
+          %main
+            .px-4.sm:px-6.lg:px-8.py-8.w-full.max-w-9xl.mx-auto
+              = render 'layouts/flashes'
+              = yield
+
+    - else
+      = render 'shared/not_signed_in'

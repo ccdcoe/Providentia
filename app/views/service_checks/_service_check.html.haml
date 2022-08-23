@@ -1,0 +1,14 @@
+%tr[service_check]
+  %td.pl-4.py-3{colspan: 4}
+    = form_with(model: [service_check.service.exercise, service_check.service, service_check], autocomplete: 'off', data: { controller: 'model', action: "change->model#update"}) do |f|
+      .flex.flex-row.space-x-2
+        %div{class: 'basis-1/4'}= f.grouped_collection_select :network_id, @exercise.networks.includes(:team).for_grouped_select, :last, :first, :id, :abbreviation, {include_blank: true},  { data: { controller: 'select' }}
+        .grow.flex.flex-row.space-x-2
+          = f.collection_select :protocol, service_protocols, :last, :first, {}, class: 'form-input'
+          = f.collection_select :ip_family, ip_families, :last, :first, {}, class: 'form-input'
+          = f.number_field :destination_port, class: 'form-input'
+  %td.pr-4.py-3.text-right{class: 'w-0'}
+    - if service_check.persisted?
+      = form_with(model: [service_check.service.exercise, service_check.service, service_check], method: :delete, data: { confirm: 'Are you sure?' }) do |f|
+        %button{type: 'submit'}
+          %i.fas.fa-times-circle.text-red-500

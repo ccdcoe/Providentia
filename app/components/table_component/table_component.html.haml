@@ -1,0 +1,13 @@
+.flex.flex-col
+  .pb-4.overflow-x-auto.sm:-mx-6.lg:-mx-8
+    .py-2.align-middle.inline-block.min-w-full.sm:px-6.lg:px-8
+      .shadow.overflow-hidden.sm:rounded-lg
+        %table.min-w-full.divide-y.divide-gray-200.dark:divide-gray-400
+          %thead.bg-gray-200.dark:bg-gray-800
+            %tr
+              - columns.each do |column|
+                = column
+
+          %tbody.bg-white.dark:bg-gray-600.dark:text-white.divide-y.divide-gray-200.dark:divide-gray-400
+            - table_rows.each do |row|
+              = row

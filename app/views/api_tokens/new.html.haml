@@ -1,0 +1,10 @@
+.bg-white.dark:bg-gray-800.shadow{class: 'w-5/12'}
+  = simple_form_for(@api_token, html: { autocomplete: "off", data: { turbo: false } }) do |f|
+    = f.error_notification
+    = f.error_notification message: f.object.errors[:base].to_sentence if f.object.errors[:base].present?
+
+    .px-4.py-5.space-y-6.sm:p-6
+      = f.input :name
+
+    .px-4.py-3.bg-slate-200.dark:bg-gray-500.text-right.sm:px-6
+      = f.button :submit, class: 'form-submit'

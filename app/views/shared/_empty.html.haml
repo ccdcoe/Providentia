@@ -1,0 +1,8 @@
+.container.mx-auto.px-5.py-24.text-center
+  .text-3xl.mb-4.font-medium.text-gray-700
+    %i.fas.fa-3x{class: klass.to_icon}
+
+    %p.py-6
+      No
+      = klass.model_name.human.pluralize.downcase
+      found

@@ -1,0 +1,79 @@
+- if policy(Network.new(exercise: @exercise)).create?
+  - provide :new_url do
+    = url_for [:new, @exercise, :network]
+
+.bg-white.dark:bg-gray-800.shadow.overflow-hidden.rounded-lg.mb-6
+  .flex.items-center.justify-end.px-6.py-5
+    %h3.flex-grow.text-lg.leading-6.font-medium.text-gray-900.dark:text-white.dark:text-gray-300
+      Network information
+    - if policy(@network).update?
+      %hr.w-px.h-6.bg-gray-200.dark:bg-gray-400.dark:border-gray-400.mx-3.justify-self-end/
+      = link_to 'Edit', [:edit, @exercise, @network], class: 'text-indigo-600 hover:text-indigo-900 dark:text-indigo-400'
+
+  .border-t.border-gray-200.dark:border-gray-500
+    %dl
+      .px-6.py-5.grid.grid-cols-2.gap-4.xl:grid-cols-4
+        %div
+          %dt.text-sm.font-medium.text-gray-500.dark:text-gray-400= Network.human_attribute_name(:abbreviation)
+          %dd.mt-1.text-sm.text-gray-900.dark:text-white.mt-0= @network.abbreviation
+
+        %div
+          %dt.text-sm.font-medium.text-gray-500.dark:text-gray-400= Team.model_name.human
+          %dd.mt-1.text-sm.text-gray-900.dark:text-white.mt-0= @network.team.name
+
+      .px-6.py-5
+        %dt.text-sm.font-medium.text-gray-500.dark:text-gray-400= Network.human_attribute_name(:description)
+        %dd.mt-1.text-sm.text-gray-900.dark:text-white.mt-0.col-span-2= @network.description
+
+      .px-6.py-5
+        %dt.text-sm.font-medium.text-gray-500.dark:text-gray-400= Capability.model_name.human.pluralize
+        %dd.mt-1.text-sm.text-gray-900.dark:text-white.mt-0.col-span-2.py-1
+          = render(CapabilityChipComponent.with_collection(@network.capabilities.pluck(:name)))
+
+      .py-1
+        .border-t.border-gray-200.dark:border-gray-500
+
+      .px-6.py-5
+        %h3
+          %span.text-lg Addressing
+          = render ModalComponent.new(header: "Network addresses") do |c|
+            - c.body do
+              = render 'address_preview', network: @network
+            = link_to 'Preview', 'javascript:;', class: 'text-xs text-indigo-600 hover:text-indigo-900 dark:text-indigo-400', data: { action: "click->modal#open" }
+
+        .grid.grid-cols-1.gap-4.xl:grid-cols-2
+          .only:block.hidden
+            %em (None)
+          - @network.address_pools.group_by(&:ip_family).sort.each do |mode, pools|
+            %div
+              %dt.text-sm.font-medium
+                %span.font-bold= I18n.t("ip_families.#{mode}")
+
+                .grid.grid-cols-4.gap-6.text-gray-500
+                  .col-span-2= AddressPool.human_attribute_name(:network_address)
+                  .col-span-2= AddressPool.human_attribute_name(:gateway)
+
+              - pools.each do |pool|
+                %dd.mt-1.text-sm.text-gray-900.dark:text-white.mt-0
+                  .grid.grid-cols-4.gap-6
+                    .col-span-2= render LiquidPoolNetworkComponent.new(object: pool)
+                    .col-span-2= render LiquidAddressComponent.new(object: pool.gateway_address_object) if pool.gateway
+
+      .py-1
+        .border-t.border-gray-200.dark:border-gray-500
+
+      .px-6.py-5.grid.grid-cols-12.gap-4
+        .col-span-4
+          %dt.text-sm.font-medium.text-gray-500.dark:text-gray-400= Network.human_attribute_name(:domain)
+          %dd.mt-1.text-sm.text-gray-900.dark:text-white.mt-0
+            = render LiquidTextComponent.new(object: @network.full_domain, exercise: @network.exercise)
+
+      .py-1
+        .border-t.border-gray-200.dark:border-gray-500
+
+      .px-6.py-5
+        %dt.text-sm.font-medium.text-gray-500.dark:text-gray-400= Network.human_attribute_name(:cloud_id)
+        %dd.mt-1.text-sm.text-gray-900.dark:text-white.mt-0.col-span-2
+          = render LiquidTextComponent.new(object: @network.cloud_id, exercise: @network.exercise)
+
+= render 'used_addresses'

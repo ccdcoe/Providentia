@@ -1,0 +1,5 @@
+= turbo_stream.update dom_id(@virtual_machine) do
+  = render "form"
+
+= turbo_stream.update "connection_info" do
+  = render "virtual_machines/connection_info", vm: @virtual_machine

@@ -1,0 +1,18 @@
+= simple_form_for([@exercise, @virtual_machine], html: { autocomplete: "off" }) do |f|
+  = f.error_notification
+  = f.error_notification message: f.object.errors[:base].to_sentence if f.object.errors[:base].present?
+
+  = render ColumnFormSectionComponent.new do |c|
+    - c.description do
+      %h3.text-lg.font-medium.leading-6.text-gray-900.dark:text-gray-50 Basic information
+      %p.mt-1.text-gray-600.dark:text-gray-400
+        Basic information for new virtual machine
+
+    - c.main do
+      .px-4.py-5.bg-white.dark:bg-gray-800.space-y-6.sm:p-6
+        .grid.grid-cols-2.gap-6
+          = f.input :name
+          = f.association :team, collection: policy_scope(Team)
+
+      .px-4.py-3.bg-slate-200.dark:bg-gray-500.text-right.sm:px-6
+        = f.button :submit, 'Save', class: 'form-submit'

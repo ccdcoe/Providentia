@@ -1,0 +1,6 @@
+= turbo_frame_tag :new_nic, class: 'contents' do
+  .rounded-xl.flex-grow.border-8.border-dashed.border-gray-300.dark:border-gray-500
+    .flex.items-center.justify-center.h-full.text-2xl{class: 'min-h-[300px]'}
+      = link_to [:new, @virtual_machine.exercise, @virtual_machine, :network_interface], class: 'form-submit-add gap-2' do
+        %i.fas.fa-plus
+        Add NIC

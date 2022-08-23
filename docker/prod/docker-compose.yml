@@ -1,0 +1,36 @@
+version: "3"
+
+services:
+  db:
+    image: "postgres:14-alpine"
+    restart: unless-stopped
+    volumes:
+      - "${DB_VOLUME_PATH:-/srv/providentia_db}:/var/lib/postgresql/data"
+    env_file:
+      - db.env
+
+  redis:
+    image: "redis:alpine"
+    restart: unless-stopped
+    volumes:
+      - "redis:/data"
+
+  web:
+    depends_on:
+      - "db"
+      - "redis"
+    build:
+      context: ../../
+      dockerfile: Dockerfile.prod
+    entrypoint: ["/srv/app/docker-entrypoint.sh"]
+    command: ["puma", "-C", "config/puma.production.rb"]
+    restart: unless-stopped
+    volumes:
+      - /etc/ssl/certs/ca-certificates.crt:/etc/ssl/certs/ca-certificates.crt
+    expose:
+      - 3000
+    env_file:
+      - web.env
+
+volumes:
+  redis:

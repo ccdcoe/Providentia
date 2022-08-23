@@ -1,0 +1,40 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+  /* simple_form hacks */
+  .form-input:not(.boolean):not(.ts-wrapper):not([hidden]) {
+    @apply mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm border-gray-300 rounded-md dark:bg-gray-500 dark:border-black dark:placeholder:text-gray-400;
+  }
+
+  .form-input.boolean {
+    @apply focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300 rounded align-text-bottom mr-1 p-1;
+  }
+
+  .form-button {
+    @apply inline-flex gap-1 leading-tight uppercase justify-center items-center py-2 px-4 border border-transparent shadow-sm font-medium rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition duration-150 ease-in-out;
+  }
+
+  .form-submit {
+    @apply form-button text-white bg-indigo-600 hover:bg-indigo-700 dark:bg-indigo-500;
+  }
+
+  .form-submit-add {
+    @apply form-button text-white bg-green-500 hover:bg-green-600 hover:shadow-lg focus:bg-green-600 focus:shadow-lg active:bg-green-700 active:shadow-lg;
+  }
+
+  .background-arrow {
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%2364748b' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+
+    @media (prefers-color-scheme: dark) {
+      & {
+        background-image: url("data:image/svg+xml,%3csvg xmlns=%27http://www.w3.org/2000/svg%27 fill=%27none%27 viewBox=%270 0 20 20%27%3e%3cpath stroke=%27%23fff%27 stroke-linecap=%27round%27 stroke-linejoin=%27round%27 stroke-width=%271.5%27 d=%27M6 8l4 4 4-4%27/%3e%3c/svg%3e");
+      }
+    }
+  }
+
+  select {
+    @apply background-arrow;
+  }
+}
