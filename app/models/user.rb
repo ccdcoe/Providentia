@@ -21,7 +21,7 @@ class User < ApplicationRecord
     user ||= create(uid: uid)
     user.update({
       uid: uid,
-      email: email,
+      email: email || "",
       permissions: permissions
     }.merge(extra_fields))
     user
