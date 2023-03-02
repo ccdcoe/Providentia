@@ -1,0 +1,20 @@
+version: "3"
+
+services:
+  nginx-proxy:
+    image: nginxproxy/nginx-proxy
+    ports:
+      - "80:80"
+      - "443:443"
+    depends_on:
+      - web
+    restart: unless-stopped
+    volumes:
+      - path.to.cert:/etc/nginx/certs/fqdn.of.providentia.crt
+      - path.to.cert.key:/etc/nginx/certs/fqdn.of.providentia.key
+      - /var/run/docker.sock:/tmp/docker.sock:ro
+    logging:
+      driver: json-file
+      options:
+        max-size: 250m
+        max-file: "1"
