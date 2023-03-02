@@ -1,8 +1,9 @@
 # frozen_string_literal: true
 
-class ClassWrapperComponent < ViewComponent::Base
-  def initialize(classes: nil)
+class DomWrapperComponent < ViewComponent::Base
+  def initialize(classes: nil, id: nil)
     @classes = classes
+    @id = id
   end
 
   private

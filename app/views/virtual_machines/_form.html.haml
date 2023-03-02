@@ -58,10 +58,8 @@
           Strategy and count of VM-s to be deployed
 
       - c.main do
-        .px-4.py-5.bg-white.dark:bg-gray-800.space-y-6.p-6
-          .grid.gap-6.grid-cols-2
-            = f.input :deploy_mode, collection: deploy_modes, include_blank: false, disabled: @virtual_machine.forced_bt_numbering?, input_html: { data: { controller: 'select' } }
-            = f.input :custom_instance_count
+        .px-4.py-5.bg-white.dark:bg-gray-800.space-y-6.p-6#deployment_section
+          = render 'deployment_section', f:
 
   .py-5
     .border-t.border-gray-200.dark:border-gray-600

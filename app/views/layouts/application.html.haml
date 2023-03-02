@@ -5,8 +5,9 @@
     %title Providentia
     = csrf_meta_tags
     = csp_meta_tag
-    = stylesheet_link_tag "application", "data-turbo-track": "reload"
-    = javascript_include_tag "application", "data-turbo-track": "reload", defer: true
+    = vite_stylesheet_tag "application", "data-turbo-track": "reload"
+    = vite_client_tag
+    = vite_javascript_tag "application", "data-turbo-track": "reload", defer: true
 
     %link{rel: "apple-touch-icon", sizes: "180x180", href: "/apple-touch-icon.png"}
     %link{rel: "icon", type: "image/png", sizes: "32x32", href: "/favicon-32x32.png"}

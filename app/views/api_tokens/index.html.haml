@@ -15,7 +15,7 @@
       - c.table_row do
         %td.px-6.py-4= api_token.name
         %td.px-6.py-4 ***********
-        %td.px-6.py-4.text-right= link_to 'Revoke', api_token_path(api_token), { id: api_token.id, method: :delete, remote: true, class: 'p-1 px-2 rounded-sm text-white bg-red-500', data: { confirm: 'Are you sure?' } }
+        %td.px-6.py-4.text-right= link_to 'Revoke', api_token_path(api_token), { id: api_token.id, class: 'p-1 px-2 rounded-sm text-white bg-red-500', data: { turbo_method: :delete, turbo_confirm: 'Are you sure?' } }
 
 - else
   = render 'shared/empty', klass: APIToken

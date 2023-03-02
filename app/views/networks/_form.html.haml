@@ -71,9 +71,8 @@
             .mt-1.flex.rounded-md.shadow-sm
               = f.text_field :domain, class: 'focus:ring-indigo-500 focus:border-indigo-500 flex-1 block w-full rounded-none rounded-l-md border-gray-300 dark:bg-gray-500 dark:border-black'
               - unless f.object.ignore_root_domain
-                %span.inline-flex.items-center.px-3.rounded-r-md.border.border-l-0.border-gray-300.bg-gray-50.text-gray-500.dark:bg-gray-600.dark:text-current.dark:border-black.text-sm<
-                  \.
-                  = f.object.exercise.root_domain
+                %span.inline-flex.items-center.px-3.rounded-r-md.border.border-l-0.border-gray-300.bg-gray-50.text-gray-500.dark:bg-gray-600.dark:text-current.dark:border-black.text-sm
+                  = ".#{f.object.exercise.root_domain}"
         = f.input :ignore_root_domain
 
       - if policy(@network).update?

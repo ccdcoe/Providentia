@@ -207,7 +207,103 @@ Example:
 
 ```json
 {
-  "result": ["out", "isp1", "isp2", "sinet", "blu"]
+  "result": [
+    {
+      "id": "sinet",
+      "name": "SINET",
+      "description": "This is Internet",
+      "team": "green",
+      "instances": [
+        {
+          "cloud_id": "VLAN22-CRX-LOGS",
+          "domains": ["not.domain.test.exercise"],
+          "address_pools": [
+            {
+              "id": "default-default-ipv4",
+              "ip_family": "v4",
+              "network_address": "192.168.0.1/24",
+              "gateway": "192.168.0.1"
+            },
+            {
+              "id": "default-default-ipv6",
+              "ip_family": "v6",
+              "network_address": "beef::/5",
+              "gateway": "b800::1"
+            }
+          ],
+          "config_map": null
+        }
+      ]
+    },
+    {
+      "id": "nr1",
+      "name": "numbered",
+      "description": null,
+      "team": "blue",
+      "instances": [
+        {
+          "cloud_id": "team1",
+          "domains": ["team1.test.exercise"],
+          "address_pools": [
+            {
+              "id": "default-default-ipv4",
+              "ip_family": "v4",
+              "network_address": "10.20.1.0/24",
+              "gateway": "10.20.1.1"
+            }
+          ],
+          "config_map": {
+            "team_specific_string": "test - 1"
+          }
+        },
+        {
+          "cloud_id": "team2",
+          "domains": ["team2.test.exercise"],
+          "address_pools": [
+            {
+              "id": "default-default-ipv4",
+              "ip_family": "v4",
+              "network_address": "10.20.2.0/24",
+              "gateway": "10.20.2.1"
+            }
+          ],
+          "config_map": {
+            "team_specific_string": "test - 2"
+          }
+        },
+        {
+          "cloud_id": "team3",
+          "domains": ["team3.test.exercise"],
+          "address_pools": [
+            {
+              "id": "default-default-ipv4",
+              "ip_family": "v4",
+              "network_address": "10.20.3.0/24",
+              "gateway": "10.20.3.1"
+            }
+          ],
+          "config_map": {
+            "team_specific_string": "test - 3"
+          }
+        },
+        {
+          "cloud_id": "team4",
+          "domains": ["team4.test.exercise"],
+          "address_pools": [
+            {
+              "id": "default-default-ipv4",
+              "ip_family": "v4",
+              "network_address": "10.20.4.0/24",
+              "gateway": "10.20.4.1"
+            }
+          ],
+          "config_map": {
+            "team_specific_string": "test - 4"
+          }
+        }
+      ]
+    }
+  ]
 }
 ```
 

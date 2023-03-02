@@ -1,7 +1,7 @@
 #!/bin/sh
 set -ex
 
-ln -s -f ../../docker/dev/post-commit .git/hooks/post-commit
+ln -sf ../../docker/dev/post-commit .git/hooks/post-commit
 chmod +x .git/hooks/post-commit
 
 if [ -f tmp/pids/server.pid ]; then

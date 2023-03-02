@@ -16,7 +16,7 @@ gem 'rails', '~> 7.0'
 gem 'oj', '~> 3.10'
 gem 'pry-rails', '~> 0.3.9'
 gem 'rails-patterns'
-gem 'friendly_id', '~> 5.4.0'
+gem 'friendly_id', '~> 5.5.0'
 gem 'view_component'
 gem 'jwt'
 gem 'http', '~> 5.0'
@@ -47,8 +47,6 @@ gem 'pundit'
 
 # frontend
 gem 'propshaft'
-gem 'jsbundling-rails', '~> 1.0'
-gem 'cssbundling-rails', '~> 1.0'
 
 # monitoring
 gem 'sentry-ruby'
@@ -74,5 +72,4 @@ group :development do
   gem 'stackprof'
 end
 
-group :production do
-end
+gem 'vite_rails', '~> 3.0'

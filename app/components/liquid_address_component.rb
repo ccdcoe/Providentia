@@ -15,7 +15,7 @@ class LiquidAddressComponent < LiquidTooltipSnippetComponent
   private
     def template_text
       calc = UnsubstitutedAddress.new(@object)
-      text = calc.send :result
+      text = AddressValues.result_for(@object) || calc.send(:result)
       return text unless @net_only
 
       case text

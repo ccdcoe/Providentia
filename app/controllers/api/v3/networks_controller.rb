@@ -6,23 +6,11 @@ module API
       before_action :get_exercise
 
       def index
+        networks = policy_scope(@exercise.networks)
         render json: {
-          result: policy_scope(@exercise.networks).pluck(:slug)
+          result: networks.map { |network| NetworkPresenter.new(network) }
         }
       end
-
-      def show
-        return render_not_found unless network
-
-        render json: {
-          result: NetworkPresenter.new(network)
-        }
-      end
-
-      private
-        def network
-          @network ||= policy_scope(@exercise.networks).find_by(slug: params[:id])
-        end
     end
   end
 end

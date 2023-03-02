@@ -21,7 +21,7 @@
 
       - unless customization_spec.mode_host?
         .text-right.shrink
-          = link_to 'javascript:;', data: { action: "model#delete", confirm: 'Are you sure?' } do
+          = link_to 'javascript:;', data: { action: "model#delete" } do
             %i.fas.fa-times-circle.text-red-600
 
       .h-0.basis-full
@@ -33,8 +33,7 @@
           .mt-1.flex.rounded-md.shadow-sm
             = form.text_field :dns_name, placeholder: customization_spec.default_dns_name, class: 'focus:ring-indigo-500 focus:border-indigo-500 flex-1 block w-full rounded-none rounded-l-md sm border-gray-300 dark:bg-gray-500 dark:border-black dark:placeholder:text-gray-400'
             %span.inline-flex.items-center.px-3.rounded-r-md.border.border-l-0.border-gray-300.bg-gray-50.text-gray-500.dark:bg-gray-600.dark:text-current.dark:border-black<
-              \.
-              = render LiquidDomainComponent.new(object: customization_spec.virtual_machine)
+              = ".#{render LiquidDomainComponent.new(object: customization_spec.virtual_machine)}"
         - else
           = form.text_field :dns_name, placeholder: customization_spec.virtual_machine.name, class: 'form-input'
 

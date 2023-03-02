@@ -8,7 +8,7 @@
     - c.column { '' }
 
     - @virtual_machines.each do |machine|
-      - c.table_row do
+      - c.table_row(id: dom_id(machine, 'first')) do
         - cache([machine.exercise, machine, 'index_fragment_1']) do
           %td.px-6.py-4
             %div= link_to machine.name, [machine.exercise, machine], class: 'text-indigo-600 hover:text-indigo-900 dark:text-indigo-400 dark:text-indigo-400', data: { turbo_frame: '_top'}
@@ -25,30 +25,31 @@
 
 
           %td.px-6.py-4.text-right
-            = link_to [machine.exercise, machine], method: :delete, data: { confirm: 'Are you sure?' } do
+            = link_to [machine.exercise, machine], data: { turbo_method: 'delete', turbo_confirm: 'Are you sure?' } do
               %i.fas.fa-times-circle.text-red-600
 
-      - c.table_row(classes: '!border-t-0') do
-        - cache([machine.exercise, machine, 'index_fragment_2']) do
-          %td.px-6.pb-4.text-sm.text-gray-500.dark:text-gray-50{colspan: 6}
-            .flex.flex-wrap.gap-2
-              - machine.network_interfaces.each do |nic|
-                .shrink-0{title: nic_tooltip(nic)}
-                  - addresses = nic.addresses.for_search
-                  - next if addresses.empty?
-                  = render TeamChipComponent.new(team: nic.network.team, text: '') do
-                    - if nic.egress?
-                      %i.fas.fa-cloud-upload-alt.text-sm
-                    - if nic.connection?
-                      %i.fas.fa-cogs.text-sm
+      - if machine.addresses.any?
+        - c.table_row(classes: '!border-t-0', id: dom_id(machine, 'second')) do
+          - cache([machine.exercise, machine, 'index_fragment_2']) do
+            %td.px-6.pb-4.text-sm.text-gray-500.dark:text-gray-50{colspan: 6}
+              .flex.flex-wrap.gap-2
+                - machine.network_interfaces.each do |nic|
+                  .shrink-0{title: nic_tooltip(nic)}
+                    - addresses = nic.addresses.for_search
+                    - next if addresses.empty?
+                    = render TeamChipComponent.new(team: nic.network.team, text: '') do
+                      - if nic.egress?
+                        %i.fas.fa-cloud-upload-alt.text-sm
+                      - if nic.connection?
+                        %i.fas.fa-cogs.text-sm
 
-                    %span.space-x-2
-                      - if addresses.size > 1
-                        - addresses.each do |address|
-                          %span.rounded.px-2{class: 'bg-zinc-400/30 dark:bg-gray-600/40'}
-                            = render(LiquidAddressComponent.new(object: address))
-                      - else
-                        %span= render(LiquidAddressComponent.new(object: addresses.first))
+                      %span.space-x-2
+                        - if addresses.size > 1
+                          - addresses.each do |address|
+                            %span.rounded.px-2{class: 'bg-zinc-400/30 dark:bg-gray-600/40'}
+                              = render(LiquidAddressComponent.new(object: address))
+                        - else
+                          %span= render(LiquidAddressComponent.new(object: addresses.first))
 
 
 - else

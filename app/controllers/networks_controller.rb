@@ -22,13 +22,15 @@ class NetworksController < ApplicationController
     end
   end
 
-  def show; end
+  def edit
+    @form = ConfigMapForm.new(@network)
+  end
 
   def update
-    if @network.update network_params
-      redirect_to [:edit, @network.exercise, @network], notice: 'Network was successfully updated.'
+    if params[:cm]
+      config_map_update
     else
-      render :edit, status: 400
+      regular_update
     end
   end
 
@@ -50,5 +52,25 @@ class NetworksController < ApplicationController
 
     def get_network
       @network = authorize(@exercise.networks.friendly.find(params[:id]))
+    end
+
+    def config_map_update
+      @form = ConfigMapForm.new(@network, params[:cm])
+      if @form.save
+        render turbo_stream: turbo_stream.remove('config_map_errors')
+      else
+        render turbo_stream: turbo_stream.append(
+          'config_map_form',
+          FormErrorBoxComponent.new(@form, id: 'config_map_errors').render_in(view_context)
+        )
+      end
+    end
+
+    def regular_update
+      if @network.update network_params
+        redirect_to [:edit, @network.exercise, @network], notice: 'Network was successfully updated.'
+      else
+        render :edit, status: 400
+      end
     end
 end

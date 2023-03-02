@@ -3,3 +3,7 @@
 
 = turbo_stream.update "connection_info" do
   = render "virtual_machines/connection_info", vm: @network_interface.virtual_machine
+
+= simple_form_for([@exercise, @virtual_machine]) do |f|
+  = turbo_stream.update "deployment_section" do
+    = render "virtual_machines/deployment_section", f:

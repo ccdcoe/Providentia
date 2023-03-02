@@ -14,6 +14,13 @@ class StringSubstituter < Patterns::Calculation
 
     def liquid_substitution
       Liquid::Template.parse(subject, error_mode: :strict)
-        .render(options.slice(*VALID_LIQUID_KEYS).stringify_keys)
+        .render(substitution_keys)
+    end
+
+    def substitution_keys
+      options.slice(*VALID_LIQUID_KEYS).symbolize_keys.tap do |keys|
+        keys[:seq] = keys[:seq].to_s.rjust(2, '0') if keys[:seq]
+        keys[:team_nr_str] = keys[:team_nr].to_s.rjust(2, '0') if keys[:team_nr]
+      end.stringify_keys
     end
 end

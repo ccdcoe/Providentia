@@ -9,6 +9,6 @@
             %span.text-red-600= special_check.errors[:name].join(', ')
   %td.pr-4.py-3.text-right{class: 'w-0'}
     - if special_check.persisted?
-      = form_with(model: [special_check.service.exercise, special_check.service, special_check], method: :delete, data: { confirm: 'Are you sure?' }) do |f|
+      = form_with(model: [special_check.service.exercise, special_check.service, special_check], method: :delete, data: { turbo_confirm: 'Are you sure?' }) do |f|
         %button{type: 'submit'}
           %i.fas.fa-times-circle.text-red-500

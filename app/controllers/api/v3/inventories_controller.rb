@@ -8,7 +8,13 @@ module API
       def show
         scope = policy_scope(@exercise.customization_specs).for_api
         render json: {
-          result: Rails.cache.fetch(['apiv3', @exercise, scope, 'spec']) do
+          result: Rails.cache.fetch([
+            'apiv3',
+            @exercise,
+            scope,
+            policy_scope(@exercise.virtual_machines),
+            'inventory'
+          ]) do
             scope.map { |spec| CustomizationSpecPresenter.new(spec) }
           end
         }

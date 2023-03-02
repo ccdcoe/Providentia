@@ -44,17 +44,15 @@
 
           %td.px-6.py-4.whitespace-nowrap
             - if network.domain.present?
-              %strong<>
-                = render LiquidTextComponent.new(object: network.domain, exercise: network.exercise)
+              = render LiquidTextComponent.new(object: network.domain, exercise: network.exercise)
               - unless network.ignore_root_domain
-                \.
-                %span>= network.exercise.root_domain
+                %span<>= ".#{network.exercise.root_domain}"
             - else
               %span.text-gray{title: 'Default from exercise'}= network.exercise.root_domain
           %td.px-6.py-4= network.description
           %td.px-6.py-4.whitespace-nowrap.text-right
             - if policy(network).destroy?
-              = link_to [network.exercise, network], method: :delete, data: { confirm: 'Are you sure?' } do
+              = link_to [network.exercise, network], data: { turbo_method: 'delete', turbo_confirm: 'Are you sure?' } do
                 %i.fas.fa-times-circle.text-red-600
 - else
   = render 'shared/empty', klass: Network

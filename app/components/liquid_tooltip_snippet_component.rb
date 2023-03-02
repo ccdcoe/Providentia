@@ -27,9 +27,12 @@ class LiquidTooltipSnippetComponent < ViewComponent::Base
     def tooltip_for(node)
       "#{node.name.name}: " +
       case node.name.name
-      when 'team_nr'
-        exercise.all_blue_teams.values_at(0, -1).map do |team|
-          node.render(Liquid::Context.new('team_nr' => team.to_s))
+      when 'team_nr', 'team_nr_str'
+        exercise.all_blue_teams.values_at(0, -1).map(&:to_s).map do |team|
+          node.render(Liquid::Context.new(
+              'team_nr' => team,
+              'team_nr_str' => team.rjust(2, '0')
+            ))
         end.join ' - '
       when 'seq'
         if @object.is_a?(VirtualMachine)

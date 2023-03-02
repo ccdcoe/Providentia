@@ -15,7 +15,7 @@
 
         %td.px-6.py-4.whitespace-nowrap.text-right
           - if policy(capability).destroy?
-            = link_to [capability.exercise, capability], method: :delete, data: { confirm: 'Are you sure?' } do
+            = link_to [capability.exercise, capability], data: { turbo_method: :delete, turbo_confirm: 'Are you sure?' } do
               %i.fas.fa-times-circle.text-red-600
 - else
   = render 'shared/empty', klass: Capability

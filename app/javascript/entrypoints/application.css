@@ -1,7 +1,7 @@
 @import "tippy.js/dist/tippy.css";
-@import "./tailwind.css";
-@import "./tomselect.css";
-@import "./highlight.css";
+@import "~/stylesheets/tailwind.css";
+@import "~/stylesheets/tomselect.css";
+@import "~/stylesheets/highlight.css";
 @import "@fortawesome/fontawesome-svg-core/styles.css";
 
 @font-face {
@@ -9,7 +9,7 @@
   font-style: normal;
   font-weight: 400;
   font-display: swap;
-  src: url("./fonts/Lusitana-Regular.ttf") format("truetype");
+  src: url("~/fonts/Lusitana-Regular.ttf") format("truetype");
 }
 
 @font-face {
@@ -17,13 +17,13 @@
   font-style: bold;
   font-weight: 700;
   font-display: swap;
-  src: url("./fonts/Lusitana-Bold.ttf") format("truetype");
+  src: url("~/fonts/Lusitana-Bold.ttf") format("truetype");
 }
 
 @font-face {
   font-family: "Raleway";
   font-display: swap;
-  src: url("./fonts/Raleway-VariableFont_wght.ttf") format("truetype");
+  src: url("~/fonts/Raleway-VariableFont_wght.ttf") format("truetype");
 }
 
 /* Chrome, Safari and Opera */

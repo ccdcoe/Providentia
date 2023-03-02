@@ -12,9 +12,10 @@ module API
           preload_interfaces
           {
             id: spec.slug,
+            parent_id:,
             customization_context: spec.mode,
             owner: vm.system_owner&.name,
-            description: vm.description,
+            description: spec.mode_host? ? vm.description : spec.description,
             role: spec.role,
             team_name: vm.team.name.downcase,
             bt_visible: vm.api_bt_visible,
@@ -38,6 +39,14 @@ module API
       private
         def vm
           spec.virtual_machine
+        end
+
+        def host_spec
+          vm.host_spec.tap { |spec| spec.virtual_machine = vm } # set manually to avoid extra db call
+        end
+
+        def parent_id
+          host_spec.slug unless spec.mode_host?
         end
 
         def preload_interfaces

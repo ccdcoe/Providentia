@@ -1,5 +1,6 @@
 version: "3"
 
+name: providentia
 services:
   db:
     image: "postgres:14-alpine"
@@ -21,7 +22,8 @@ services:
       - "redis"
     build:
       context: ../../
-      dockerfile: Dockerfile.prod
+      dockerfile: Dockerfile
+      target: production
     entrypoint: ["/srv/app/docker-entrypoint.sh"]
     command: ["puma", "-C", "config/puma.production.rb"]
     restart: unless-stopped

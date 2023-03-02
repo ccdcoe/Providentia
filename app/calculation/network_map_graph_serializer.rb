@@ -84,6 +84,8 @@ class NetworkMapGraphSerializer < Patterns::Calculation
     end
 
     def add_host(host, parent = nil)
+      Current.interfaces_cache ||= {}
+      Current.interfaces_cache[host.id] ||= host.network_interfaces.for_api.load_async
       host.single_network_instances(Presenter).each do |instance|
         @nodes << instance.to_node.merge(
           parent: map_id_from_object(parent || host.connection_nic.network)

@@ -1,0 +1,4 @@
+%h2.text-2xl.font-bold.py-3.pb-6 Configuration map
+
+= form_with(model: @form, url: [@exercise, @network], class: 'px-4 py-5', id: 'config_map_form', data: { controller: 'model', action: "change->model#update"}) do |form|
+  = form.text_area :config_map_as_yaml, data: {controller: 'editor'}

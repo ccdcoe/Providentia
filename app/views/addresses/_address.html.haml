@@ -29,7 +29,7 @@
                     = Address.human_attribute_name(:connection)
 
                 %li.text-red-600.italic.border-t.border-gray-200.p-1.px-2
-                  = link_to 'javascript:;', data: { action: "model#delete", confirm: 'Are you sure?' } do
+                  = link_to 'javascript:;', data: { action: "model#delete" } do
                     Remove
 
 
@@ -51,8 +51,7 @@
               = render LiquidAddressComponent.new(object: address, net_only: true)
             = form.text_field :parsed_ipv6, class: 'focus:ring-indigo-500 focus:border-indigo-500 flex-1 block w-full sm:text-sm border-gray-300 dark:bg-gray-500 dark:border-black', autocomplete: "off"
             %span.inline-flex.items-center.px-3.rounded-r-md.border.border-l-0.border-gray-300.bg-gray-50.text-gray-500.dark:bg-gray-600.dark:text-current.dark:border-black.text-sm<
-              \/
-              = address.ip_family_network&.prefix
+              = "/#{address.ip_family_network&.prefix}"
 
           - if address.errors[:parsed_ipv6].any? || address.errors[:offset].any?
             .w-full

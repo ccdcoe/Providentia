@@ -16,7 +16,7 @@ module API
           hostname:,
           domain: substitute(connection_namespec.domain.to_s),
           fqdn: substitute(connection_namespec.fqdn.to_s),
-          connection_address: connection_address&.ip_object(sequential_number, team_number)&.address,
+          connection_address: connection_address&.ip_object(sequential_number, team_number)&.to_s,
           interfaces:,
           checks:,
           config_map: {}
@@ -36,8 +36,8 @@ module API
           StringSubstituter.result_for(
             text,
             {
-              seq: sequential_number.to_s.rjust(2, '0'),
-              team_nr: team_number.to_s.rjust(2, '0')
+              team_nr: team_number,
+              seq: sequential_number
             }
           )
         end
@@ -61,7 +61,7 @@ module API
         end
 
         def hostname_team_suffix
-          't{{ team_nr }}' if !vm.deploy_mode_single?
+          't{{ team_nr_str }}' if !vm.deploy_mode_single?
         end
 
         def inventory_name

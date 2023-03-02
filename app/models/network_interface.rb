@@ -14,7 +14,7 @@ class NetworkInterface < ApplicationRecord
   accepts_nested_attributes_for :addresses,
     reject_if: proc { |attributes| attributes.all? { |key, value| value.blank? || value == '0' } }
 
-  before_save :network_change_cleanup
+  after_save :network_change_cleanup
   after_save :update_vm_deploy_mode, if: :saved_change_to_network_id?
 
   validate :network_in_exercise
@@ -43,7 +43,7 @@ class NetworkInterface < ApplicationRecord
     end
 
     def network_change_cleanup
-      return unless persisted? && network_id_changed?
+      return unless persisted? && network_id_previously_changed?
       addresses.update_all offset: nil, address_pool_id: nil
       addresses.each(&:save) # will set correct addresspool
     end

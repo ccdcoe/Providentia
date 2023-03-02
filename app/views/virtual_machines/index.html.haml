@@ -2,7 +2,7 @@
   - provide :new_url do
     = url_for [:new, @exercise, :virtual_machine]
 
-= turbo_frame_tag :vm_search, data: { turbo_action: "advance" } do
+= turbo_frame_tag :vm_search, disabled: true, data: { turbo_action: "advance" } do
   %section
     .flex.justify-center.mx-auto{class: 'w-2/3'}
       %ul.flex.flex-shrink.bg-white.dark:bg-gray-800.rounded-lg.items-center.px-3.shadow-lg.mb-6

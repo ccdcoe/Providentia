@@ -9,6 +9,6 @@
           = f.number_field :destination_port, class: 'form-input'
   %td.pr-4.py-3.text-right{class: 'w-0'}
     - if service_check.persisted?
-      = form_with(model: [service_check.service.exercise, service_check.service, service_check], method: :delete, data: { confirm: 'Are you sure?' }) do |f|
+      = form_with(model: [service_check.service.exercise, service_check.service, service_check], method: :delete, data: { turbo_confirm: 'Are you sure?' }) do |f|
         %button{type: 'submit'}
           %i.fas.fa-times-circle.text-red-500

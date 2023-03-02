@@ -6,6 +6,8 @@ class VirtualMachinesController < ApplicationController
   include VmPage # needs to be after other stuff
   skip_before_action :preload_form_collections, only: %i[index]
 
+  respond_to :turbo_stream
+
   def index
     @virtual_machines = policy_scope(@exercise.virtual_machines)
       .preload(
@@ -62,7 +64,10 @@ class VirtualMachinesController < ApplicationController
 
   def destroy
     @virtual_machine.destroy
-    redirect_to [@exercise, :virtual_machines], notice: 'Virtual machine was successfully destroyed.'
+    respond_to do |format|
+      format.turbo_stream
+      format.html { redirect_to [@exercise, :virtual_machines], notice: 'Virtual machine was successfully destroyed.' }
+    end
   end
 
   private

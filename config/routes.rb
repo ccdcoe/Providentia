@@ -45,7 +45,7 @@ Rails.application.routes.draw do
 
     namespace :v3 do
       resources :exercises, path: '', only: %i[index show] do
-        resources :networks, only: %i[index show]
+        resources :networks, only: %i[index]
         resources :services, only: %i[index show]
         resources :capabilities, only: %i[index]
         resources :tags, only: %i[index]

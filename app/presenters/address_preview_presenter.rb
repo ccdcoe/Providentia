@@ -31,8 +31,8 @@ class AddressPreviewPresenter < Struct.new(:spec, :sequential_number, :team_numb
       StringSubstituter.result_for(
         text,
         {
-          seq: sequential_number.to_s.rjust(2, '0'),
-          team_nr: team_number.to_s.rjust(2, '0')
+          seq: sequential_number,
+          team_nr: team_number
         }
       )
     end

@@ -14,7 +14,7 @@
             %i.fas.fa-cogs.text-sm
 
       - if network_interface.persisted?
-        = form_with(url: [network_interface.exercise, network_interface.virtual_machine, network_interface], method: :delete, data: { confirm: 'Are you sure?' }) do |form|
+        = form_with(url: [network_interface.exercise, network_interface.virtual_machine, network_interface], method: :delete, data: { turbo_confirm: 'Are you sure?' }) do |form|
           %button{type: 'submit'}
             %i.fas.fa-times-circle.text-red-500
 

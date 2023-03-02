@@ -16,17 +16,18 @@ class IPPickerComponent < ViewComponent::Base
 
   private
     def collection
-      addresses.map do |host_address|
+      address_ip_objects.map do |ip_object|
+        address = address_for_ip_object(ip_object)
         [
-          liquid_template_shortening(
-            UnsubstitutedAddress.result_for(host_address, address_pool:)
+          AddressValues.result_for(address) || liquid_template_shortening(
+            UnsubstitutedAddress.result_for(ip_object, address_pool:)
           ),
-          host_address.u32 - address_pool.ip_network.network_u32 - 1
+          ip_object.u32 - address_pool.ip_network.network_u32 - 1
         ]
       end.sort_by(&:last).uniq
     end
 
-    def addresses
+    def address_ip_objects
       case @hosts
       when :available_for_object # for specific network interface
         AvailableIPBlock.result_for(
@@ -62,6 +63,10 @@ class IPPickerComponent < ViewComponent::Base
       @form.object.network_interface
     end
 
+    def exercise
+      address_pool.exercise
+    end
+
     def reserve_amount
       if vm.custom_instance_count
         [vm.custom_instance_count, 1].max
@@ -76,5 +81,9 @@ class IPPickerComponent < ViewComponent::Base
       LiquidReplacer.new(text).iterate do |variable_node|
         "[ #{variable_node.name.name} ]"
       end
+    end
+
+    def address_for_ip_object(ip_object)
+      address_pool.addresses.build(network:, offset: ip_object.to_u32 - ip_object.network.to_u32 - 1)
     end
 end

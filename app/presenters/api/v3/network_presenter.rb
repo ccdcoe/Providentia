@@ -9,19 +9,26 @@ module API
             id: network.slug,
             name: network.name,
             description: network.description,
-            cloud_id: network.cloud_id,
             team: network.team.name.downcase,
-            address_pools: network.address_pools.map do |pool|
-              {
-                id: pool.slug,
-                ip_family: pool.ip_family,
-                network_address: pool.network_address,
-                gateway:  UnsubstitutedAddress.result_for(pool.gateway_address_object)
-              }
-            end
+            instances:
           }
         end
       end
+
+      private
+        def instances
+          instance_generator
+            .map { |team_number| NetworkInstancePresenter.new(network, team_number) }
+            .map(&:as_json)
+        end
+
+        def instance_generator
+          if network.numbered?
+            1.upto(network.exercise.last_dev_bt).to_a
+          else
+            [nil]
+          end
+        end
     end
   end
 end

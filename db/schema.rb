@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_09_01_075645) do
+ActiveRecord::Schema[7.0].define(version: 2022_11_15_141207) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -142,6 +142,7 @@ ActiveRecord::Schema[7.0].define(version: 2022_09_01_075645) do
     t.string "domain"
     t.boolean "ignore_root_domain", default: false, null: false
     t.string "slug"
+    t.jsonb "config_map"
     t.index ["exercise_id"], name: "index_networks_on_exercise_id"
     t.index ["team_id"], name: "index_networks_on_team_id"
   end

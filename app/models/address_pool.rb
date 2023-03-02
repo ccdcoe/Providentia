@@ -22,7 +22,7 @@ class AddressPool < ApplicationRecord
 
   validates :name, :ip_family, :scope, presence: true
   validates :network_address, format: {
-    with: /\A(?>(?>{{\s*[-,\w.'|:\s]+\s*}}|[0-9#]){1,3}\.){3}[0-9]{1,3}(\/([0-9]|[1-2][0-9]|3[0-2]))\z/,
+    with: /\A(?>(?>{{\s*[-,\w.'|:\s]+\s*}}|[0-9#]){1,3}\.){3}(?>{{\s*[-,\w.'|:\s]+\s*}}|[0-9#]){1,3}(\/([0-9]|[1-2][0-9]|3[0-2]))\z/,
     allow_nil: true
   }, if: :ip_v4?
   validates :network_address, format: {
@@ -37,7 +37,7 @@ class AddressPool < ApplicationRecord
   }
 
   before_validation :set_mgmt_default_name
-  before_update :clear_dangling_addresses
+  before_update :clear_dangling_addresses, :clear_address_range
   after_validation :revert_invalid_network_values
 
   def self.to_icon
@@ -64,8 +64,20 @@ class AddressPool < ApplicationRecord
 
   def ip_network(team = nil)
     return unless network_address
-    templated = StringSubstituter.result_for(network_address.dup, { team_nr: team || 1 })
-    IPAddress(templated).network
+    base = network_address.dup
+    if last_octet_is_dynamic?
+      first_net = IPAddress(StringSubstituter.result_for(base, { team_nr: 1 })).network
+      IPAddress::IPv4.parse_u32(
+        first_net.to_i + ((team || 1) - 1) * first_net.size, first_net.prefix
+      )
+    else
+      templated = StringSubstituter.result_for(base, { team_nr: team || 1 })
+      IPAddress(templated).network
+    end
+  end
+
+  def last_octet_is_dynamic?
+    ip_v4? && (network_address =~ /\.\d+\/\d+\z/).nil?
   end
 
   def available_range
@@ -114,6 +126,13 @@ class AddressPool < ApplicationRecord
           ip_network.include? IPAddress::IPv6.new("#{ip}/#{ip_network.prefix}")
         }
         address.update(offset: nil)
+      end
+    end
+
+    def clear_address_range
+      if network_address_changed? && last_octet_is_dynamic?
+        self.range_start = nil
+        self.range_end = nil
       end
     end
 

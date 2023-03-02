@@ -7,10 +7,15 @@ export default class extends Controller {
 
   delete(event) {
     const form = event.currentTarget.closest("form");
-    form.addEventListener("formdata", (e) => {
-      const formData = e.formData;
-      formData.set("_method", "delete");
-    });
-    form.requestSubmit();
+    if (
+      form.dataset.confirm !== "false" &&
+      window.confirm(form.dataset.confirm || "Are you sure?")
+    ) {
+      form.addEventListener("formdata", (e) => {
+        const formData = e.formData;
+        formData.set("_method", "delete");
+      });
+      form.requestSubmit();
+    }
   }
 }
