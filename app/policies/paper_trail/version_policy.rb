@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class VersionPolicy < ApplicationPolicy
+class PaperTrail::VersionPolicy < ApplicationPolicy
   def index?
     admin?
   end

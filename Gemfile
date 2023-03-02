@@ -10,7 +10,7 @@ gem 'bootsnap', '>= 1.4.2', require: false
 gem 'haml-rails', '~> 2.0'
 gem 'rgl', '~> 0.5.7'
 gem 'pg'
-gem 'puma', '~> 5.0'
+gem 'puma', '< 7'
 gem 'nilify_blanks', '~> 1.4'
 gem 'rails', '~> 7.0'
 gem 'oj', '~> 3.10'

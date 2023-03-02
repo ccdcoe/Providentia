@@ -1,0 +1,40 @@
+-# frozen_string_literal: true
+
+- content_for(:heading) do
+  %i.fas.mr-2.mt-1{class: Exercise.to_icon}
+  Cloning environment
+  = @exercise.name
+
+= simple_form_for(@clone, url: exercise_clone_path(@exercise), html: { autocomplete: "off" }) do |f|
+  = f.input :exercise_id, as: :hidden
+
+  .flex.flex-row.gap-8
+    .bg-white.dark:bg-gray-800.shadow.p-3.flex-1.rounded
+      %h2.text-center.font-bold.text-2xl
+        Source
+
+      .px-3.py-4
+        .space-y-6
+          = f.input :source_name, readonly: true
+          = f.input :source_abbreviation, readonly: true
+
+        .mt-4
+          The source environment, along with all its virtual machines, networks, capabilities and services will be replicated to a new environment, with a new name and abbreviation.
+
+
+    .text-center.flex-none.self-center
+      %i.fas.fa-4x.fa-angles-right
+
+    .bg-white.dark:bg-gray-800.shadow.p-3.flex-1.rounded
+      %h2.text-center.font-bold.text-2xl
+        Destination
+      = f.error_notification
+      = f.error_notification message: f.object.errors[:base].to_sentence if f.object.errors[:base].present?
+
+      .px-3.py-4.space-y-6
+        = f.input :name
+        = f.input :abbreviation
+
+
+  .my-4.px-4.py-3.text-right
+    = f.button :submit, 'Clone', class: 'form-submit'

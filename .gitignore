@@ -45,3 +45,5 @@ spec/examples.txt
 docker/**/*.env
 /app/assets/builds/*
 !/app/assets/builds/.keep
+
+CURRENT_VERSION

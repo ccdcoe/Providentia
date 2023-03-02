@@ -23,6 +23,7 @@ Rails.application.routes.draw do
       resources :special_checks, only: %i[create update destroy]
     end
     resources :capabilities
+    resource :clone, only: %i[show create]
   end
 
   resources :operating_systems, except: %i[edit destroy] do

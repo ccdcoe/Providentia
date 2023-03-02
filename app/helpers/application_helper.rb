@@ -72,4 +72,8 @@ module ApplicationHelper
       policy_scope(@exercise.capabilities).cache_key_with_version,
     ]
   end
+
+  def providentia_version_string
+    Rails.configuration.x.providentia_version
+  end
 end

@@ -121,12 +121,21 @@
 
       = render ColumnFormSectionComponent.new(disabled: !policy(@exercise).update?, shadow: false) do |c|
         - c.description do
-          %h3.text-lg.leading-6.text-gray-900.dark:text-gray-50 Archival
+          %h3.text-lg.leading-6.text-gray-900.dark:text-gray-50 Archival & Cloning
           %p.mt-1.text-sm.text-gray-600.dark:text-gray-400
-            If this environment is no longer in active use, it can be archived
+            If this environment is no longer in active use, it can be archived. Archived environments are hidden in UI, but still accessible from API.
+
+          %p.mt-1.text-sm.text-gray-600.dark:text-gray-400
+            Cloning the environment will create a duplicate of the current state of
+            %strong= @exercise.name
+            \.
 
         - c.main do
-          .text-right.leading-8
+          .flex.flex-row-reverse.gap-x-2.leading-8
             = link_to exercise_path(@exercise, exercise: { archived: true }), method: :put, class: 'inline-flex items-center justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500', data: { confirm: "Are you sure you want to archive #{@exercise.name}?"} do
+              %i.fas.fa-box.mr-2
               Archive
-              %i.fas.fa-box.ml-2
+
+            = link_to exercise_clone_path(@exercise), class: 'inline-flex items-center justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-orange-600 hover:bg-orange-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500' do
+              %i.fas.fa-clone.mr-2
+              Clone

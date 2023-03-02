@@ -9,10 +9,11 @@ class Exercise < ApplicationRecord
     infra: 2
   }, _prefix: :mode
 
-  has_many :networks
-  has_many :virtual_machines
-  has_many :services
-  has_many :capabilities
+  has_many :networks, dependent: :destroy
+  has_many :virtual_machines, dependent: :destroy
+  has_many :services, dependent: :destroy
+  has_many :capabilities, dependent: :destroy
+  has_many :address_pools, through: :networks
   has_many :addresses, through: :virtual_machines
   has_many :customization_specs, through: :virtual_machines
 

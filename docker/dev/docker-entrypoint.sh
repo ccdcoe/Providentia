@@ -1,6 +1,9 @@
 #!/bin/sh
 set -ex
 
+ln -s -f ../../docker/dev/post-commit .git/hooks/post-commit
+chmod +x .git/hooks/post-commit
+
 if [ -f tmp/pids/server.pid ]; then
   rm tmp/pids/server.pid
 fi
@@ -13,5 +16,6 @@ touch tmp/caching-dev.txt
 bundle exec rake db:prepare
 bundle exec rake db:seed
 yarn
+git describe --tags >CURRENT_VERSION
 
 exec "$@"
