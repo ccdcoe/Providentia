@@ -9,7 +9,7 @@
 
     - @virtual_machines.each do |machine|
       - c.table_row(id: dom_id(machine, 'first')) do
-        - cache([machine.exercise, machine, 'index_fragment_1']) do
+        - cache([machine.exercise.cache_key_with_version, machine.cache_key_with_version, 'index_fragment_1']) do
           %td.px-6.py-4
             %div= link_to machine.name, [machine.exercise, machine], class: 'text-indigo-600 hover:text-indigo-900 dark:text-indigo-400 dark:text-indigo-400', data: { turbo_frame: '_top'}
             .text-sm.text-gray-500.dark:text-gray-50
@@ -30,7 +30,7 @@
 
       - if machine.addresses.any?
         - c.table_row(classes: '!border-t-0', id: dom_id(machine, 'second')) do
-          - cache([machine.exercise, machine, 'index_fragment_2']) do
+          - cache([machine.exercise.cache_key_with_version, machine.cache_key_with_version, 'index_fragment_2']) do
             %td.px-6.pb-4.text-sm.text-gray-500.dark:text-gray-50{colspan: 6}
               .flex.flex-wrap.gap-2
                 - machine.network_interfaces.each do |nic|

@@ -302,8 +302,6 @@ Example:
 }
 ```
 
-#### /:environment_id/networks/:id
-
 #### /:environment_id/services
 
 #### /:environment_id/services/:id

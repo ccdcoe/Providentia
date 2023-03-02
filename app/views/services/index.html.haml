@@ -14,8 +14,9 @@
         %td.px-6.py-4.addresses.space-y-3
           - all_checks = service.service_checks + service.special_checks
           - all_checks.group_by(&:network).each do |network, checks|
-            .inline-block{title: network.name}
-              = render TeamChipComponent.new(team: network.team, text: checks.map(&:display_name).join(', '))
+            - team = network&.team || Team.first
+            .inline-block{title: team.name}
+              = render TeamChipComponent.new(team: team, text: checks.map(&:display_name).join(', '))
 
         %td.px-6.py-4.text-right
           = link_to [@exercise, service], data: { turbo_method: 'delete', turbo_confirm: 'Are you sure?' } do

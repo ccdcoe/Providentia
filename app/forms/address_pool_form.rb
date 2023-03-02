@@ -57,7 +57,7 @@ class AddressPoolForm < Patterns::Form
     end
 
     def sort_range_fields
-      return unless range_start && range_end
-      self.range_start, self.range_end = [range_start, range_end].sort
+      return unless range_start.present? && range_end.present?
+      self.range_start, self.range_end = [range_start.to_i, range_end.to_i].sort
     end
 end

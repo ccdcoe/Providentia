@@ -5,11 +5,11 @@ class SpecialCheck < ApplicationRecord
   has_paper_trail
 
   belongs_to :service, touch: true
-  belongs_to :network
+  belongs_to :network, optional: true
   has_one :exercise, through: :service
-  has_many :virtual_machines, through: :service
+  has_many :customization_specs, through: :service
 
-  validates :name, :network, presence: true
+  validates :name, presence: true
 
   def self.to_icon
     'fa-flask'
@@ -22,7 +22,7 @@ class SpecialCheck < ApplicationRecord
   def slug
     [
       service.name,
-      network.abbreviation,
+      network&.abbreviation,
       name
     ].compact.join '-'
   end

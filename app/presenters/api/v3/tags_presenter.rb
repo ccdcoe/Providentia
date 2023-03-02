@@ -9,7 +9,9 @@ module API
 
       private
         def network_scope
-          @network_scope ||= Pundit.policy_scope(scope, exercise.networks)
+          # @network_scope ||= Pundit.policy_scope(scope, exercise.networks)
+          # temporarily show all networks in API
+          @network_scope ||= exercise.networks
         end
 
         def vm_scope
@@ -17,7 +19,7 @@ module API
         end
 
         def team_tags
-          Rails.cache.fetch(['apiv3', exercise, 'tags', Team.all.cache_key_with_version]) do
+          Rails.cache.fetch(['apiv3', exercise.cache_key_with_version, 'tags', Team.all.cache_key_with_version]) do
             Team.all.map do |team|
               {
                 id: team.api_short_name,
@@ -30,7 +32,7 @@ module API
         end
 
         def os_tags
-          Rails.cache.fetch(['apiv3', exercise, 'os', OperatingSystem.all.cache_key_with_version]) do
+          Rails.cache.fetch(['apiv3', exercise.cache_key_with_version, 'os', OperatingSystem.all.cache_key_with_version]) do
             OperatingSystem.all.map do |os|
               {
                 id: os.api_short_name,
@@ -43,7 +45,7 @@ module API
         end
 
         def zone_tags
-          Rails.cache.fetch(['apiv3', exercise, 'zone', network_scope.cache_key_with_version]) do
+          Rails.cache.fetch(['apiv3', exercise.cache_key_with_version, 'zone', network_scope.cache_key_with_version]) do
             network_scope.map do |network|
               {
                 id: network.api_short_name,
@@ -62,7 +64,7 @@ module API
         end
 
         def sequential_tags
-          Rails.cache.fetch(['apiv3', exercise, 'sequential', vm_scope.cache_key_with_version]) do
+          Rails.cache.fetch(['apiv3', exercise.cache_key_with_version, 'sequential', vm_scope.cache_key_with_version]) do
             vm_scope
               .where.not(custom_instance_count: nil)
               .flat_map(&:customization_specs)
@@ -77,7 +79,7 @@ module API
         end
 
         def numbered_tags
-          Rails.cache.fetch(['apiv3', exercise, 'numbered', vm_scope.cache_key_with_version]) do
+          Rails.cache.fetch(['apiv3', exercise.cache_key_with_version, 'numbered', vm_scope.cache_key_with_version]) do
             vm_scope
               .reject(&:deploy_mode_single?)
               .group_by { |instance| [instance.team, instance.deploy_mode] }
@@ -95,7 +97,7 @@ module API
         end
 
         def capability_tags
-          Rails.cache.fetch(['apiv3', exercise, 'capability_list', exercise.capabilities]) do
+          Rails.cache.fetch(['apiv3', exercise.cache_key_with_version, 'capability_list', exercise.capabilities.cache_key_with_version]) do
             exercise.capabilities.map do |cap|
               {
                 id: cap.api_short_name,

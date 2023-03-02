@@ -3,7 +3,7 @@
 source 'https://rubygems.org'
 git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
-ruby '3.1.2'
+ruby '3.2.0'
 
 # core
 gem 'bootsnap', '>= 1.4.2', require: false
@@ -25,6 +25,7 @@ gem 'liquid', '~> 5.3'
 gem 'redis'
 gem 'hiredis', '~> 0.6.3'
 gem 'mail', '2.7.1' # until fixed
+gem 'nokogiri', '~> 1.14.rc.1'
 
 # functionality
 gem 'ipaddress', github: 'ipaddress-gem/ipaddress'
@@ -47,6 +48,7 @@ gem 'pundit'
 
 # frontend
 gem 'propshaft'
+gem 'vite_rails', '~> 3.0'
 
 # monitoring
 gem 'sentry-ruby'
@@ -57,6 +59,7 @@ group :development, :test do
   gem 'byebug', platforms: %i[mri mingw x64_mingw]
   gem 'rspec-rails', '~> 5.1.0'
   gem 'factory_bot_rails'
+  gem 'rails-pg-extras', '~> 4.12'
 end
 
 group :development do
@@ -71,5 +74,3 @@ group :development do
   gem 'flamegraph'
   gem 'stackprof'
 end
-
-gem 'vite_rails', '~> 3.0'

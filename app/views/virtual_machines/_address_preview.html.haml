@@ -1,4 +1,4 @@
-- cache([vm, 'address_preview']) do
+- cache([vm.cache_key_with_version, 'address_preview']) do
   = render TableComponent.new do |c|
     - vm.host_spec.deployable_instances(AddressPreviewPresenter).group_by(&:team_number).each do |team, instances|
       - c.table_row do

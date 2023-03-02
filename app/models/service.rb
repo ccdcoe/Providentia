@@ -9,7 +9,6 @@ class Service < ApplicationRecord
   has_many :service_checks, dependent: :destroy
   has_many :special_checks, dependent: :destroy
 
-  has_and_belongs_to_many :virtual_machines
   has_and_belongs_to_many :customization_specs
 
   validates_associated :service_checks, :special_checks

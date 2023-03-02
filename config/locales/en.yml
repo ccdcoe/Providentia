@@ -37,6 +37,8 @@ en:
       service_check:
         ip_family: IP family
         network: Source network
+      special_check:
+        network: Source network
       operating_system:
         cpu: vCPU count
         ram: RAM

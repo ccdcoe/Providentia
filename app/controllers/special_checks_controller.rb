@@ -20,7 +20,7 @@ class SpecialChecksController < ApplicationController
 
   private
     def check_params
-      params.fetch(:special_check, {}).permit(:network_id, :name)
+      params.fetch(:special_check, {}).permit(:network_id, :name, :scored)
     end
 
     def get_service

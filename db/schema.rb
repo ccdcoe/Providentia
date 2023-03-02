@@ -11,8 +11,12 @@
 # It's strongly recommended that you check this file into your version control system.
 
 ActiveRecord::Schema[7.0].define(version: 2022_11_15_141207) do
+ActiveRecord::Schema[7.0].define(version: 2023_01_03_131112) do
   # These are extensions that must be enabled in order to support this database
+  enable_extension "pg_buffercache"
+  enable_extension "pg_stat_statements"
   enable_extension "plpgsql"
+  enable_extension "sslinfo"
 
   create_table "address_pools", force: :cascade do |t|
     t.bigint "network_id", null: false
@@ -170,6 +174,7 @@ ActiveRecord::Schema[7.0].define(version: 2022_11_15_141207) do
     t.integer "destination_port"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.boolean "scored", default: true, null: false
     t.index ["network_id"], name: "index_service_checks_on_network_id"
     t.index ["service_id"], name: "index_service_checks_on_service_id"
   end
@@ -191,10 +196,11 @@ ActiveRecord::Schema[7.0].define(version: 2022_11_15_141207) do
 
   create_table "special_checks", force: :cascade do |t|
     t.bigint "service_id", null: false
-    t.bigint "network_id", null: false
+    t.bigint "network_id"
     t.string "name", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.boolean "scored", default: true, null: false
     t.index ["network_id"], name: "index_special_checks_on_network_id"
     t.index ["service_id"], name: "index_special_checks_on_service_id"
   end

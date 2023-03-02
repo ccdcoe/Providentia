@@ -1,4 +1,4 @@
-- cache([network, 'address_preview']) do
+- cache([network.cache_key_with_version, 'address_preview']) do
   = render TableComponent.new do |c|
     - c.column { '' }
     - c.column { 'IPv4' }

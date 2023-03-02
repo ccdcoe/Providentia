@@ -53,9 +53,10 @@ class Address < ApplicationRecord
   }
 
   before_validation :parse_ipv6, :parse_ipv4,
-    :clear_on_mode_change, :populate_first_pool_if_empty,
+    :clear_on_mode_change,
     :clear_offset, :set_to_connection_if_first_address,
     on: :update
+  before_validation :populate_first_pool_if_empty
   after_save :fix_connection_flag
 
   validate :check_ip_offset6, :check_ip_offset4, :check_overlap
@@ -233,7 +234,7 @@ class Address < ApplicationRecord
     end
 
     def clear_offset
-      return true if !mode_changed? || new_record?
+      return unless mode_changed?
       self.offset = nil
       true
     end

@@ -123,7 +123,7 @@ module API
               egress: nic.egress?,
               connection: nic.addresses.any?(&:connection),
               addresses: nic
-                .addresses
+                .addresses.order(:created_at)
                 .filter_map do |address|
                   if !address.fixed? || address.offset.present?
                     {
@@ -150,7 +150,8 @@ module API
 
         def checks
           Current.services_cache ||= {}
-          Current.services_cache[spec.id] ||= spec.services.for_api.map do |check_name|
+          Current.services_cache[spec.id] ||= spec.services.for_api.to_a
+          Current.services_cache[spec.id].map do |check_name|
             {
               id: check_name,
               budget_id: "#{spec.slug}_#{check_name}",

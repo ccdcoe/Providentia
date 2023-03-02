@@ -44,8 +44,11 @@ class NetworkInterface < ApplicationRecord
 
     def network_change_cleanup
       return unless persisted? && network_id_previously_changed?
-      addresses.update_all offset: nil, address_pool_id: nil
-      addresses.each(&:save) # will set correct addresspool
+      Address.transaction do
+        addresses.each do |address|
+          address.update(offset: nil, address_pool: nil)
+        end
+      end
     end
 
     def update_vm_deploy_mode

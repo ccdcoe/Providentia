@@ -89,7 +89,7 @@ module ApplicationHelper
 
   def sidebar_cache_key
     [
-      @exercise,
+      @exercise.cache_key_with_version,
       'sidebar',
       policy_scope(@exercise.virtual_machines).cache_key_with_version,
       policy_scope(@exercise.networks).cache_key_with_version,

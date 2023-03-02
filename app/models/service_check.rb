@@ -7,7 +7,7 @@ class ServiceCheck < ApplicationRecord
   belongs_to :service, touch: true
   belongs_to :network
   has_one :exercise, through: :service
-  has_many :virtual_machines, through: :service
+  has_many :customization_specs, through: :service
 
   enum protocol: {
     tcp: 0,

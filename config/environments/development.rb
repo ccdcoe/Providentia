@@ -88,4 +88,6 @@ Rails.application.configure do
   end
 
   config.web_console.allowed_ips = '172.16.0.0/12'
+
+  RailsPgExtras.configuration.public_dashboard = true
 end

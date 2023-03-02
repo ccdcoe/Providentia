@@ -21,7 +21,7 @@ class ServiceChecksController < ApplicationController
   private
     def check_params
       params.fetch(:service_check, {}).permit(
-        :network_id, :protocol, :ip_family, :destination_port
+        :network_id, :protocol, :ip_family, :destination_port, :scored
       )
     end
 

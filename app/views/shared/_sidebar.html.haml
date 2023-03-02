@@ -19,9 +19,9 @@
                       %i.fas{class: Network.to_icon}
                     %span.text-sm Networks
 
-                  - if @exercise.networks.size > 0
+                  - if policy_scope(@exercise.networks).size > 0
                     .flex.flex-shrink-0.ml-2
-                      %span.inline-flex.items-center.justify-center.h-5.text-xs.text-white.bg-indigo-500.px-2.rounded-sm= @exercise.networks.size
+                      %span.inline-flex.items-center.justify-center.h-5.text-xs.text-white.bg-indigo-500.px-2.rounded-sm= policy_scope(@exercise.networks).size
 
             %li.px-3.py-2.rounded-sm.last:mb-0.false{:class => "mb-0.5"}
               = link_to [@exercise, :virtual_machines], class: 'block text-gray-200 hover:text-white transition duration-150 false active' do
@@ -31,7 +31,7 @@
                       %i.fas{class: VirtualMachine.to_icon}
                     %span.text-sm Virtual machines
 
-                  - if @exercise.virtual_machines.size > 0
+                  - if policy_scope(@exercise.virtual_machines).size > 0
                     .flex.flex-shrink-0.ml-2
                       %span.inline-flex.items-center.justify-center.h-5.text-xs.text-white.bg-indigo-500.px-2.rounded-sm= policy_scope(@exercise.virtual_machines).size
 
@@ -45,7 +45,7 @@
 
                   - if @exercise.services.size > 0
                     .flex.flex-shrink-0.ml-2
-                      %span.inline-flex.items-center.justify-center.h-5.text-xs.text-white.bg-indigo-500.px-2.rounded-sm= @exercise.services.size
+                      %span.inline-flex.items-center.justify-center.h-5.text-xs.text-white.bg-indigo-500.px-2.rounded-sm= policy_scope(@exercise.services).size
 
             %li.px-3.py-2.rounded-sm.last:mb-0.false{:class => "mb-0.5"}
               = link_to [@exercise, :capabilities], class: 'block text-gray-200 hover:text-white transition duration-150 false active' do
@@ -57,7 +57,7 @@
 
                   - if @exercise.capabilities.size > 0
                     .flex.flex-shrink-0.ml-2
-                      %span.inline-flex.items-center.justify-center.h-5.text-xs.text-white.bg-indigo-500.px-2.rounded-sm= @exercise.capabilities.size
+                      %span.inline-flex.items-center.justify-center.h-5.text-xs.text-white.bg-indigo-500.px-2.rounded-sm= policy_scope(@exercise.capabilities).size
 
     %div
       %h3.text-xs.uppercase.text-gray-500.font-semibold.pl-3 System

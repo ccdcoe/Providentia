@@ -13,7 +13,7 @@ class APIVerifyService < Patterns::Service
     User.from_external(
       uid: payload.dig('preferred_username'),
       email: payload.dig('email'),
-      resources: payload.dig('resources')
+      resources: resource_list(payload)
     )
   rescue JWT::DecodeError, JWT::InvalidIssuerError
   end
@@ -32,5 +32,17 @@ class APIVerifyService < Patterns::Service
         iss: Rails.configuration.oidc_issuer,
         algorithm: 'RS256'
       }
+    end
+
+    def resource_list(payload)
+      case Rails.configuration.authorization_mode
+      when 'scope'
+        payload.dig('resurces')
+      when 'resource_access'
+        payload.dig(
+          'resource_access',
+          ENV.fetch('KEYCLOAK_CLIENT_ID', ''), 'roles'
+        )
+      end
     end
 end

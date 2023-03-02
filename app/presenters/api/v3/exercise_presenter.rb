@@ -4,7 +4,7 @@ module API
   module V3
     class ExercisePresenter < Struct.new(:exercise)
       def as_json(_opts)
-        Rails.cache.fetch(['apiv3', exercise]) do
+        Rails.cache.fetch(['apiv3', exercise.cache_key_with_version]) do
           {
             id: exercise.slug,
             name: exercise.name,

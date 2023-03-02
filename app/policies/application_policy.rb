@@ -63,14 +63,14 @@ class ApplicationPolicy
 
       private
         def accessible_teams_for_user(ex_id = exercise)
-          if (user.accessible_exercises[ex_id] & %w(rt local_admin)).any?
+          if (user.accessible_exercises[ex_id.to_s] & %w(rt local_admin)).any?
             Team.pluck(:id)
           else
             Team.where.not(name: 'Red').pluck(:id)
           end
         end
 
-        def exercises_for_context
+        def exercise_ids_for_context
           exercise.present? ? [exercise.id.to_s] : user.accessible_exercises.keys
         end
     end

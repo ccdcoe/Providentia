@@ -12,7 +12,7 @@ services:
       - POSTGRES_DB=keycloak
 
   keycloak:
-    image: bitnami/keycloak:19.0.1
+    image: bitnami/keycloak:20.0.1
     depends_on:
       - keycloak_db
     environment:
@@ -35,7 +35,7 @@ services:
       - VIRTUAL_PORT=8080
 
   keycloak_config:
-    image: adorsys/keycloak-config-cli:latest-19.0.1
+    image: adorsys/keycloak-config-cli:latest-20.0.1
     depends_on:
       - keycloak
     volumes:
@@ -52,6 +52,7 @@ services:
     image: "postgres:14-alpine"
     volumes:
       - "postgres_providentia:/var/lib/postgresql/data"
+    command: postgres -c shared_preload_libraries=pg_stat_statements -c pg_stat_statements.track=all
     environment:
       - POSTGRES_USER=providentia
       - POSTGRES_PASSWORD=secret
@@ -99,6 +100,7 @@ services:
       RUBY_HEAP_SLOTS_GROWTH_FACTOR: 1
       RUBY_GC_MALLOC_LIMIT: 100000000
       RUBY_HEAP_FREE_MIN: 5000000
+      # RUBY_YJIT_ENABLE: 1
 
   vite:
     depends_on:

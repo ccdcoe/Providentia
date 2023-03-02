@@ -53,5 +53,9 @@ Rails.application.routes.draw do
     end
   end
 
+  if Rails.env.development?
+    mount RailsPgExtras::Web::Engine, at: 'pg_extras'
+  end
+
   root to: 'dashboard#index'
 end

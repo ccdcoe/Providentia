@@ -10,7 +10,7 @@ module API
         render json: {
           result: Rails.cache.fetch([
             'apiv3',
-            @exercise,
+            @exercise.cache_key_with_version,
             scope,
             policy_scope(@exercise.virtual_machines),
             'inventory'

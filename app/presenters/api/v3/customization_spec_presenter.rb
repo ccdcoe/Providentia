@@ -8,7 +8,7 @@ module API
         to: :vm
 
       def as_json(_opts)
-        Rails.cache.fetch(['apiv3', vm, spec]) do
+        Rails.cache.fetch(['apiv3', vm.cache_key_with_version, spec.cache_key_with_version]) do
           preload_interfaces
           {
             id: spec.slug,
