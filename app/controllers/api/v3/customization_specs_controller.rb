@@ -21,7 +21,9 @@ module API
 
       private
         def spec
-          @spec ||= policy_scope(@exercise.customization_specs).friendly.find(params[:id])
+          @spec ||= policy_scope(@exercise.customization_specs)
+            .for_api
+            .friendly.find(params[:id])
         end
     end
   end

@@ -11,6 +11,23 @@ class CustomizationSpec < ApplicationRecord
     container: 2
   }, _prefix: :mode, _default: 'host'
 
+  scope :for_api, -> {
+    includes(
+      {
+        virtual_machine: [
+          :system_owner,
+          :team,
+          :operating_system,
+          :host_spec,
+          { connection_nic: [:network] },
+          :exercise
+        ]
+      },
+      :capabilities_customizationspecs,
+      :capabilities
+    )
+  }
+
   belongs_to :virtual_machine, touch: true
   has_one :exercise, through: :virtual_machine
   has_and_belongs_to_many :services,

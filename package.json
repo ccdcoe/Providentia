@@ -2,16 +2,16 @@
   "name": "providentia",
   "private": true,
   "dependencies": {
-    "@fortawesome/fontawesome-svg-core": "^6.2.0",
-    "@fortawesome/free-brands-svg-icons": "^6.2.0",
-    "@fortawesome/free-solid-svg-icons": "^6.2.0",
+    "@fortawesome/fontawesome-svg-core": "^6.2.1",
+    "@fortawesome/free-brands-svg-icons": "^6.2.1",
+    "@fortawesome/free-solid-svg-icons": "^6.2.1",
     "@hotwired/stimulus": "^3.1.1",
     "@hotwired/turbo-rails": "^7.2.4",
     "@rails/actioncable": "^7.0.4",
     "@rails/activestorage": "^7.0.4",
     "@tailwindcss/aspect-ratio": "^0.4.2",
     "@tailwindcss/forms": "^0.5.3",
-    "@tailwindcss/typography": "^0.5.7",
+    "@tailwindcss/typography": "^0.5.8",
     "autoprefixer": "^10.4.13",
     "cssnano": "^5.1.14",
     "cytoscape": "^3.23.0",
@@ -19,24 +19,21 @@
     "cytoscape-node-html-label": "^1.2.2",
     "debounce": "^1.2.1",
     "element-matches-polyfill": "^1.0.0",
-    "esbuild": "^0.15.13",
+    "esbuild": "^0.15.14",
     "esbuild-rails": "^1.0.3",
     "mrujs": "^0.10.1",
-    "postcss": "^8.4.18",
+    "postcss": "^8.4.19",
     "postcss-cli": "^10.0.0",
     "postcss-import": "^15.0.0",
     "postcss-nesting": "^10.2.0",
-    "postcss-preset-env": "^7.8.2",
-    "tailwindcss": "^3.2.1",
+    "postcss-preset-env": "^7.8.3",
+    "tailwindcss": "^3.2.4",
     "tailwindcss-stimulus-components": "^3.0.4",
     "tippy.js": "^6.3.7",
     "tom-select": "^2.2.2",
     "web-worker": "^1.2.0"
   },
   "version": "0.1.0",
-  "devDependencies": {
-    "chokidar": "^3.5.3"
-  },
   "scripts": {
     "build": "node esbuild.config.js",
     "start": "node esbuild-dev.config.js",
@@ -44,5 +41,6 @@
   },
   "browserslist": [
     "defaults"
-  ]
+  ],
+  "packageManager": "yarn@3.3.0"
 }

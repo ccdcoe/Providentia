@@ -9,8 +9,8 @@
       - c.table_row do
         %td.px-6.py-4= "BT#{bt.to_s.rjust(2, "0")}"
         %td.px-6.py-4
-          - (pools['ipv4'] || []).each do |pool|
+          - (pools['v4'] || []).each do |pool|
             %p= pool.ip_network(bt)&.to_string
         %td.px-6.py-4
-          - (pools['ipv6'] || []).each do |pool|
+          - (pools['v6'] || []).each do |pool|
             %p= pool.ip_network(bt)&.to_string

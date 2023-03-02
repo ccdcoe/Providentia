@@ -15,6 +15,14 @@ class Service < ApplicationRecord
   validates_associated :service_checks, :special_checks
   validates :name, uniqueness: { scope: :exercise }, presence: true, length: { minimum: 1, maximum: 63 }
 
+  scope :for_api, -> {
+    eager_load(service_checks: [:network, :service], special_checks: [:network, :service])
+      .flat_map do |service|
+        service.service_checks.flat_map(&:virtual_checks).map(&:slug) +
+          service.special_checks.map(&:slug)
+      end
+  }
+
   def self.to_icon
     'fa-flask'
   end

@@ -62,11 +62,11 @@
           .shrink-0.ml-2.self-center.inline-flex.items-center.justify-center.rounded-full.bg-orange-200.text-orange-800.w-7.h-7{title: Address.human_attribute_name(:connection)}
             %i.fas.fa-cogs.text-sm
 
-        - if address.needs_pool? && address.offset
-          .shrink-0.ml-2.self-center.flex.items-center.justify-center.rounded-full.bg-blue-200.text-blue-800.w-7.h-7{class: !address.dns_enabled ? 'opacity-70' : ''}
-            %label.cursor-pointer{title: address.dns_enabled? ? 'Address published to DNS' : 'Address not published to DNS'}
-              = form.check_box :dns_enabled, class: 'hidden'
-              %span.fa-layers.fa-fw.text-sm
-                %i.fas.fa-database
-                - unless address.dns_enabled?
-                  %i.fas.fa-slash.fa-rotate-90.font-bold
+      - if address.needs_pool? && address.offset
+        .shrink-0.ml-2.self-center.flex.items-center.justify-center.rounded-full.bg-blue-200.text-blue-800.w-7.h-7{class: !address.dns_enabled ? 'opacity-70' : ''}
+          %label.cursor-pointer{title: address.dns_enabled? ? 'Address published to DNS' : 'Address not published to DNS'}
+            = form.check_box :dns_enabled, class: 'hidden'
+            %span.fa-layers.fa-fw.text-sm
+              %i.fas.fa-database
+              - unless address.dns_enabled?
+                %i.fas.fa-slash.fa-rotate-90.font-bold

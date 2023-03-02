@@ -12,10 +12,10 @@ if [ ! -f config/credentials.yml.enc ]; then
   EDITOR=true bundle exec rails credentials:edit
 fi
 
+git describe --tags >CURRENT_VERSION
 touch tmp/caching-dev.txt
 bundle exec rake db:prepare
 bundle exec rake db:seed
 yarn
-git describe --tags >CURRENT_VERSION
 
 exec "$@"

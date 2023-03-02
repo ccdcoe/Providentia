@@ -4,12 +4,12 @@ module API
   module V3
     class CustomizationSpecPresenter < Struct.new(:spec)
       delegate :team,
-        :operating_system,
         :deploy_mode, :deploy_mode_single?,
         to: :vm
 
       def as_json(_opts)
         Rails.cache.fetch(['apiv3', vm, spec]) do
+          preload_interfaces
           {
             id: spec.slug,
             customization_context: spec.mode,
@@ -40,11 +40,16 @@ module API
           spec.virtual_machine
         end
 
+        def preload_interfaces
+          Current.interfaces_cache ||= {}
+          Current.interfaces_cache[vm.id] ||= vm.network_interfaces.for_api.load_async
+        end
+
         def tags
           [
             sequential_group,
             vm.connection_nic&.api_short_name,
-            (operating_system&.path || []).map(&:api_short_name),
+            (vm.operating_system&.path || []).map(&:api_short_name),
             team.api_short_name,
             ("#{team.api_short_name}_#{deploy_mode}_numbered" if !deploy_mode_single? && !team.blue?),
             ('customization_container' if spec.mode_container?),
@@ -53,7 +58,7 @@ module API
         end
 
         def services
-          spec.services.map(&:name)
+          spec.services.pluck(:name)
         end
 
         def instances
@@ -61,9 +66,7 @@ module API
         end
 
         def capabilities
-          Capability.where(
-            id: spec.capability_ids + vm.connection_nic&.network&.capability_ids.to_a
-          ).pluck(:slug)
+          [] + spec.capabilities.pluck(:slug).to_a + vm.connection_nic&.network&.capabilities&.pluck(:slug).to_a
         end
 
         def sequence_info

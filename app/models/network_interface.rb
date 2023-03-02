@@ -21,6 +21,9 @@ class NetworkInterface < ApplicationRecord
 
   scope :egress, -> { where(egress: true) }
   scope :connectable, -> { joins(:addresses).where(addresses: { connection: true }) }
+  scope :for_api, -> {
+    eager_load(addresses: [:address_pool], network: [:exercise, :address_pools])
+  }
 
   delegate :api_short_name, to: :network
 

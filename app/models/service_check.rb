@@ -43,6 +43,9 @@ class ServiceCheck < ApplicationRecord
 
   def virtual_checks
     return [self] unless ip_family_v4v6?
-    [self.dup.tap { |a| a.ip_family = 'v4' }, self.dup.tap { |a| a.ip_family = :v6 }]
+    [
+      self.dup.tap { |a| a.network = self.network; a.service = self.service; a.ip_family = 'v4' },
+      self.dup.tap { |a| a.network = self.network; a.service = self.service; a.ip_family = 'v6' }
+    ]
   end
 end

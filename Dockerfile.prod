@@ -1,3 +1,14 @@
+# jemalloc builder
+FROM ruby:3.1.2-alpine AS builder_jemalloc
+
+RUN apk add build-base
+RUN wget -O - https://github.com/jemalloc/jemalloc/releases/download/5.3.0/jemalloc-5.3.0.tar.bz2 | tar -xj && \
+  cd jemalloc-5.3.0 && \
+  ./configure && \
+  make && \
+  make install
+
+
 # ruby builder image
 FROM ruby:3.1.2-alpine as builder
 
@@ -32,6 +43,9 @@ ENV RAILS_SERVE_STATIC_FILES true
 ENV RUBY_GC_HEAP_INIT_SLOTS 2000000
 ENV RUBY_HEAP_FREE_MIN 20000
 ENV RUBY_GC_MALLOC_LIMIT 100000000
+
+COPY --from=builder_jemalloc /usr/local/lib/libjemalloc.so.2 /usr/local/lib/
+ENV LD_PRELOAD=/usr/local/lib/libjemalloc.so.2
 
 RUN apk add --no-cache --update \
   postgresql-client \

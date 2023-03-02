@@ -16,8 +16,8 @@ module API
           hostname:,
           domain: substitute(connection_namespec.domain.to_s),
           fqdn: substitute(connection_namespec.fqdn.to_s),
-          connection_address: vm.addresses.find_by(connection: true)&.ip_object(sequential_number, team_number)&.address,
-          interfaces: network_interfaces,
+          connection_address: connection_address&.ip_object(sequential_number, team_number)&.address,
+          interfaces:,
           checks:,
           config_map: {}
         }.merge(team_numbers).merge(sequence_info)
@@ -29,7 +29,7 @@ module API
         end
 
         def connection_namespec
-          @connection_namespec ||= HostnameGenerator.result_for(spec)
+          @connection_namespec ||= HostnameGenerator.result_for(spec, nic: connection_nic)
         end
 
         def substitute(text)
@@ -84,23 +84,36 @@ module API
         end
 
         def vm_name
-          host_spec = HostnameGenerator.result_for(vm.host_spec)
-          substitute("#{vm.exercise.abbreviation}_#{host_spec.fqdn}").downcase
+          spec = HostnameGenerator.result_for(host_spec, nic: connection_nic)
+          substitute("#{vm.exercise.abbreviation}_#{spec.fqdn}").downcase
+        end
+
+        def host_spec
+          vm.host_spec.tap { |spec| spec.virtual_machine = vm } # set manually to avoid extra db call
         end
 
         def hostname
           substitute(
             HostnameGenerator.result_for(
               spec,
-              nic: vm.network_interfaces.find { |nic| !nic.network.numbered? } ||
-                vm.network_interfaces.first ||
+              nic: network_interfaces.find { |nic| !nic.network.numbered? } ||
+                network_interfaces.first ||
                 vm.dup.network_interfaces.build
             ).hostname
           )
         end
 
         def network_interfaces
-          vm.network_interfaces.map do |nic|
+          Current.interfaces_cache ||= {}
+          Current.interfaces_cache[vm.id]
+        end
+
+        def connection_nic
+          network_interfaces.detect(&:connection?)
+        end
+
+        def interfaces
+          network_interfaces.map do |nic|
             namespec = HostnameGenerator.result_for(spec, nic:)
             {
               network_id: nic.network.slug,
@@ -109,42 +122,45 @@ module API
               fqdn: substitute(namespec.fqdn),
               egress: nic.egress?,
               connection: nic.addresses.any?(&:connection),
-              addresses: nic.addresses.for_api.map do |address|
-                {
-                  pool_id: address.address_pool&.slug,
-                  mode: address.mode,
-                  connection: address.connection?,
-                  address: nil,
-                  dns_enabled: nil,
-                  gateway: nil
-                }.tap do |hash|
-                  if address.fixed?
-                    hash[:address] = address.ip_object(sequential_number, team_number).to_string
-                    hash[:dns_enabled] = address.dns_enabled
-                  end
-                  if nic.egress? && (address.mode_ipv4_static? || address.mode_ipv6_static?)
-                    hash[:gateway] = address.address_pool.gateway_ip(team_number)&.to_s
+              addresses: nic
+                .addresses
+                .filter_map do |address|
+                  if !address.fixed? || address.offset.present?
+                    {
+                      pool_id: address.address_pool&.slug,
+                      mode: address.mode,
+                      connection: address.connection?,
+                      address: nil,
+                      dns_enabled: nil,
+                      gateway: nil
+                    }.tap do |hash|
+                      if address.fixed?
+                        hash[:address] = address.ip_object(sequential_number, team_number).to_string
+                        hash[:dns_enabled] = address.dns_enabled
+                      end
+                      if nic.egress? && (address.mode_ipv4_static? || address.mode_ipv6_static?)
+                        hash[:gateway] = address.address_pool.gateway_ip(team_number)&.to_s
+                      end
+                    end
                   end
                 end
-              end
             }
           end
         end
 
         def checks
-          spec
-            .services
-            .flat_map do |service|
-              service.service_checks.flat_map(&:virtual_checks).map(&:slug) +
-                service.special_checks.map(&:slug)
-            end
-            .map { |check_name|
-              {
-                id: check_name,
-                budget_id: "#{spec.slug}_#{check_name}",
-                exercise_unique_id: "#{inventory_name}_#{check_name}"
-              }
+          Current.services_cache ||= {}
+          Current.services_cache[spec.id] ||= spec.services.for_api.map do |check_name|
+            {
+              id: check_name,
+              budget_id: "#{spec.slug}_#{check_name}",
+              exercise_unique_id: "#{inventory_name}_#{check_name}"
             }
+          end
+        end
+
+        def connection_address
+          (connection_nic&.addresses || []).detect(&:connection?)
         end
     end
   end

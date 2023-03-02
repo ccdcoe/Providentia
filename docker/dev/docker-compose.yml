@@ -97,11 +97,11 @@ services:
       - AUTH_MODE=resource_access
       - VIRTUAL_HOST=providentia.localhost
       - VIRTUAL_PORT=3000
-      - RUBY_GC_HEAP_INIT_SLOTS=1000000
+      - RUBY_GC_HEAP_INIT_SLOTS=10000000
       - RUBY_HEAP_SLOTS_INCREMENT=1000000
       - RUBY_HEAP_SLOTS_GROWTH_FACTOR=1
       - RUBY_GC_MALLOC_LIMIT=100000000
-      - RUBY_HEAP_FREE_MIN=500000
+      - RUBY_HEAP_FREE_MIN=5000000
 
   esbuild:
     depends_on:

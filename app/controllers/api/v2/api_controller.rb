@@ -31,7 +31,7 @@ module API
         end
 
         def authenticate_by_local_token
-          APIToken.find_by_token(token_value)&.user
+          User.joins(:api_tokens).where(api_tokens: { token: token_value }).first
         end
 
         def authenticate_by_access_token
