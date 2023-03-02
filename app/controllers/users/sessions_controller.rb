@@ -11,6 +11,6 @@ class Users::SessionsController < Devise::SessionsController
     end
 
     def after_sign_out_path_for(_)
-      new_user_session_path
+      '/users/auth/sso/logout'
     end
 end

@@ -53,7 +53,8 @@ class Address < ApplicationRecord
   }
 
   before_validation :parse_ipv6, :parse_ipv4
-  before_save :clear_on_mode_change, :populate_first_pool_if_empty, :clear_offset
+  before_save :clear_on_mode_change, :populate_first_pool_if_empty,
+    :clear_offset, :set_to_connection_if_first_address
   after_save :fix_connection_flag
 
   validate :check_ip_offset6, :check_ip_offset4, :check_overlap
@@ -149,7 +150,7 @@ class Address < ApplicationRecord
       1.upto(virtual_machine.custom_instance_count).map do |seq|
         ip_object(seq)
       end
-    elsif !address_pool.numbered? && virtual_machine.deploy_count > 1
+    elsif !(address_pool || network).numbered? && virtual_machine.deploy_count > 1
       1.upto(virtual_machine.deploy_count).map do |team_nr|
         ip_object(nil, team_nr)
       end
@@ -161,12 +162,14 @@ class Address < ApplicationRecord
   private
     def check_overlap
       return unless offset && !vip?
-      other_used_addresses = address_pool.addresses
-        .where.not(id: id)
+      errors.add(:offset, :overlap) if (other_used_addresses & all_ip_objects).any?
+    end
+
+    def other_used_addresses
+      (needs_pool? ? address_pool.addresses : network.addresses)
+        .where.not(id:)
         .where(mode: self.mode)
         .all_ip_objects
-
-      errors.add(:offset, :overlap) if (other_used_addresses & all_ip_objects).any?
     end
 
     def parse_ipv6
@@ -231,6 +234,11 @@ class Address < ApplicationRecord
     def clear_offset
       return true if !mode_changed? || new_record?
       self.offset = nil
+      true
+    end
+
+    def set_to_connection_if_first_address
+      self.connection = true if virtual_machine.addresses.empty?
       true
     end
 

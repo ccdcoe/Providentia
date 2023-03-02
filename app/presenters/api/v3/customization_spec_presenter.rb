@@ -2,39 +2,44 @@
 
 module API
   module V3
-    class VirtualMachinePresenter < Struct.new(:vm)
+    class CustomizationSpecPresenter < Struct.new(:spec)
       delegate :team,
         :operating_system,
         :deploy_mode, :deploy_mode_single?,
         to: :vm
 
       def as_json(_opts)
-        Rails.cache.fetch(['apiv3', vm]) do
+        Rails.cache.fetch(['apiv3', vm, spec]) do
           {
-            id: vm.name,
+            id: spec.slug,
+            customization_context: spec.mode,
             owner: vm.system_owner&.name,
             description: vm.description,
-            role: vm.role.presence || vm.name,
+            role: spec.role,
             team_name: vm.team.name.downcase,
             bt_visible: vm.api_bt_visible,
             hardware_cpu: vm.cpu || vm.operating_system&.applied_cpu,
             hardware_ram: vm.ram || vm.operating_system&.applied_ram,
             hardware_primary_disk_size: vm.primary_disk_size || vm.operating_system&.applied_primary_disk_size,
-            tags: tags,
-            capabilities: capabilities,
-            services: services
+            tags:,
+            capabilities:,
+            services:
           }
           .merge(sequence_info)
-          .merge({ instances: instances })
+          .merge({ instances: })
         end
       end
 
       def sequential_group
         return unless vm.custom_instance_count.to_i > 1
-        "sequential_#{vm.name}".tr('-', '_')
+        "sequential_#{spec.slug}".tr('-', '_')
       end
 
       private
+        def vm
+          spec.virtual_machine
+        end
+
         def tags
           [
             sequential_group,
@@ -42,21 +47,22 @@ module API
             (operating_system&.path || []).map(&:api_short_name),
             team.api_short_name,
             ("#{team.api_short_name}_#{deploy_mode}_numbered" if !deploy_mode_single? && !team.blue?),
-            vm.capabilities.map(&:api_short_name)
+            ('customization_container' if spec.mode_container?),
+            spec.capabilities.map(&:api_short_name)
           ].flatten.compact
         end
 
         def services
-          vm.services.map(&:name)
+          spec.services.map(&:name)
         end
 
         def instances
-          vm.deployable_instances(VmInstancePresenter).map(&:as_json)
+          spec.deployable_instances(InstancePresenter).map(&:as_json)
         end
 
         def capabilities
           Capability.where(
-            id: vm.capability_ids + vm.connection_nic&.network&.capability_ids.to_a
+            id: spec.capability_ids + vm.connection_nic&.network&.capability_ids.to_a
           ).pluck(:slug)
         end
 

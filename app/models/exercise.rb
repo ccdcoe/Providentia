@@ -14,6 +14,7 @@ class Exercise < ApplicationRecord
   has_many :services
   has_many :capabilities
   has_many :addresses, through: :virtual_machines
+  has_many :customization_specs, through: :virtual_machines
 
   validates :blue_team_count, :dev_team_count,
     numericality: { only_integer: true, greater_than_or_equal_to: 1 },

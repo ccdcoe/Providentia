@@ -30,7 +30,7 @@ class UnsubstitutedAddress < Patterns::Calculation
 
     def process
       NumberingTools.unsubstitute(
-        template_string: template_string, input: substitution_step
+        template_string:, input: substitution_step
       )
     end
 

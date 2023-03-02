@@ -5,7 +5,7 @@
 
     = render ColumnFormSectionComponent.new(disabled: !policy(@virtual_machine).update?) do |c|
       - c.description do
-        %h3.text-lg.font-medium.leading-6.text-gray-900.dark:text-gray-50 Identity
+        %h3.text-lg.leading-6.text-gray-900.dark:text-gray-50 Identity
         %p.mt-1.text-gray-600.dark:text-gray-400
           Name, owner and other identity information for this VM
 
@@ -17,39 +17,15 @@
             - if @virtual_machine.team&.green?
               = f.input :bt_visible, wrapper_class: 'mt-6 p-2.5'
 
-          .grid.gap-6.grid-cols-2
-            %div= f.input :hostname, hint: 'Name will be used by default', placeholder: @virtual_machine.name
-            %div= f.input :role, hint: 'Name will be used by default', placeholder: @virtual_machine.name
-
-            .col-span-2= f.association :system_owner, collection: @system_owners, input_html: { data: { controller: 'select' } }
-            .col-span-2= f.input :description
+          = f.association :system_owner, collection: @system_owners, input_html: { data: { controller: 'select' } }
+          = f.input :description
 
     .py-5
       .border-t.border-gray-200.dark:border-gray-600
 
     = render ColumnFormSectionComponent.new(disabled: !policy(@virtual_machine).update?) do |c|
       - c.description do
-        %h3.text-lg.font-medium.leading-6.text-gray-900.dark:text-gray-50 Services & Capabilities
-        %p.mt-1.text-gray-600.dark:text-gray-400
-          %strong Capabilities
-          this VM is part of
-
-        %p.mt-1.text-gray-600.dark:text-gray-400
-          Required
-          %strong BT
-          services for this VM
-
-      - c.main do
-        .px-4.py-5.bg-white.dark:bg-gray-800.space-y-6.p-6
-          = f.association :capabilities, collection: @capabilities, input_html: { data: { controller: 'select' }}
-          = f.association :services, collection: @services, disabled: @exercise.services_read_only && !current_user.admin?, input_html: { data: { controller: 'select' }}
-
-    .py-5
-      .border-t.border-gray-200.dark:border-gray-600
-
-    = render ColumnFormSectionComponent.new(disabled: !policy(@virtual_machine).update?) do |c|
-      - c.description do
-        %h3.text-lg.font-medium.leading-6.text-gray-900.dark:text-gray-50 Hardware
+        %h3.text-lg.leading-6.text-gray-900.dark:text-gray-50 Hardware
         %p.mt-1.text-gray-600.dark:text-gray-400 Resources for this VM
         %p.mt-1.text-gray-600.dark:text-gray-400 Default vCPU and RAM for operating system will be used, if left blank
 
@@ -77,13 +53,33 @@
 
     = render ColumnFormSectionComponent.new(disabled: !policy(@virtual_machine).update?) do |c|
       - c.description do
-        %h3.text-lg.font-medium.leading-6.text-gray-900.dark:text-gray-50 Deployment
+        %h3.text-lg.leading-6.text-gray-900.dark:text-gray-50 Deployment
         %p.mt-1.text-gray-600.dark:text-gray-400
           Strategy and count of VM-s to be deployed
 
       - c.main do
         .px-4.py-5.bg-white.dark:bg-gray-800.space-y-6.p-6
-          .gap-6{class: 'w-1/2'}
-            .col-span-3= f.input :deploy_mode, collection: deploy_modes, include_blank: false, disabled: @virtual_machine.forced_bt_numbering?, input_html: { data: { controller: 'select' } }
-          .gap-6{class: 'w-1/2'}
-            .col-span-3= f.input :custom_instance_count
+          .grid.gap-6.grid-cols-2
+            = f.input :deploy_mode, collection: deploy_modes, include_blank: false, disabled: @virtual_machine.forced_bt_numbering?, input_html: { data: { controller: 'select' } }
+            = f.input :custom_instance_count
+
+  .py-5
+    .border-t.border-gray-200.dark:border-gray-600
+
+  = render ColumnFormSectionComponent.new(disabled: !policy(@virtual_machine).update?) do |c|
+    - c.description do
+      %h3.text-lg.font-medium.leading-6.text-gray-900.dark:text-gray-50 Customization
+      %p.mt-1.text-gray-600.dark:text-gray-400
+        Defines how instances of this host are customized
+
+    - c.main do
+      .bg-white.dark:bg-gray-800
+        .flex.py-2.px-3.gap-2.items-center.bg-gray-50.dark:bg-gray-500
+          %h1.grow.text-2xl.font-bold.m-2= CustomizationSpec.model_name.human.pluralize
+          = form_with(url: [@virtual_machine.exercise, @virtual_machine, :customization_specs]) do |_form|
+            %button.form-submit-add.text-sm.h-8{type: 'submit'}
+              %i.fas.fa-plus.self-center
+              Add customization spec
+
+        #customization_specs.divide-y-4.divide-double.divide-gray-200.dark:divide-gray-500
+          = render @virtual_machine.customization_specs.sort

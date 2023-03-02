@@ -6,7 +6,7 @@
 
   = render ColumnFormSectionComponent.new(disabled: !policy(@network).update?) do |c|
     - c.description do
-      %h3.text-lg.font-medium.leading-6.text-gray-900.dark:text-gray-50 Identity
+      %h3.text-lg.leading-6.text-gray-900.dark:text-gray-50 Identity
       %p.mt-1.text-sm.text-gray-600.dark:text-gray-400
         Name and abbreviation for this network
 
@@ -28,7 +28,7 @@
 
   = render ColumnFormSectionComponent.new(disabled: !policy(@network).update?) do |c|
     - c.description do
-      %h3.text-lg.font-medium.leading-6.text-gray-900.dark:text-gray-50 Connection
+      %h3.text-lg.leading-6.text-gray-900.dark:text-gray-50 Connection
       %p.mt-1.text-sm.text-gray-600.dark:text-gray-400
         Backing connection for this network in virtualized environment
 
@@ -52,7 +52,7 @@
 
   = render ColumnFormSectionComponent.new(disabled: !policy(@network).update?) do |c|
     - c.description do
-      %h3.text-lg.font-medium.leading-6.text-gray-900.dark:text-gray-50 DNS
+      %h3.text-lg.leading-6.text-gray-900.dark:text-gray-50 DNS
       %p.mt-1.text-sm.text-gray-600.dark:text-gray-400
         Nameserver related settings
 

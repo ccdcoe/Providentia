@@ -8,7 +8,7 @@ class AddressPoolsController < ApplicationController
 
   def create
     authorize @network, :update?
-    @address_pool = @network.address_pools.create(name: "New addresspool #{@network.address_pools.size+1}")
+    @address_pool = @network.address_pools.create(name: "New addresspool #{@network.address_pools.size + 1}")
   end
 
   def update

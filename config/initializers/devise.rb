@@ -279,6 +279,8 @@ Devise.setup do |config|
     scope: ENV.fetch('AUTH_MODE', 'scope') == 'scope' ? [:resources] : [],
     discovery: true,
     issuer: Rails.configuration.oidc_issuer,
+    # post_logout_redirect_uri: base_url
+    # this is currently not working
     client_options: {
       identifier: ENV.fetch('KEYCLOAK_CLIENT_ID', ''),
       secret: ENV.fetch('KEYCLOAK_CLIENT_SECRET', ''),

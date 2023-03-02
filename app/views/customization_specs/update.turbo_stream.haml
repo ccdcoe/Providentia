@@ -1,0 +1,8 @@
+- if @customization_spec.mode_host?
+  - @customization_spec.virtual_machine.customization_specs.each do |spec|
+    = turbo_stream.replace dom_id(spec) do
+      = render spec
+
+- else
+  = turbo_stream.replace dom_id(@customization_spec) do
+    = render @customization_spec

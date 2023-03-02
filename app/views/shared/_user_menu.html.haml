@@ -6,9 +6,9 @@
   .z-10.absolute.top-full.right-0.mt-2.w-44.hidden{"data-dropdown-target" => "menu"}
     .bg-white.border.border-gray-200.rounded.shadow-lg.overflow-hidden.py-1
       .pb-2.px-3.mb-1.border-b.border-gray-200{:class => "pt-0.5"}
-        .font-medium.text-gray-800= current_user.name
+        .text-gray-800= current_user.name
         - if current_user.admin?
           .text-xs.text-gray-500.italic Administrator
       %ul
         %li= link_to "API tokens", api_tokens_path, class: 'font-medium text-sm text-indigo-500 hover:text-indigo-600 flex items-center py-1 px-3'
-        %li= link_to "Sign Out", destroy_user_session_path, method: :delete, class: 'font-medium text-sm text-indigo-500 hover:text-indigo-600 flex items-center py-1 px-3', data: { type: 'html'}
+        %li= button_to "Sign Out", destroy_user_session_path, method: :delete, class: 'font-medium text-sm text-indigo-500 hover:text-indigo-600 flex items-center py-1 px-3', data: { type: 'html', turbo: false }

@@ -1,6 +1,6 @@
 .bg-white.dark:bg-gray-800.shadow.overflow-hidden.rounded-lg.mb-6
   .flex.items-center.justify-end.px-6.py-5
-    %h3.flex-grow.text-lg.leading-6.font-medium.text-gray-900.dark:text-gray-300
+    %h3.flex-grow.text-lg.leading-6.text-gray-900.dark:text-gray-300
       Exercise information
     - if policy(@exercise).update?
       %hr.w-px.h-6.bg-gray-200.dark:bg-gray-400.dark:border-gray-400.mx-3.justify-self-end/
@@ -10,19 +10,19 @@
     %dl
       .px-6.py-5.grid.grid-cols-12.gap-4
         .col-span-3
-          %dt.text-sm.font-medium.text-gray-500.dark:text-gray-400= Exercise.human_attribute_name(:abbreviation)
+          %dt.text-sm.text-gray-500.dark:text-gray-400= Exercise.human_attribute_name(:abbreviation)
           %dd.mt-1.text-sm.text-gray-900.dark:text-white.mt-0= @exercise.abbreviation
 
         .col-span-3
-          %dt.text-sm.font-medium.text-gray-500.dark:text-gray-400= Exercise.human_attribute_name(:mode)
+          %dt.text-sm.text-gray-500.dark:text-gray-400= Exercise.human_attribute_name(:mode)
           %dd.mt-1.text-sm.text-gray-900.dark:text-white.mt-0= @exercise.mode.capitalize
 
         .col-span-3
-          %dt.text-sm.font-medium.text-gray-500.dark:text-gray-400= Exercise.human_attribute_name(:root_domain)
+          %dt.text-sm.text-gray-500.dark:text-gray-400= Exercise.human_attribute_name(:root_domain)
           %dd.mt-1.text-sm.text-gray-900.dark:text-white.mt-0= @exercise.root_domain
 
       .px-6.py-5
-        %dt.text-sm.font-medium.text-gray-500.dark:text-gray-400= Exercise.human_attribute_name(:description)
+        %dt.text-sm.text-gray-500.dark:text-gray-400= Exercise.human_attribute_name(:description)
         %dd.mt-1.text-sm.text-gray-900.dark:text-white.mt-0.col-span-2= @exercise.description
 
       .py-1
@@ -33,11 +33,11 @@
           %span.font-bold Teams
           .grid.grid-flow-col.gap-6.auto-cols-fr
             %div
-              %dt.text-sm.font-medium.text-gray-500= Exercise.human_attribute_name(:blue_team_count)
+              %dt.text-sm.text-gray-500= Exercise.human_attribute_name(:blue_team_count)
               %dd.mt-1.text-sm.text-gray-900.dark:text-white.mt-0= @exercise.blue_team_count
 
             %div
-              %dt.text-sm.font-medium.text-gray-500= Exercise.human_attribute_name(:dev_team_count)
+              %dt.text-sm.text-gray-500= Exercise.human_attribute_name(:dev_team_count)
               %dd.mt-1.text-sm.text-gray-900.dark:text-white.mt-0= @exercise.dev_team_count
 
       .py-1
@@ -55,15 +55,15 @@
 
           .grid.grid-flow-col.gap-4.auto-cols-fr
             %div
-              %dt.text-sm.font-medium.text-gray-500 Virtual machines
+              %dt.text-sm.text-gray-500 Virtual machines
               %dd.mt-1.text-sm.text-gray-900.dark:text-white.mt-0= policy_scope(@exercise.virtual_machines).size
 
             %div
-              %dt.text-sm.font-medium.text-gray-500 Virtual machine instances
+              %dt.text-sm.text-gray-500 Virtual machine instances
               %dd.mt-1.text-sm.text-gray-900.dark:text-white.mt-0= policy_scope(@exercise.virtual_machines).map(&:deploy_count).inject(&:+)
 
             %div
-              %dt.text-sm.font-medium.text-gray-500 Networks
+              %dt.text-sm.text-gray-500 Networks
               %dd.mt-1.text-sm.text-gray-900.dark:text-white.mt-0= @exercise.networks.size
 
         - cache(['resource', @exercise.virtual_machines]) do
@@ -72,15 +72,15 @@
 
             .grid.grid-flow-col.gap-4.auto-cols-fr
               %div
-                %dt.text-sm.font-medium.text-gray-500= OperatingSystem.human_attribute_name(:cpu)
+                %dt.text-sm.text-gray-500= OperatingSystem.human_attribute_name(:cpu)
                 %dd.mt-1.text-sm.text-gray-900.dark:text-white.mt-0= ExerciseResourceUsage.result_for(@exercise).cpu
 
               %div
-                %dt.text-sm.font-medium.text-gray-500= OperatingSystem.human_attribute_name(:ram)
+                %dt.text-sm.text-gray-500= OperatingSystem.human_attribute_name(:ram)
                 %dd.mt-1.text-sm.text-gray-900.dark:text-white.mt-0
                   %span{title: "#{ExerciseResourceUsage.result_for(@exercise).ram} GB"}= number_to_human_size ExerciseResourceUsage.result_for(@exercise).ram*1024*1024*1024
 
               %div
-                %dt.text-sm.font-medium.text-gray-500= OperatingSystem.human_attribute_name(:primary_disk_size)
+                %dt.text-sm.text-gray-500= OperatingSystem.human_attribute_name(:primary_disk_size)
                 %dd.mt-1.text-sm.text-gray-900.dark:text-white.mt-0
                   %span{title: "#{ExerciseResourceUsage.result_for(@exercise).primary_disk_size} GB"}= number_to_human_size ExerciseResourceUsage.result_for(@exercise).primary_disk_size*1024*1024*1024

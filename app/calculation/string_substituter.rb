@@ -13,7 +13,7 @@ class StringSubstituter < Patterns::Calculation
     end
 
     def liquid_substitution
-      Liquid::Template.parse(subject)
+      Liquid::Template.parse(subject, error_mode: :strict)
         .render(options.slice(*VALID_LIQUID_KEYS).stringify_keys)
     end
 end

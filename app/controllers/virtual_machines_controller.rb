@@ -3,6 +3,8 @@
 class VirtualMachinesController < ApplicationController
   before_action :get_exercise
   before_action :get_virtual_machine, only: %i[update destroy]
+  include VmPage # needs to be after other stuff
+  skip_before_action :preload_form_collections, only: %i[index]
 
   def index
     @virtual_machines = policy_scope(@exercise.virtual_machines)
@@ -40,24 +42,22 @@ class VirtualMachinesController < ApplicationController
       .virtual_machines
       .includes(
           :team,
-          :capabilities,
-          :services,
           :operating_system,
           networks: [:exercise],
           network_interfaces: [{ addresses: [:network] }, { network: [:team] }]
         )
       .find(params[:id])
 
+    authorize @virtual_machine
+  end
+
+  def update
     @teams = policy_scope(Team).load_async
     @system_owners = policy_scope(User).order(:name).load_async
     @capabilities = policy_scope(@exercise.capabilities).load_async
     @services = policy_scope(@exercise.services).load_async
 
-    authorize @virtual_machine
-  end
-
-  def update
-    @virtual_machine.update(update_params)
+    @virtual_machine.update(virtual_machine_params)
   end
 
   def destroy
@@ -73,7 +73,7 @@ class VirtualMachinesController < ApplicationController
     def filter_by_team
       return unless params[:team].present?
       team = policy_scope(Team).find_by(name: params[:team])
-      @virtual_machines = @virtual_machines.where(team: team)
+      @virtual_machines = @virtual_machines.where(team:)
     end
 
     def filter_by_name
@@ -83,21 +83,10 @@ class VirtualMachinesController < ApplicationController
 
     def virtual_machine_params
       params.require(:virtual_machine).permit(
-        :name, :hostname, :role,
-        :team_id, :bt_visible,
-        :description, :deploy_mode, :custom_instance_count,
+        :name, :team_id, :bt_visible,
+        :system_owner_id, :description,
+        :deploy_mode, :custom_instance_count,
         :operating_system_id, :cpu, :ram, :primary_disk_size,
-        :system_owner_id, { service_ids: [] }, { capability_ids: [] }
       )
-    end
-
-    def update_params
-      if current_user.admin? || !@virtual_machine.exercise.services_read_only
-        virtual_machine_params
-      else
-        virtual_machine_params.tap do |params|
-          params.delete(:service_ids)
-        end
-      end
     end
 end

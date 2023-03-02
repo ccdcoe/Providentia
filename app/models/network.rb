@@ -21,7 +21,7 @@ class Network < ApplicationRecord
 
   validates :name, :abbreviation, presence: true
 
-  scope :for_team, ->(team) { where(team: team) }
+  scope :for_team, ->(team) { where(team:) }
   scope :for_grouped_select, -> {
     order(:name).includes(:team).group_by { |network| network.team.name }
   }

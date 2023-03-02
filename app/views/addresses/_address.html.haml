@@ -11,8 +11,11 @@
 
       - elsif !address.fixed?
         .order-1.text-center.text-gray-500 Automatic configuration
+        - if address.connection?
+          .order-4.shrink-0.self-center.inline-flex.items-center.justify-center.rounded-full.bg-orange-200.text-orange-800.w-7.h-7{title: Address.human_attribute_name(:connection)}
+            %i.fas.fa-cogs.text-sm
 
-      .order-last.mt-1
+      .order-last
         .relative.inline-flex{"data-controller" => "dropdown"}
           .inline-flex.justify-center.items-center.group.select-none{"data-action" => "click->dropdown#toggle click@window->dropdown#hide", "data-dropdown-target" => "button", :role => "button", :tabindex => "0"}
             %button.form-submit{type: :button}
@@ -20,18 +23,17 @@
           .z-10.absolute.top-full.right-0.mt-2.w-44.hidden{"data-dropdown-target" => "menu"}
             .bg-white.border.border-gray-200.rounded.shadow-lg.overflow-hidden
               %ul.text-gray-900
-                - if address.fixed?
-                  %li.p-1.px-2
-                    %label
-                      = form.check_box :connection
-                      = Address.human_attribute_name(:connection)
+                %li.p-1.px-2
+                  %label
+                    = form.check_box :connection
+                    = Address.human_attribute_name(:connection)
 
                 %li.text-red-600.italic.border-t.border-gray-200.p-1.px-2
                   = link_to 'javascript:;', data: { action: "model#delete", confirm: 'Are you sure?' } do
                     Remove
 
 
-    .mt-3.flex.flex-row.empty:hidden<
+    .mt-3.flex.flex-row.flex-wrap.empty:hidden<
       - case address.mode
       - when "ipv4_static"
         - if address.address_pool.present?
@@ -53,9 +55,10 @@
               = address.ip_family_network.prefix
 
           - if address.errors[:parsed_ipv6].any? || address.errors[:offset].any?
-            %span.text-red-600= address.errors.to_hash.values_at(:parsed_ipv6, :offset).join ', '
+            .w-full
+              %span.text-red-600= address.errors.to_hash.values_at(:parsed_ipv6, :offset).join ', '
 
-      - if address.connection?
+      - if address.connection? && address.fixed?
         .shrink-0.ml-2.self-center.inline-flex.items-center.justify-center.rounded-full.bg-orange-200.text-orange-800.w-7.h-7{title: Address.human_attribute_name(:connection)}
           %i.fas.fa-cogs.text-sm
 

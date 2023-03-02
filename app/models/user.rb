@@ -17,12 +17,12 @@ class User < ApplicationRecord
     permissions = UserPermissions.result_for(resources)
     return unless permissions
 
-    user = find_by(uid: uid) || find_by(email: email)
-    user ||= create(uid: uid)
+    user = find_by(uid:) || find_by(email:)
+    user ||= create(uid:)
     user.update({
-      uid: uid,
-      email: email || "",
-      permissions: permissions
+      uid:,
+      email: email || '',
+      permissions:
     }.merge(extra_fields))
     user
   end

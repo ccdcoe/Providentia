@@ -1,14 +1,14 @@
 # frozen_string_literal: true
 
-class VirtualMachineInstance < Struct.new(:virtual_machine, :sequential_number, :team_number)
-  delegate :role, :name, :team,
+class VirtualMachineInstance < Struct.new(:spec, :sequential_number, :team_number)
+  delegate :name, :team,
     :operating_system,
     :deploy_mode, :deploy_mode_single?,
     :connection_nic,
-    to: :virtual_machine
+    to: :vm
 
   def hostname
-    @hostname ||= computed_hostname(virtual_machine.actual_hostname)
+    @hostname ||= computed_hostname(spec.hostname)
   end
 
   def inventory_name
@@ -20,11 +20,11 @@ class VirtualMachineInstance < Struct.new(:virtual_machine, :sequential_number, 
   end
 
   def cpu
-    virtual_machine.cpu || virtual_machine.operating_system&.applied_cpu
+    vm.cpu || vm.operating_system&.applied_cpu
   end
 
   def ram
-    ram_size = virtual_machine.ram || virtual_machine.operating_system&.applied_ram
+    ram_size = vm.ram || vm.operating_system&.applied_ram
     return unless ram_size
     ram_size * 1024
   end
@@ -34,33 +34,33 @@ class VirtualMachineInstance < Struct.new(:virtual_machine, :sequential_number, 
   end
 
   def sequential_group
-    return unless virtual_machine.custom_instance_count.to_i > 1
-    "sequential_#{virtual_machine.name}".tr('-', '_')
+    return unless vm.custom_instance_count.to_i > 1
+    "sequential_#{vm.name}".tr('-', '_')
   end
 
   def to_ansible_acceptable_format
     {
       id: name,
       name: inventory_name,
-      owner: virtual_machine.system_owner&.name,
-      description: virtual_machine.description,
+      owner: vm.system_owner&.name,
+      description: vm.description,
       team: {
         name: team.name.downcase,
-        bt_visible: virtual_machine.api_bt_visible
+        bt_visible: vm.api_bt_visible
       },
-      capabilities: capabilities,
+      capabilities:,
       vars: ({
         id: name,
-        role: role.presence || name,
-        hostname: hostname,
+        role: spec.role,
+        hostname:,
         cpus: cpu,
-        ram: ram,
+        ram:,
         networks: networks.map(&:compact),
         }.tap do |inner_json|
-          if virtual_machine.custom_instance_count.to_i > 1
+          if vm.custom_instance_count.to_i > 1
             inner_json[:sequential_group] = sequential_group
             inner_json[:sequential_index] = sequential_number
-            inner_json[:sequential_count] = virtual_machine.custom_instance_count
+            inner_json[:sequential_count] = vm.custom_instance_count
           end
           if connection_nic && !deploy_mode_single?
             inner_json[:domain] = numbered_domain
@@ -71,19 +71,23 @@ class VirtualMachineInstance < Struct.new(:virtual_machine, :sequential_number, 
           end
         end).compact,
       groups: groups.compact,
-      services: services
+      services:
     }
   end
 
   def networks
-    @networks ||= virtual_machine.network_interfaces.select(&:persisted?).map do |nic|
+    @networks ||= vm.network_interfaces.select(&:persisted?).map do |nic|
       network_hash(nic)
     end
   end
 
   private
+    def vm
+      spec.virtual_machine
+    end
+
     def add_team_to_hostname?
-      virtual_machine.networks.any? { |net| !net.numbered? } && team_number
+      vm.networks.any? { |net| !net.numbered? } && team_number
     end
 
     def computed_hostname(source)
@@ -110,7 +114,7 @@ class VirtualMachineInstance < Struct.new(:virtual_machine, :sequential_number, 
         dns_enabled: nic.addresses.any?(&:dns_enabled?),
         no_address: nic.addresses.empty?
       }.tap do |network|
-        if virtual_machine.network_interfaces.egress.include?(nic)
+        if vm.network_interfaces.egress.include?(nic)
           ipv4_gateway = addresses.dig('ipv4_static', 0)&.address_pool&.gateway_ip(team_number)
           ipv6_gateway = addresses.dig('ipv6_static', 0)&.address_pool&.gateway_ip(team_number)
 
@@ -131,7 +135,7 @@ class VirtualMachineInstance < Struct.new(:virtual_machine, :sequential_number, 
     end
 
     def services
-      virtual_machine.services.map do |service|
+      vm.host_spec.services.map do |service|
         {
           name: service.name,
           checks: all_checks(service)
@@ -167,7 +171,7 @@ class VirtualMachineInstance < Struct.new(:virtual_machine, :sequential_number, 
 
     def capabilities
       Capability.where(
-        id: virtual_machine.capability_ids + connection_nic&.network&.capability_ids.to_a
+        id: vm.host_spec.capability_ids + connection_nic&.network&.capability_ids.to_a
       ).pluck(:slug)
     end
 end

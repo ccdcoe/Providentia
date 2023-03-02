@@ -14,7 +14,7 @@ class NetworkInterface < ApplicationRecord
   accepts_nested_attributes_for :addresses,
     reject_if: proc { |attributes| attributes.all? { |key, value| value.blank? || value == '0' } }
 
-  before_save :clear_address_on_network_change
+  before_save :network_change_cleanup
   after_save :update_vm_deploy_mode, if: :saved_change_to_network_id?
 
   validate :network_in_exercise
@@ -28,26 +28,6 @@ class NetworkInterface < ApplicationRecord
     'fa-network-wired'
   end
 
-  def fqdn
-    "#{hostname}.#{domain}"
-  end
-
-  def domain
-    network.full_domain.gsub(/#+/, '{{ team_nr }}')
-  end
-
-  def hostname
-    hostname_sequence_suffix = '{{ seq }}' if virtual_machine.custom_instance_count.to_i > 1
-    hostname_team_suffix = '{{ team_nr }}' if !virtual_machine.deploy_mode_single? && !network&.numbered?
-
-    sequences = [
-      hostname_sequence_suffix,
-      hostname_team_suffix
-    ].compact
-
-    "#{virtual_machine.actual_hostname}#{sequences.join('_')}"
-  end
-
   def connection?
     addresses.any?(&:connection?)
   end
@@ -59,9 +39,10 @@ class NetworkInterface < ApplicationRecord
       errors.add(:network, :invalid)
     end
 
-    def clear_address_on_network_change
+    def network_change_cleanup
       return unless persisted? && network_id_changed?
       addresses.update_all offset: nil, address_pool_id: nil
+      addresses.each(&:save) # will set correct addresspool
     end
 
     def update_vm_deploy_mode

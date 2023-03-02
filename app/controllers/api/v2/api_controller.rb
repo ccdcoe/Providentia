@@ -3,7 +3,7 @@
 module API
   module V2
     class APIController < ActionController::API
-      include Pundit
+      include Pundit::Authorization
 
       before_action :set_sentry_context, :skip_trackable, :authenticate_request
 

@@ -2,7 +2,7 @@
 
 module API
   module V3
-    class VmInstancePresenter < Struct.new(:vm, :sequential_number, :team_number)
+    class InstancePresenter < Struct.new(:spec, :sequential_number, :team_number)
       delegate :team,
         :operating_system,
         :deploy_mode, :deploy_mode_single?,
@@ -11,19 +11,27 @@ module API
       def as_json
         {
           id: inventory_name,
-          vm_name: vm_name,
+          vm_name:,
           team_unique_id: name,
-          hostname: hostname,
-          domain: substitute(vm.connection_nic&.domain.to_s),
-          fqdn: substitute(vm.connection_nic&.fqdn.to_s),
+          hostname:,
+          domain: substitute(connection_namespec.domain.to_s),
+          fqdn: substitute(connection_namespec.fqdn.to_s),
           connection_address: vm.addresses.find_by(connection: true)&.ip_object(sequential_number, team_number)&.address,
           interfaces: network_interfaces,
-          checks: checks,
+          checks:,
           config_map: {}
         }.merge(team_numbers).merge(sequence_info)
       end
 
       private
+        def vm
+          spec.virtual_machine
+        end
+
+        def connection_namespec
+          @connection_namespec ||= HostnameGenerator.result_for(spec)
+        end
+
         def substitute(text)
           StringSubstituter.result_for(
             text,
@@ -59,7 +67,7 @@ module API
         def inventory_name
           substitute(
             [
-              vm.name,
+              spec.slug,
               hostname_sequence_suffix,
               hostname_team_suffix
             ].compact.join('_')
@@ -69,33 +77,36 @@ module API
         def name
           substitute(
             [
-              vm.name,
+              spec.slug,
               hostname_sequence_suffix
             ].compact.join('_')
           )
         end
 
         def vm_name
-          substitute("#{vm.exercise.abbreviation}_#{vm.connection_nic&.fqdn}").downcase
+          host_spec = HostnameGenerator.result_for(vm.host_spec)
+          substitute("#{vm.exercise.abbreviation}_#{host_spec.fqdn}").downcase
         end
 
         def hostname
           substitute(
-            (
-              vm.network_interfaces.find { |nic| !nic.network.numbered? } ||
-              vm.network_interfaces.first ||
-              vm.dup.network_interfaces.build
+            HostnameGenerator.result_for(
+              spec,
+              nic: vm.network_interfaces.find { |nic| !nic.network.numbered? } ||
+                vm.network_interfaces.first ||
+                vm.dup.network_interfaces.build
             ).hostname
           )
         end
 
         def network_interfaces
           vm.network_interfaces.map do |nic|
+            namespec = HostnameGenerator.result_for(spec, nic:)
             {
               network_id: nic.network.slug,
               cloud_id: substitute(nic.network.cloud_id.to_s),
               domain: substitute(nic.network.full_domain),
-              fqdn: substitute(nic.fqdn),
+              fqdn: substitute(namespec.fqdn),
               egress: nic.egress?,
               connection: nic.addresses.any?(&:connection),
               addresses: nic.addresses.for_api.map do |address|
@@ -121,7 +132,7 @@ module API
         end
 
         def checks
-          vm
+          spec
             .services
             .flat_map do |service|
               service.service_checks.flat_map(&:virtual_checks).map(&:slug) +
@@ -130,7 +141,7 @@ module API
             .map { |check_name|
               {
                 id: check_name,
-                budget_id: "#{vm.name}_#{check_name}",
+                budget_id: "#{spec.slug}_#{check_name}",
                 exercise_unique_id: "#{inventory_name}_#{check_name}"
               }
             }

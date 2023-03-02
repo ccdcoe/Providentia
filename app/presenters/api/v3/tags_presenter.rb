@@ -4,7 +4,7 @@ module API
   module V3
     class TagsPresenter < Struct.new(:exercise, :scope)
       def as_json(_opts)
-        team_tags + os_tags + zone_tags + sequential_tags + numbered_tags + capability_tags
+        team_tags + os_tags + zone_tags + type_tags + sequential_tags + numbered_tags + capability_tags
       end
 
       private
@@ -57,10 +57,16 @@ module API
           end
         end
 
+        def type_tags
+          [{ id: 'customization_container', name: 'customization_container', config_map: {}, children: [] }]
+        end
+
         def sequential_tags
           Rails.cache.fetch(['apiv3', exercise, 'sequential', vm_scope.cache_key_with_version]) do
             vm_scope
-              .map { |vm| VirtualMachinePresenter.new(vm) }
+              .where.not(custom_instance_count: nil)
+              .flat_map(&:customization_specs)
+              .map { |spec| CustomizationSpecPresenter.new(spec) }
               .map(&:sequential_group)
               .uniq
               .compact

@@ -26,6 +26,7 @@ async function builder() {
     bundle: true,
     outdir: path.join(process.cwd(), "app/assets/builds"),
     absWorkingDir: path.join(process.cwd(), "app/javascript"),
+    logLevel: "info",
     incremental: true,
     banner: {
       js: ' (() => new EventSource("http://localhost:8082").onmessage = () => location.reload())();',

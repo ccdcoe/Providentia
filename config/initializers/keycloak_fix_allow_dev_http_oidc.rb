@@ -10,7 +10,7 @@ if Rails.env.development?
     end
 
     def endpoint
-      URI::Generic.build(scheme: scheme, host: host, port: port, path: path)
+      URI::Generic.build(scheme:, host:, port:, path:)
     rescue URI::Error => e
       raise SWD::Exception.new(e.message)
     end

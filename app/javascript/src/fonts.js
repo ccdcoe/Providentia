@@ -1,9 +1,11 @@
 // fonts
-import { dom, library } from "@fortawesome/fontawesome-svg-core";
+import { config, dom, library } from "@fortawesome/fontawesome-svg-core";
+
 import {
   faTimes,
   faTimesCircle,
   faPlus,
+  faBook,
   faFlask,
   faBox,
   faCogs,
@@ -31,10 +33,14 @@ import {
 
 import { faUbuntu, faWindows } from "@fortawesome/free-brands-svg-icons";
 
+// Make sure this is before any other `fontawesome` API calls
+config.autoAddCss = false;
+
 library.add(
   faTimes,
   faTimesCircle,
   faPlus,
+  faBook,
   faFlask,
   faBox,
   faCogs,

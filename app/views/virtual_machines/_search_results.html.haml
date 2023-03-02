@@ -17,7 +17,7 @@
           %td.px-6.py-4.text-sm= render TeamChipComponent.new(team: machine.team)
           %td.px-6.py-4= machine.system_owner&.name
           %td.px-6.py-4
-            .flex.flex-wrap.gap-1= render(CapabilityChipComponent.with_collection(machine.capabilities.pluck(:name)))
+            .flex.flex-wrap.gap-1= render(CapabilityChipComponent.with_collection(machine.customization_specs.flat_map(&:capabilities).pluck(:name)))
           %td.px-6.py-4
             - if machine.operating_system
               %i{class: machine.operating_system.to_icon}

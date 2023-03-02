@@ -3,13 +3,13 @@ en:
     messages:
       label_begins_or_ends_with_hyphen: label begins or ends with a hyphen
       missing_in_path: is missing for this record or its parent(s)
+      hostname_conflict: is conflicting with another DNS name
   activerecord:
     models:
       exercise: Environment
     errors:
       models:
         virtual_machine:
-          hostname_conflict: is conflicting with another hostname
           attributes:
             name:
               invalid: is invalid (must not contain _)
@@ -24,7 +24,6 @@ en:
         dev_red_resource_name: SSO resource name for RT access
         local_admin_resource_name: SSO resource name for exercise administration
       virtual_machine:
-        role: Customization role name
         cpu: vCPU count
         ram: RAM
         custom_instance_count: Sequential instances
@@ -44,6 +43,10 @@ en:
         ram: RAM
       address_pool:
         mode: IP family
+      customization_spec:
+        api_id: Instance ID in API
+        role_name: Customization role name
+        dns_name: DNS name
 
   pool_scopes:
     default: Default

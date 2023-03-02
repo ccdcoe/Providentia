@@ -20,7 +20,7 @@
 
   .bg-white.dark:bg-gray-800.flex-grow
     = form_with(model: [network_interface.exercise, network_interface.virtual_machine, network_interface], class: 'px-4 py-5', data: { controller: 'model', action: "change->model#update"}) do |form|
-      .text-sm.font-medium.text-gray-500.dark:text-gray-400= form.label :network_id
+      .text-sm.text-gray-500.dark:text-gray-400= form.label :network_id
 
       .flex.gap-4.items-center
         .flex-grow= form.grouped_collection_select :network_id, networks.for_grouped_select, :last, :first, :id, :abbreviation, {include_blank: true},  { data: { controller: 'select' }}

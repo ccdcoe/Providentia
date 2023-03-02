@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
-class AddressPreviewPresenter < Struct.new(:vm, :sequential_number, :team_number)
+class AddressPreviewPresenter < Struct.new(:spec, :sequential_number, :team_number)
   def name
-    substitute(vm.connection_nic&.fqdn.to_s)
+    substitute(HostnameGenerator.result_for(spec).fqdn)
   end
 
   def interfaces
@@ -23,6 +23,10 @@ class AddressPreviewPresenter < Struct.new(:vm, :sequential_number, :team_number
   end
 
   private
+    def vm
+      spec.virtual_machine
+    end
+
     def substitute(text)
       StringSubstituter.result_for(
         text,

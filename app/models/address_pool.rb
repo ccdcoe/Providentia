@@ -30,6 +30,8 @@ class AddressPool < ApplicationRecord
     allow_nil: true
   }, if: :ip_v6?
 
+  validate :parsed_network_address_valid?
+
   scope :for_address, ->(address) {
     where(ip_family: address.ipv4? ? :v4 : :v6)
   }
@@ -50,7 +52,7 @@ class AddressPool < ApplicationRecord
     Address.new(
       mode: address_mode,
       address_pool: self,
-      network: network,
+      network:,
       offset: gateway
     )
   end
@@ -113,6 +115,14 @@ class AddressPool < ApplicationRecord
         }
         address.update(offset: nil)
       end
+    end
+
+    def parsed_network_address_valid?
+      ip_network.present?
+    rescue Liquid::SyntaxError => e
+      errors.add(:network_address, "Invalid template syntax: #{e.message}")
+    rescue ArgumentError => e
+      errors.add(:network_address, "Parses to invalid address: #{e.message.match(/\A(?:Invalid IP|Unknown IP Address) "?(.*)"?\z/)[1]}")
     end
 
     def revert_invalid_network_values

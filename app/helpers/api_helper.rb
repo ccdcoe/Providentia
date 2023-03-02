@@ -19,7 +19,8 @@ module APIHelper
             'apiv2',
             @exercise,
             'host',
-            instance.virtual_machine,
+            instance.spec,
+            instance.spec.virtual_machine,
             instance.sequential_number,
             instance.team_number
           ]) do

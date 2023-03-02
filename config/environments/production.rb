@@ -54,7 +54,6 @@ Rails.application.configure do
   # Use a different cache store in production.
   # config.cache_store = :mem_cache_store
   config.cache_store = :redis_cache_store, {
-    driver: :hiredis,
     url: ENV.fetch('REDIS_URL') { 'redis://localhost:6379/0' },
 
     connect_timeout:    30,

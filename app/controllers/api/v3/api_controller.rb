@@ -15,10 +15,10 @@ module API
         end
 
         def render_error(status: 400, message:)
-          render status: status, json: {
+          render status:, json: {
             error: {
               code: status,
-              message: message
+              message:
             }
           }
         end

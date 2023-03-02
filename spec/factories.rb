@@ -2,6 +2,14 @@
 
 # This will guess the User class
 FactoryBot.define do
+  factory :customization_spec do
+    virtual_machine { nil }
+    name { 'MyString' }
+    role_name { 'MyString' }
+    dns_name { 'MyString' }
+    description { 'MyText' }
+  end
+
   factory :capability do
     name { 'MyString' }
     slug { 'MyString' }

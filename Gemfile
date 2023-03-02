@@ -22,6 +22,8 @@ gem 'jwt'
 gem 'http', '~> 5.0'
 gem 'turbo-rails', '~> 1.0'
 gem 'liquid', '~> 5.3'
+gem 'redis'
+gem 'hiredis', '~> 0.6.3'
 
 # functionality
 gem 'ipaddress', github: 'ipaddress-gem/ipaddress'
@@ -34,12 +36,12 @@ gem 'naturally', '~> 2.2'
 
 # markdown
 gem 'redcarpet'
-gem 'rouge', '~> 3.30'
+gem 'rouge'
 
 # auth
 gem 'devise'
 gem 'omniauth', '~> 2.0'
-gem 'omniauth_openid_connect', github: 'sping/omniauth_openid_connect'
+gem 'omniauth_openid_connect'
 gem 'omniauth-rails_csrf_protection'
 gem 'pundit'
 
@@ -73,6 +75,4 @@ group :development do
 end
 
 group :production do
-  gem 'redis'
-  gem 'hiredis', '~> 0.6.3'
 end

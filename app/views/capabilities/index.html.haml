@@ -10,7 +10,7 @@
     - @capabilities.each do |capability|
       - c.table_row do
         %td.px-6.py-4
-          .text-sm.font-medium
+          .text-sm
             = link_to_if policy(capability).show?, capability.name, [capability.exercise, capability], class: 'text-indigo-600 hover:text-indigo-900 dark:text-indigo-400'
 
         %td.px-6.py-4.whitespace-nowrap.text-right

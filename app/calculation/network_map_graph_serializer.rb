@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class NetworkMapGraphSerializer < Patterns::Calculation
-  class Presenter < ::API::V3::VmInstancePresenter
+  class Presenter < ::API::V3::InstancePresenter
     def to_node
       {
         id: inventory_name,

@@ -13,8 +13,11 @@ class VirtualMachine < ApplicationRecord
   belongs_to :operating_system, optional: true
   belongs_to :system_owner, class_name: 'User', inverse_of: :owned_systems, optional: true
   has_many :network_interfaces, dependent: :destroy
+  has_many :customization_specs, dependent: :destroy
   has_one :connection_nic, -> { connectable },
     class_name: 'NetworkInterface', foreign_key: :virtual_machine_id
+  has_one :host_spec, -> { mode_host },
+    class_name: 'CustomizationSpec', foreign_key: :virtual_machine_id
 
   has_many :networks, through: :network_interfaces
   has_many :addresses, through: :network_interfaces
@@ -26,28 +29,47 @@ class VirtualMachine < ApplicationRecord
   accepts_nested_attributes_for :network_interfaces,
     reject_if: proc { |attributes| attributes.all? { |key, value| value.blank? || value == '0' } }
 
-  scope :for_team, ->(team) { where(team: team) }
+  scope :for_team, ->(team) { where(team:) }
   scope :search, ->(query) {
-    columns = %w{virtual_machines.name virtual_machines.hostname users.name operating_systems.name}
-    left_outer_joins(:system_owner, :operating_system)
+    columns = %w{virtual_machines.name customization_specs.dns_name users.name operating_systems.name}
+    left_outer_joins(:system_owner, :operating_system, :customization_specs)
       .where(
         columns
           .map { |c| "lower(#{c}) like :search" }
           .join(' OR '),
         search: "%#{query.downcase}%"
       )
+      .group(:id)
   }
 
   validates :name, uniqueness: { scope: :exercise }, presence: true, length: { minimum: 1, maximum: 63 }, hostname: true
-  validates :hostname, length: { minimum: 1, maximum: 63, allow_blank: true }, hostname: { allow_blank: true }
   validates :ram, numericality: true, inclusion: 1..200, allow_blank: true
   validates :cpu, numericality: { only_integer: true }, inclusion: 1..100, allow_blank: true
   validates :custom_instance_count, numericality: { only_integer: true, greater_than_or_equal_to: 1 }, allow_blank: true
   validates_associated :network_interfaces
   validate :hostname_conflicts, :transfer_overlap_error
 
-  before_save :lowercase_ansible_fields, :reset_bt_visibility
+  before_validation :lowercase_fields
+  after_create :create_default_spec
+  before_save :reset_bt_visibility
+  after_update :sync_host_spec_name
   after_touch :ensure_nic_status
+
+  # TEMPORARY until migrated
+  def self.migrate_to_customization_specs
+    find_each do |vm|
+      vm.customization_specs.where(mode: 'host').first_or_create(
+        name: vm.name,
+        role_name: vm.role,
+        dns_name: vm.hostname,
+        description: vm.description
+      ).tap do |spec|
+        pp spec.errors
+        spec.capabilities << vm.capabilities
+        spec.services << vm.services
+      end
+    end
+  end
 
   def self.to_icon
     'fa-server'
@@ -61,21 +83,13 @@ class VirtualMachine < ApplicationRecord
     networks.any?(&:numbered?)
   end
 
-  def deployable_instances(presenter = VirtualMachineInstance)
-    generate_instance_array(:deploy_count)
-      .product(generate_instance_array(:custom_instance_count))
-      .map do |team_number, sequential_number|
-        presenter.new(self, sequential_number, team_number)
-      end
-  end
-
-  def single_network_instances(presenter = VirtualMachineInstance)
+  def single_network_instances(presenter)
     if !deploy_mode_single? && connection_nic.network.numbered?
-      generate_instance_array(:custom_instance_count).map do |seq|
-        presenter.new(self, seq, nil)
+      1.upto(custom_instance_count || 1).map do |seq|
+        presenter.new(host_spec, seq, nil)
       end
     else
-      deployable_instances(presenter)
+      host_spec.deployable_instances(presenter)
     end
   end
 
@@ -86,10 +100,6 @@ class VirtualMachine < ApplicationRecord
     else
       1
     end
-  end
-
-  def actual_hostname
-    hostname.presence || name
   end
 
   def api_bt_visible
@@ -104,14 +114,8 @@ class VirtualMachine < ApplicationRecord
   end
 
   private
-    def generate_instance_array(method)
-      Array.new([public_send(method) || 1, 1].max) { |i| [nil, 1].include?(public_send(method)) ? nil : i + 1 }
-    end
-
-    def lowercase_ansible_fields
+    def lowercase_fields
       name.downcase! if name
-      hostname.downcase! if hostname
-      role.downcase! if role
     end
 
     def hostname_conflicts
@@ -120,14 +124,15 @@ class VirtualMachine < ApplicationRecord
       query = VirtualMachine
         .from(
           VirtualMachine
-            .select("id, coalesce(NULLIF(hostname, ''), NULLIF(name, '')) as composite_name")
+            .joins(:customization_specs)
+            .select("virtual_machines.id, customization_specs.id as id2, coalesce(NULLIF(customization_specs.dns_name, ''), NULLIF(virtual_machines.name, '')) as composite_name")
             .where(id: (connection_nic&.network&.virtual_machine_ids || []) - [id])
         )
-        .where('composite_name = ?', actual_hostname)
+        .where('composite_name = ?', name)
         .exists?
 
       return unless query
-      errors.add(hostname.present? ? :hostname : :name, :hostname_conflict)
+      errors.add(:name, :hostname_conflict)
     end
 
     def transfer_overlap_error
@@ -148,6 +153,11 @@ class VirtualMachine < ApplicationRecord
       self.bt_visible = true
     end
 
+    def sync_host_spec_name
+      return unless name_previously_changed?
+      host_spec.update(name:)
+    end
+
     def has_unnumbered_nets?
       networks.any? { |net| !net.numbered? }
     end
@@ -158,5 +168,9 @@ class VirtualMachine < ApplicationRecord
         network_interfaces.first.update(egress: true) if network_interfaces.egress.empty?
         addresses.joins(:address_pool).mode_ipv4_static.update(connection: true) if network_interfaces.connectable.empty?
       end
+    end
+
+    def create_default_spec
+      customization_specs.create(mode: 'host', name:)
     end
 end

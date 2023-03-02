@@ -3,6 +3,6 @@
 class LiquidFQDNComponent < LiquidTooltipSnippetComponent
   private
     def template_text
-      @object.connection_nic&.fqdn
+      HostnameGenerator.result_for(@object.host_spec).fqdn
     end
 end

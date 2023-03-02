@@ -7,6 +7,7 @@ class ApplicationController < ActionController::Base
     :authenticate_user!, :set_paper_trail_whodunnit
 
   rescue_from Pundit::NotAuthorizedError, with: :user_not_authorized
+  rescue_from ActiveRecord::RecordNotFound, with: :user_not_authorized
 
   private
     def load_exercises

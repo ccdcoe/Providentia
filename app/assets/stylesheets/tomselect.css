@@ -195,7 +195,7 @@
 
 .disabled .ts-control,
 .disabled .ts-control * {
-  cursor: default !important;
+  cursor: not-allowed !important;
 }
 
 .ts-control > * {

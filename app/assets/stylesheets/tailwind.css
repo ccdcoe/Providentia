@@ -4,6 +4,10 @@
 
 @layer components {
   /* simple_form hacks */
+  .form-input {
+    @apply disabled:cursor-not-allowed disabled:opacity-75;
+  }
+
   .form-input:not(.boolean):not(.ts-wrapper):not([hidden]) {
     @apply mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm border-gray-300 rounded-md dark:bg-gray-500 dark:border-black dark:placeholder:text-gray-400;
   }

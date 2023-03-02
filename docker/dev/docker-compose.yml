@@ -13,7 +13,7 @@ services:
       - POSTGRES_DB=keycloak
 
   keycloak:
-    image: bitnami/keycloak:18.0.2
+    image: bitnami/keycloak:19.0.1
     depends_on:
       - keycloak_db
     ports:
@@ -39,7 +39,7 @@ services:
       - VIRTUAL_PORT=8080
 
   keycloak_config:
-    image: adorsys/keycloak-config-cli:latest-18.0.2
+    image: adorsys/keycloak-config-cli:latest-19.0.1
     depends_on:
       - keycloak
     volumes:
@@ -109,7 +109,6 @@ services:
     build:
       context: ../../
       dockerfile: Dockerfile
-    restart: on-failure
     tty: true
     volumes:
       - ../../:/srv/app
@@ -123,11 +122,10 @@ services:
     build:
       context: ../../
       dockerfile: Dockerfile
-    restart: on-failure
     tty: true
     volumes:
       - ../../:/srv/app
-    command: ["yarn", "build:css", "--watch"]
+    command: ["yarn", "build:css", "--verbose", "--watch"]
 
   omgwtfssl:
     image: paulczar/omgwtfssl

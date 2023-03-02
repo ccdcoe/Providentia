@@ -38,16 +38,24 @@ module API
               {
                 network_interfaces: [
                   {
-                    network: [:team, :exercise]
+                    network: [:exercise]
                   }
                 ],
               },
-              { addresses: [:network] },
-              { services: [
-                { service_checks: [:network] },
-                { special_checks: [:network] }
-              ] },
+              {
+                host_spec: [
+                  { virtual_machine: [:exercise] },
+                  {
+                    services: {
+                      service_checks: [],
+                      special_checks: [:network]
+                    },
+                  },
+                ]
+              },
+              { addresses: [:address_pool] },
               :operating_system,
+              :connection_nic,
               :system_owner,
               :networks,
               :team,
@@ -55,7 +63,7 @@ module API
         end
 
         def machine_instances
-          virtual_machines.flat_map(&:deployable_instances)
+          virtual_machines.flat_map { |vm| vm.host_spec.deployable_instances }
         end
     end
   end

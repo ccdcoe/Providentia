@@ -1,8 +1,30 @@
-@import url("https://fonts.googleapis.com/css2?family=Lusitana:wght@400;700&family=Raleway:wght@400;600;700&display=swap");
 @import "tippy.js/dist/tippy.css";
 @import "./tailwind.css";
 @import "./tomselect.css";
 @import "./highlight.css";
+@import "@fortawesome/fontawesome-svg-core/styles.css";
+
+@font-face {
+  font-family: "Lusitana";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("./fonts/Lusitana-Regular.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "Lusitana";
+  font-style: bold;
+  font-weight: 700;
+  font-display: swap;
+  src: url("./fonts/Lusitana-Bold.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "Raleway";
+  font-display: swap;
+  src: url("./fonts/Raleway-VariableFont_wght.ttf") format("truetype");
+}
 
 /* Chrome, Safari and Opera */
 .no-scrollbar::-webkit-scrollbar {

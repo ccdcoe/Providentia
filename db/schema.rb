@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_09_01_074149) do
+ActiveRecord::Schema[7.0].define(version: 2022_09_01_075645) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -62,6 +62,12 @@ ActiveRecord::Schema[7.0].define(version: 2022_09_01_074149) do
     t.index ["exercise_id"], name: "index_capabilities_on_exercise_id"
   end
 
+  create_table "capabilities_customization_specs", id: false, force: :cascade do |t|
+    t.bigint "capability_id", null: false
+    t.bigint "customization_spec_id", null: false
+    t.index ["customization_spec_id", "capability_id"], name: "spec_capability_index"
+  end
+
   create_table "capabilities_networks", id: false, force: :cascade do |t|
     t.bigint "capability_id", null: false
     t.bigint "network_id", null: false
@@ -72,6 +78,26 @@ ActiveRecord::Schema[7.0].define(version: 2022_09_01_074149) do
     t.bigint "capability_id", null: false
     t.bigint "virtual_machine_id", null: false
     t.index ["virtual_machine_id", "capability_id"], name: "vm_capability_index"
+  end
+
+  create_table "customization_specs", force: :cascade do |t|
+    t.bigint "virtual_machine_id", null: false
+    t.integer "mode", default: 1, null: false
+    t.string "name"
+    t.string "slug"
+    t.string "role_name"
+    t.string "dns_name"
+    t.text "description"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["name", "virtual_machine_id"], name: "index_customization_specs_on_name_and_virtual_machine_id", unique: true
+    t.index ["virtual_machine_id"], name: "index_customization_specs_on_virtual_machine_id"
+  end
+
+  create_table "customization_specs_services", id: false, force: :cascade do |t|
+    t.bigint "service_id", null: false
+    t.bigint "customization_spec_id", null: false
+    t.index ["customization_spec_id", "service_id"], name: "spec_service_index"
   end
 
   create_table "exercises", force: :cascade do |t|
@@ -231,6 +257,7 @@ ActiveRecord::Schema[7.0].define(version: 2022_09_01_074149) do
   add_foreign_key "addresses", "network_interfaces"
   add_foreign_key "api_tokens", "users"
   add_foreign_key "capabilities", "exercises"
+  add_foreign_key "customization_specs", "virtual_machines"
   add_foreign_key "network_interfaces", "networks"
   add_foreign_key "network_interfaces", "virtual_machines"
   add_foreign_key "networks", "exercises"

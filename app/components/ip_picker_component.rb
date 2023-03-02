@@ -19,7 +19,7 @@ class IPPickerComponent < ViewComponent::Base
       addresses.map do |host_address|
         [
           liquid_template_shortening(
-            UnsubstitutedAddress.result_for(host_address, address_pool: address_pool)
+            UnsubstitutedAddress.result_for(host_address, address_pool:)
           ),
           host_address.u32 - address_pool.ip_network.network_u32 - 1
         ]

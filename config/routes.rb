@@ -10,6 +10,7 @@ Rails.application.routes.draw do
   resources :exercises, only: %i[new create show edit update] do
     resource :map, only: %i[show]
     resources :virtual_machines, except: %i[edit] do
+      resources :customization_specs
       resources :network_interfaces, path: 'nics', only: %i[new create update destroy] do
         resources :addresses, only: %i[create update destroy]
       end
@@ -49,7 +50,7 @@ Rails.application.routes.draw do
         resources :tags, only: %i[index]
         resource :inventory, only: %i[show]
         resource :graph, only: %i[show]
-        resources :virtual_machines, path: 'hosts', only: %i[index show]
+        resources :customization_specs, path: 'hosts', only: %i[index show]
       end
     end
   end

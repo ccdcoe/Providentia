@@ -33,13 +33,13 @@
       %table.min-w-full.divide-y.divide-gray-200.dark:divide-gray-500.border.border-gray-200.dark:border-gray-500.rounded-lg
         %thead.text-left.text-xs.uppercase.tracking-wider.bg-gray-50.dark:bg-gray-600.text-gray-500.dark:text-gray-50
           %tr
-            %th.px-5.py-3.font-medium{scope: "col", colspan: 4}
+            %th.px-5.py-3{scope: "col", colspan: 4}
               .flex.flex-row.space-x-8
                 %div{class: 'basis-1/4'}= ServiceCheck.human_attribute_name(:network)
                 %div{class: 'basis-1/4'}= ServiceCheck.human_attribute_name(:protocol)
                 %div{class: 'basis-1/4'}= ServiceCheck.human_attribute_name(:ip_family)
                 %div{class: 'basis-1/4'}= ServiceCheck.human_attribute_name(:destination_port)
-            %th.px-6.py-3.font-medium{scope: "col"}
+            %th.px-6.py-3{scope: "col"}
 
         %tbody#checks-table.bg-white.dark:bg-gray-700.divide-y.divide-gray-200.dark:divide-gray-500
           = render @service.service_checks.order(:created_at)

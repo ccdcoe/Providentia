@@ -4,7 +4,7 @@
 
 .bg-white.dark:bg-gray-800.shadow.overflow-hidden.rounded-lg.mb-6
   .flex.items-center.justify-end.px-6.py-5
-    %h3.flex-grow.text-lg.leading-6.font-medium.text-gray-900.dark:text-white.dark:text-gray-300
+    %h3.flex-grow.text-lg.leading-6.text-gray-900.dark:text-white.dark:text-gray-300
       Network information
     - if policy(@network).update?
       %hr.w-px.h-6.bg-gray-200.dark:bg-gray-400.dark:border-gray-400.mx-3.justify-self-end/
@@ -14,19 +14,19 @@
     %dl
       .px-6.py-5.grid.grid-cols-2.gap-4.xl:grid-cols-4
         %div
-          %dt.text-sm.font-medium.text-gray-500.dark:text-gray-400= Network.human_attribute_name(:abbreviation)
+          %dt.text-sm.text-gray-500.dark:text-gray-400= Network.human_attribute_name(:abbreviation)
           %dd.mt-1.text-sm.text-gray-900.dark:text-white.mt-0= @network.abbreviation
 
         %div
-          %dt.text-sm.font-medium.text-gray-500.dark:text-gray-400= Team.model_name.human
+          %dt.text-sm.text-gray-500.dark:text-gray-400= Team.model_name.human
           %dd.mt-1.text-sm.text-gray-900.dark:text-white.mt-0= @network.team.name
 
       .px-6.py-5
-        %dt.text-sm.font-medium.text-gray-500.dark:text-gray-400= Network.human_attribute_name(:description)
+        %dt.text-sm.text-gray-500.dark:text-gray-400= Network.human_attribute_name(:description)
         %dd.mt-1.text-sm.text-gray-900.dark:text-white.mt-0.col-span-2= @network.description
 
       .px-6.py-5
-        %dt.text-sm.font-medium.text-gray-500.dark:text-gray-400= Capability.model_name.human.pluralize
+        %dt.text-sm.text-gray-500.dark:text-gray-400= Capability.model_name.human.pluralize
         %dd.mt-1.text-sm.text-gray-900.dark:text-white.mt-0.col-span-2.py-1
           = render(CapabilityChipComponent.with_collection(@network.capabilities.pluck(:name)))
 
@@ -46,7 +46,7 @@
             %em (None)
           - @network.address_pools.group_by(&:ip_family).sort.each do |mode, pools|
             %div
-              %dt.text-sm.font-medium
+              %dt.text-sm
                 %span.font-bold= I18n.t("ip_families.#{mode}")
 
                 .grid.grid-cols-4.gap-6.text-gray-500
@@ -64,7 +64,7 @@
 
       .px-6.py-5.grid.grid-cols-12.gap-4
         .col-span-4
-          %dt.text-sm.font-medium.text-gray-500.dark:text-gray-400= Network.human_attribute_name(:domain)
+          %dt.text-sm.text-gray-500.dark:text-gray-400= Network.human_attribute_name(:domain)
           %dd.mt-1.text-sm.text-gray-900.dark:text-white.mt-0
             = render LiquidTextComponent.new(object: @network.full_domain, exercise: @network.exercise)
 
@@ -72,7 +72,7 @@
         .border-t.border-gray-200.dark:border-gray-500
 
       .px-6.py-5
-        %dt.text-sm.font-medium.text-gray-500.dark:text-gray-400= Network.human_attribute_name(:cloud_id)
+        %dt.text-sm.text-gray-500.dark:text-gray-400= Network.human_attribute_name(:cloud_id)
         %dd.mt-1.text-sm.text-gray-900.dark:text-white.mt-0.col-span-2
           = render LiquidTextComponent.new(object: @network.cloud_id, exercise: @network.exercise)
 

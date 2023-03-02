@@ -29,5 +29,11 @@ module Providentia
     config.resource_prefix = ENV.fetch('RESOURCE_PREFIX', '')
     config.oidc_issuer = ENV.fetch('OIDC_ISSUER', '')
     config.authorization_mode = ENV.fetch('AUTH_MODE', 'scope')
+
+    # add some security headers
+    config.action_dispatch.default_headers.merge!(
+      'Cross-Origin-Embedder-Policy-Report-Only' => 'require-corp',
+      'Cross-Origin-Opener-Policy' => 'same-origin'
+    )
   end
 end

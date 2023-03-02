@@ -1,0 +1,58 @@
+.px-4.py-5.sm:p-6[customization_spec]
+  = form_with(model: customization_spec, url: [customization_spec.exercise, customization_spec.virtual_machine, customization_spec], data: { controller: 'model', action: "change->model#update"}) do |form|
+    .flex.flex-row.flex-wrap.gap-x-4.gap-y-2
+      .grow
+        = form.label :name, class: 'block font-bold text-gray-700 dark:text-gray-200'
+        = form.text_field :name, class: 'form-input', disabled: customization_spec.mode_host?
+
+        - if customization_spec.errors[:name].any?
+          %span.text-red-600= customization_spec.errors[:name].join(', ')
+
+      %div
+        = form.label :role_name, class: 'block font-bold text-gray-700 dark:text-gray-200'
+        = form.text_field :role_name, class: 'form-input', placeholder: customization_spec.default_role_name
+
+        - if customization_spec.errors[:role_name].any?
+          %span.text-red-600= customization_spec.errors[:role_name].join(', ')
+
+      %div
+        = form.label :api_id, class: 'block font-bold text-gray-700 dark:text-gray-200'
+        %p.my-3= customization_spec.slug
+
+      - unless customization_spec.mode_host?
+        .text-right.shrink
+          = link_to 'javascript:;', data: { action: "model#delete", confirm: 'Are you sure?' } do
+            %i.fas.fa-times-circle.text-red-600
+
+      .h-0.basis-full
+
+      .grow
+        = form.label :dns_name, class: 'block font-bold text-gray-700 dark:text-gray-200'
+
+        - if customization_spec.virtual_machine.connection_nic
+          .mt-1.flex.rounded-md.shadow-sm
+            = form.text_field :dns_name, placeholder: customization_spec.default_dns_name, class: 'focus:ring-indigo-500 focus:border-indigo-500 flex-1 block w-full rounded-none rounded-l-md sm border-gray-300 dark:bg-gray-500 dark:border-black dark:placeholder:text-gray-400'
+            %span.inline-flex.items-center.px-3.rounded-r-md.border.border-l-0.border-gray-300.bg-gray-50.text-gray-500.dark:bg-gray-600.dark:text-current.dark:border-black<
+              \.
+              = render LiquidDomainComponent.new(object: customization_spec.virtual_machine)
+        - else
+          = form.text_field :dns_name, placeholder: customization_spec.virtual_machine.name, class: 'form-input'
+
+        - if customization_spec.errors[:dns_name].any?
+          %span.text-red-600= customization_spec.errors[:dns_name].join(', ')
+
+
+      - if customization_spec.mode_container?
+        .h-0.basis-full
+
+        .grow
+          = form.label :description, class: 'block font-bold text-gray-700 dark:text-gray-200'
+          = form.text_area :description, class: 'form-input'
+
+    .mt-2
+      = form.label :capability_ids, Capability.model_name.human.pluralize, class: 'block font-bold text-gray-700 dark:text-gray-200'
+      = form.collection_select :capability_ids, @capabilities, :id, :name, {}, multiple: true, data: { controller: 'select' }
+
+    .mt-2
+      = form.label :service_ids, Service.model_name.human.pluralize, class: 'block font-bold text-gray-700 dark:text-gray-200'
+      = form.collection_select :service_ids, @services, :id, :name, { disabled: @exercise.services_read_only && !current_user.admin? }, multiple: true, data: { controller: 'select' }

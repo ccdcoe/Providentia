@@ -4,7 +4,7 @@
 
 .bg-white.dark:bg-gray-800.shadow.overflow-hidden.rounded-lg.mb-6
   .flex.items-center.justify-end.px-6.py-5
-    %h3.flex-grow.text-lg.leading-6.font-medium.text-gray-900.dark:text-white.dark:text-gray-300
+    %h3.flex-grow.text-lg.leading-6.text-gray-900.dark:text-white.dark:text-gray-300
       Capability information
     - if policy(@capability).update?
       %hr.w-px.h-6.bg-gray-200.dark:bg-gray-400.dark:border-gray-400.mx-3.justify-self-end/
@@ -14,11 +14,11 @@
     %dl
       .px-6.py-5.grid.grid-cols-12.gap-4
         .col-span-4
-          %dt.text-sm.font-medium.text-gray-500.dark:text-gray-400= Capability.human_attribute_name(:slug)
+          %dt.text-sm.text-gray-500.dark:text-gray-400= Capability.human_attribute_name(:slug)
           %dd.mt-1.text-sm.text-gray-900.dark:text-white.mt-0= @capability.slug
 
       .px-6.py-5
-        %dt.text-sm.font-medium.text-gray-500.dark:text-gray-400= Capability.human_attribute_name(:description)
+        %dt.text-sm.text-gray-500.dark:text-gray-400= Capability.human_attribute_name(:description)
         %dd.mt-1.text-sm.text-gray-900.dark:text-white.mt-0.col-span-2= @capability.description
 
 %h1.text-2xl.font-bold.py-3.pb-6 Hosts

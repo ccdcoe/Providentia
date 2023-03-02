@@ -3,6 +3,10 @@
     = turbo_stream.update dom_id(nic) do
       = render NetworkInterfaceFormComponent.new(network_interface: nic, network_interface_counter: index+1)
 
+  - @address.virtual_machine.customization_specs.each do |spec|
+    = turbo_stream.replace dom_id(spec) do
+      = render spec
+
 - else
   = turbo_stream.update dom_id(@address) do
     = render @address

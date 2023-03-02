@@ -43,7 +43,7 @@ module PaperTrail
       case item_type
       when 'AddressPool'
         [item.exercise, item.network]
-      when 'NetworkInterface', 'Address'
+      when 'NetworkInterface', 'Address', 'CustomizationSpec'
         [item.exercise, item.virtual_machine]
       when 'Exercise'
         [item]
