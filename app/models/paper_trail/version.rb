@@ -37,25 +37,6 @@ module PaperTrail
       end
     end
 
-    def link
-      return unless item
-
-      case item_type
-      when 'AddressPool'
-        [item.exercise, item.network]
-      when 'NetworkInterface', 'Address', 'CustomizationSpec'
-        [item.exercise, item.virtual_machine]
-      when 'Exercise'
-        [item]
-      when 'OperatingSystem'
-        [item]
-      when 'ServiceCheck', 'SpecialCheck'
-        [item.service.exercise, item.service]
-      else
-        [item.exercise, item]
-      end
-    end
-
     def item_class
       item_type.constantize
     end

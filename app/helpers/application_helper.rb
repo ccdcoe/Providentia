@@ -5,6 +5,25 @@ module ApplicationHelper
     new_user_session_path
   end
 
+  def link_for_model(model)
+    return unless model
+
+    case model
+    when AddressPool
+      [model.exercise, model.network]
+    when NetworkInterface, Address, CustomizationSpec
+      [model.exercise, model.virtual_machine]
+    when Exercise
+      [model]
+    when OperatingSystem
+      [model]
+    when ServiceCheck, SpecialCheck
+      [model.service.exercise, model.service]
+    else
+      [model.exercise, model]
+    end
+  end
+
   def tailwind_classes_for(flash_type)
     {
       notice: 'bg-green-400 border-l-4 border-green-700 text-white',
@@ -33,6 +52,12 @@ module ApplicationHelper
   def deploy_modes
     VirtualMachine.deploy_modes.keys.map do |mode|
       [I18n.t("deploy_modes.#{mode}"), mode]
+    end
+  end
+
+  def visibility_modes
+    VirtualMachine.visibilities.keys.map do |mode|
+      [I18n.t("visibility_modes.#{mode}"), mode]
     end
   end
 

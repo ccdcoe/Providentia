@@ -52,9 +52,10 @@ class Address < ApplicationRecord
       .where('addresses.offset = address_pools.gateway::varchar')
   }
 
-  before_validation :parse_ipv6, :parse_ipv4
-  before_save :clear_on_mode_change, :populate_first_pool_if_empty,
-    :clear_offset, :set_to_connection_if_first_address
+  before_validation :parse_ipv6, :parse_ipv4,
+    :clear_on_mode_change, :populate_first_pool_if_empty,
+    :clear_offset, :set_to_connection_if_first_address,
+    on: :update
   after_save :fix_connection_flag
 
   validate :check_ip_offset6, :check_ip_offset4, :check_overlap

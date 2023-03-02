@@ -77,7 +77,7 @@ class AddressPool < ApplicationRecord
   end
 
   def last_octet_is_dynamic?
-    ip_v4? && (network_address =~ /\.\d+\/\d+\z/).nil?
+    ip_v4? && network_address && (network_address =~ /\.\d+\/\d+\z/).nil?
   end
 
   def available_range

@@ -69,7 +69,7 @@ class CustomizationSpec < ApplicationRecord
     end
   end
 
-  def deployable_instances(presenter = VirtualMachineInstance)
+  def deployable_instances(presenter = API::V3::InstancePresenter)
     generate_instance_array(:deploy_count)
       .product(generate_instance_array(:custom_instance_count))
       .map do |team_number, sequential_number|

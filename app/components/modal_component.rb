@@ -22,4 +22,8 @@ class ModalComponent < ViewComponent::Base
         'h-full flex-grow'
       end
     end
+
+    def js_controller_name
+      self.class.to_s.sub('Component', '').downcase
+    end
 end

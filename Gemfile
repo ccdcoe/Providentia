@@ -24,10 +24,10 @@ gem 'turbo-rails', '~> 1.0'
 gem 'liquid', '~> 5.3'
 gem 'redis'
 gem 'hiredis', '~> 0.6.3'
+gem 'mail', '2.7.1' # until fixed
 
 # functionality
 gem 'ipaddress', github: 'ipaddress-gem/ipaddress'
-gem 'jb', '~> 0.8.0'
 gem 'simple_form', '~> 5.0'
 gem 'ancestry'
 gem 'paper_trail'

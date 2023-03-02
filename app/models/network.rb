@@ -25,6 +25,22 @@ class Network < ApplicationRecord
   scope :for_grouped_select, -> {
     order(:name).includes(:team).group_by { |network| network.team.name }
   }
+  scope :search, ->(query) {
+    columns = %w{
+      networks.name networks.abbreviation
+      networks.description networks.domain
+      networks.cloud_id
+      address_pools.name address_pools.network_address
+    }
+    left_outer_joins(:address_pools)
+      .where(
+        columns
+          .map { |c| "#{c} ilike :search" }
+          .join(' OR '),
+        search: "%#{query}%"
+      )
+      .group(:id)
+  }
 
   def self.to_icon
     'fa-network-wired'

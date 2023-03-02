@@ -8,8 +8,13 @@ class VirtualMachine < ApplicationRecord
     bt: 1
   }, _prefix: :deploy_mode
 
-  belongs_to :team
+  enum visibility: {
+    public: 1,
+    team_only: 2
+  }, _prefix: :visibility
+
   belongs_to :exercise
+  belongs_to :team
   belongs_to :operating_system, optional: true
   belongs_to :system_owner, class_name: 'User', inverse_of: :owned_systems, optional: true
   has_many :network_interfaces, dependent: :destroy
@@ -35,7 +40,7 @@ class VirtualMachine < ApplicationRecord
     left_outer_joins(:system_owner, :operating_system, :customization_specs)
       .where(
         columns
-          .map { |c| "lower(#{c}) like :search" }
+          .map { |c| "lower(#{c}) ilike :search" }
           .join(' OR '),
         search: "%#{query.downcase}%"
       )
@@ -51,25 +56,8 @@ class VirtualMachine < ApplicationRecord
 
   before_validation :lowercase_fields
   after_create :create_default_spec
-  before_save :reset_bt_visibility
   after_update :sync_host_spec_name
   after_touch :ensure_nic_status
-
-  # TEMPORARY until migrated
-  def self.migrate_to_customization_specs
-    find_each do |vm|
-      vm.customization_specs.where(mode: 'host').first_or_create(
-        name: vm.name,
-        role_name: vm.role,
-        dns_name: vm.hostname,
-        description: vm.description
-      ).tap do |spec|
-        pp spec.errors
-        spec.capabilities << vm.capabilities
-        spec.services << vm.services
-      end
-    end
-  end
 
   def self.to_icon
     'fa-server'
@@ -99,17 +87,6 @@ class VirtualMachine < ApplicationRecord
       exercise.last_dev_bt
     else
       1
-    end
-  end
-
-  def api_bt_visible
-    case team.name.downcase
-    when 'blue'
-      true
-    when 'green'
-      bt_visible
-    else
-      false
     end
   end
 
@@ -146,11 +123,6 @@ class VirtualMachine < ApplicationRecord
 
     def invalidate_cache(_service_or_capability)
       touch
-    end
-
-    def reset_bt_visibility
-      return unless team_id_changed? && team_id_was == Team.find_by(name: 'Green')&.id
-      self.bt_visible = true
     end
 
     def sync_host_spec_name

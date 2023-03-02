@@ -18,7 +18,7 @@ module API
             description: spec.mode_host? ? vm.description : spec.description,
             role: spec.role,
             team_name: vm.team.name.downcase,
-            bt_visible: vm.api_bt_visible,
+            visibility: vm.visibility,
             hardware_cpu: vm.cpu || vm.operating_system&.applied_cpu,
             hardware_ram: vm.ram || vm.operating_system&.applied_ram,
             hardware_primary_disk_size: vm.primary_disk_size || vm.operating_system&.applied_primary_disk_size,

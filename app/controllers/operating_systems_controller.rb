@@ -31,6 +31,7 @@ class OperatingSystemsController < ApplicationController
     if @operating_system.update operating_system_params
       redirect_to operating_systems_path, flash: { notice: "#{OperatingSystem.model_name.human} was successfully updated." }
     else
+      @merge = MergeOsForm.new(source_id: @operating_system.id)
       render :show, status: 400
     end
   end

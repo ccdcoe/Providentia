@@ -247,6 +247,7 @@ ActiveRecord::Schema[7.0].define(version: 2022_11_15_141207) do
     t.integer "system_owner_id"
     t.boolean "bt_visible", default: true, null: false
     t.integer "primary_disk_size"
+    t.integer "visibility", default: 1
     t.index ["exercise_id"], name: "index_virtual_machines_on_exercise_id"
     t.index ["name", "exercise_id"], name: "index_virtual_machines_on_name_and_exercise_id", unique: true
     t.index ["operating_system_id"], name: "index_virtual_machines_on_operating_system_id"

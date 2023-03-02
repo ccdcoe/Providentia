@@ -30,8 +30,12 @@ class VirtualMachinePolicy < ApplicationPolicy
       def resolve
         if user.admin?
           scope.all
-        elsif user.accessible_exercises[exercise.id.to_s]
-          scope.where(team_id: accessible_teams_for_user)
+        elsif exercises_for_context.any?
+          scope
+            .where(exercises_for_context.map do |ex|
+              "(exercise_id = #{ActiveRecord::Base.connection.quote(ex.to_i)} AND team_id IN (#{accessible_teams_for_user(ex).map { |a| ActiveRecord::Base.connection.quote(a) }.join(', ')}))"
+            end
+            .join(' OR '))
         else
           scope.none
         end

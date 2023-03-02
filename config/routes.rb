@@ -30,19 +30,16 @@ Rails.application.routes.draw do
     post 'merge', on: :collection
   end
 
+  resource :search, only: [:show, :create]
+
   resources :api_tokens, except: %i[show edit update]
   resources :versions, only: %i[index show]
 
   get 'docs/api', to: 'docs#api'
   get 'docs/templating', to: 'docs#templating'
 
+  # API
   namespace :api, defaults: { format: :json } do
-    namespace :v2 do
-      resources :exercises, only: :show do
-        resource :networks, only: :show
-      end
-    end
-
     namespace :v3 do
       resources :exercises, path: '', only: %i[index show] do
         resources :networks, only: %i[index]

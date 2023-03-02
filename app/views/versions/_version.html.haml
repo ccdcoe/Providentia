@@ -6,7 +6,7 @@
     %span.chip
       %i.fas{class: version.item_class.to_icon}
 
-      = link_to_if version.item, version.full_name, version.link
+      = link_to_if version.item, version.full_name, link_for_model(version.item)
 
     event
     %strong= version.event

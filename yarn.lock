@@ -5,6 +5,15 @@ __metadata:
   version: 6
   cacheKey: 8
 
+"@babel/runtime@npm:^7.20.6":
+  version: 7.20.6
+  resolution: "@babel/runtime@npm:7.20.6"
+  dependencies:
+    regenerator-runtime: ^0.13.11
+  checksum: 42a8504db21031b1859fbc0f52d698a3d2f5ada9519eb76c6f96a7e657d8d555732a18fe71ef428a67cc9fc81ca0d3562fb7afdc70549c5fec343190cbaa9b03
+  languageName: node
+  linkType: hard
+
 "@codemirror/autocomplete@npm:^6.0.0":
   version: 6.3.4
   resolution: "@codemirror/autocomplete@npm:6.3.4"
@@ -48,9 +57,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@codemirror/lang-javascript@npm:^6.1.1":
-  version: 6.1.1
-  resolution: "@codemirror/lang-javascript@npm:6.1.1"
+"@codemirror/lang-javascript@npm:^6.1.2":
+  version: 6.1.2
+  resolution: "@codemirror/lang-javascript@npm:6.1.2"
   dependencies:
     "@codemirror/autocomplete": ^6.0.0
     "@codemirror/language": ^6.0.0
@@ -59,7 +68,7 @@ __metadata:
     "@codemirror/view": ^6.0.0
     "@lezer/common": ^1.0.0
     "@lezer/javascript": ^1.0.0
-  checksum: 9a1d082edf3d835e18f2e9e0aa603c92a3e8e86f95a5662635f5a9d1ee6b87bbfe3bac3f56bd2c8cd46bafb87bcf90e0955c5efcda334a224c5d9c2d0524d351
+  checksum: f4336b7efd44e4158b9979f0c23918184c897d0fe3e40b5414bd9243a9899ecdba4dfe13970fe5024a1894579af80cb4c5dd574c6c2b7bd7ff06d8c8cb88616b
   languageName: node
   linkType: hard
 
@@ -622,18 +631,18 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@uiw/codemirror-theme-darcula@npm:^4.15.1":
-  version: 4.15.1
-  resolution: "@uiw/codemirror-theme-darcula@npm:4.15.1"
+"@uiw/codemirror-theme-darcula@npm:^4.19.3":
+  version: 4.19.3
+  resolution: "@uiw/codemirror-theme-darcula@npm:4.19.3"
   dependencies:
-    "@uiw/codemirror-themes": 4.15.1
-  checksum: aac461f3220a6a1f1c8486752331f9f841bba7e4d9be185f30cbb85cd01d9a5ce7df5340aec131da8e6300ce2d3c7aaa8b0d38548e5d2b107d8eb5cb6af6b49e
+    "@uiw/codemirror-themes": 4.19.3
+  checksum: 6e4d6278af8f277f44fa9aea6c7d2614fe8b7fe07f377730b28eb894567d7bd8d757abb04f547ea301d44dac11893b039a426edfdcc8c7ee33f149e259bf4689
   languageName: node
   linkType: hard
 
-"@uiw/codemirror-themes@npm:4.15.1":
-  version: 4.15.1
-  resolution: "@uiw/codemirror-themes@npm:4.15.1"
+"@uiw/codemirror-themes@npm:4.19.3":
+  version: 4.19.3
+  resolution: "@uiw/codemirror-themes@npm:4.19.3"
   dependencies:
     "@codemirror/language": ^6.0.0
     "@codemirror/state": ^6.0.0
@@ -642,7 +651,7 @@ __metadata:
     "@codemirror/language": ">=6.0.0"
     "@codemirror/state": ">=6.0.0"
     "@codemirror/view": ">=6.0.0"
-  checksum: eef25536bfa4394a7da5d091e3252273216fd933090ab5364770c08d7c94d6e7799e5e47ca4012cdf7e9cd87c439a2af9c7d7d55b60cfa58fadfe7283e70e45a
+  checksum: 593d3f587a0fc3ba12f24242cc093c579d14dcf8ff126a6716e0a6bb11c53c35c210738b188dd992975f5c9e9b1fe17507842a6a7c248eb4ca098ba8474259f8
   languageName: node
   linkType: hard
 
@@ -1737,6 +1746,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"hotkeys-js@npm:>=3, hotkeys-js@npm:^3.10.1":
+  version: 3.10.1
+  resolution: "hotkeys-js@npm:3.10.1"
+  checksum: f6ca367fbcc52e6d6a4f735ada8d6ebfd38d7a1bc5574ffb3dafb5e7a0b5ad1d2a23b46c59eb482b09aca4ca76152738d1be32553580a3e8c7dad6f46a0fa738
+  languageName: node
+  linkType: hard
+
 "http-cache-semantics@npm:^4.1.0":
   version: 4.1.0
   resolution: "http-cache-semantics@npm:4.1.0"
@@ -2546,16 +2562,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"postcss-import@npm:^15.0.0":
-  version: 15.0.0
-  resolution: "postcss-import@npm:15.0.0"
+"postcss-import@npm:^15.1.0":
+  version: 15.1.0
+  resolution: "postcss-import@npm:15.1.0"
   dependencies:
     postcss-value-parser: ^4.0.0
     read-cache: ^1.0.0
     resolve: ^1.1.7
   peerDependencies:
     postcss: ^8.0.0
-  checksum: e5048072514f33520348c0c5aaedb5db92da72188e72a7367c26a8d851b9cf92e56aeda30d9c7b4ed1a34f84a58959da1b4b27b4aa23d41fc0ce36efe00bf1d1
+  checksum: 7bd04bd8f0235429009d0022cbf00faebc885de1d017f6d12ccb1b021265882efc9302006ba700af6cab24c46bfa2f3bc590be3f9aee89d064944f171b04e2a3
   languageName: node
   linkType: hard
 
@@ -3026,7 +3042,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"postcss@npm:^8.4.18, postcss@npm:^8.4.19":
+"postcss@npm:^8.4.18":
   version: 8.4.19
   resolution: "postcss@npm:8.4.19"
   dependencies:
@@ -3034,6 +3050,17 @@ __metadata:
     picocolors: ^1.0.0
     source-map-js: ^1.0.2
   checksum: 62782723a385f92b7525f66d29614624de7c5643855423db3a5efd9287e677650300192749adddbbb6734cea9b1d5f5fd4f6ea00ca3f9a95dbbb88f835f5ca64
+  languageName: node
+  linkType: hard
+
+"postcss@npm:^8.4.20":
+  version: 8.4.20
+  resolution: "postcss@npm:8.4.20"
+  dependencies:
+    nanoid: ^3.3.4
+    picocolors: ^1.0.0
+    source-map-js: ^1.0.2
+  checksum: 1a5609ea1c1b204f9c2974a0019ae9eef2d99bf645c2c9aac675166c4cb1005be7b5e2ba196160bc771f5d9ac896ed883f236f888c891e835e59d28fff6651aa
   languageName: node
   linkType: hard
 
@@ -3058,7 +3085,8 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "providentia@workspace:."
   dependencies:
-    "@codemirror/lang-javascript": ^6.1.1
+    "@babel/runtime": ^7.20.6
+    "@codemirror/lang-javascript": ^6.1.2
     "@codemirror/language": ^6.3.1
     "@codemirror/legacy-modes": ^6.3.1
     "@codemirror/stream-parser": ^0.19.9
@@ -3072,7 +3100,7 @@ __metadata:
     "@tailwindcss/aspect-ratio": ^0.4.2
     "@tailwindcss/forms": ^0.5.3
     "@tailwindcss/typography": ^0.5.8
-    "@uiw/codemirror-theme-darcula": ^4.15.1
+    "@uiw/codemirror-theme-darcula": ^4.19.3
     codemirror: ^6.0.1
     cssnano: ^5.1.14
     cytoscape: ^3.23.0
@@ -3080,17 +3108,19 @@ __metadata:
     cytoscape-node-html-label: ^1.2.2
     debounce: ^1.2.1
     element-matches-polyfill: ^1.0.0
-    postcss: ^8.4.19
-    postcss-import: ^15.0.0
+    hotkeys-js: ^3.10.1
+    postcss: ^8.4.20
+    postcss-import: ^15.1.0
     postcss-nesting: ^10.2.0
     postcss-preset-env: ^7.8.3
+    stimulus-use: ^0.51.1
     tailwindcss: ^3.2.4
     tailwindcss-stimulus-components: ^3.0.4
     throttleit: ^1.0.0
     tippy.js: ^6.3.7
     tom-select: ^2.2.2
-    vite: ^3.2.4
-    vite-plugin-ruby: ^3.1.2
+    vite: ^3.2.5
+    vite-plugin-ruby: ^3.1.3
     vite-plugin-stimulus-hmr: ^3.0.0
     web-worker: ^1.2.0
   languageName: unknown
@@ -3136,6 +3166,13 @@ __metadata:
   dependencies:
     picomatch: ^2.2.1
   checksum: 1ced032e6e45670b6d7352d71d21ce7edf7b9b928494dcaba6f11fba63180d9da6cd7061ebc34175ffda6ff529f481818c962952004d273178acd70f7059b320
+  languageName: node
+  linkType: hard
+
+"regenerator-runtime@npm:^0.13.11":
+  version: 0.13.11
+  resolution: "regenerator-runtime@npm:0.13.11"
+  checksum: 27481628d22a1c4e3ff551096a683b424242a216fee44685467307f14d58020af1e19660bf2e26064de946bad7eff28950eae9f8209d55723e2d9351e632bbb4
   languageName: node
   linkType: hard
 
@@ -3314,6 +3351,17 @@ __metadata:
   version: 0.1.8
   resolution: "stable@npm:0.1.8"
   checksum: 2ff482bb100285d16dd75cd8f7c60ab652570e8952c0bfa91828a2b5f646a0ff533f14596ea4eabd48bb7f4aeea408dce8f8515812b975d958a4cc4fa6b9dfeb
+  languageName: node
+  linkType: hard
+
+"stimulus-use@npm:^0.51.1":
+  version: 0.51.1
+  resolution: "stimulus-use@npm:0.51.1"
+  dependencies:
+    hotkeys-js: ">=3"
+  peerDependencies:
+    "@hotwired/stimulus": ">= 3"
+  checksum: 2d67cafc4af241f89c707a3faa0a8c3f03288fe3893ef82918792301901e8292f6de53ef47ede7fc048b4179cb260c0e51887fcdaae31a6d93298ffb6aaa225b
   languageName: node
   linkType: hard
 
@@ -3531,15 +3579,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"vite-plugin-ruby@npm:^3.1.2":
-  version: 3.1.2
-  resolution: "vite-plugin-ruby@npm:3.1.2"
+"vite-plugin-ruby@npm:^3.1.3":
+  version: 3.1.3
+  resolution: "vite-plugin-ruby@npm:3.1.3"
   dependencies:
     debug: ^4.3.4
     fast-glob: ^3.2.11
   peerDependencies:
     vite: ">=2.5.0"
-  checksum: 72dc5cd671daadc8bdd0d6c2f71fb641c189ca7ca53c6196d5ae52a60f21a4e664bbc54a31ded51a5ca603be05581533216be6fd45233a8f4dfd4dd81b429e27
+  checksum: e1c3f80857b5c4f3cacb78c7bd2132bb10478cb21d7c5e9b370540cb8645187157e8f56a82b693836c7ccdbd2ef8dbc4f49a841514b3a8a565fdd21bf03d4a2c
   languageName: node
   linkType: hard
 
@@ -3553,9 +3601,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"vite@npm:^3.2.4":
-  version: 3.2.4
-  resolution: "vite@npm:3.2.4"
+"vite@npm:^3.2.5":
+  version: 3.2.5
+  resolution: "vite@npm:3.2.5"
   dependencies:
     esbuild: ^0.15.9
     fsevents: ~2.3.2
@@ -3587,7 +3635,7 @@ __metadata:
       optional: true
   bin:
     vite: bin/vite.js
-  checksum: 0f3e8f89c15809bd6bd8dec54b04b7c9b87374314d00928035f9d70190b4b220e8206b5d77a1e4097a5019cebf7862df4fbc11fbbb35c4f75f359999123d2c25
+  checksum: ad35b7008c2b62a167d1d1a82f0a0c60fa457733f1969e9eedf0b0077f67a7ac74b4c9477e75a397895150f09b6551f0c17841c5b05c34d9fe302bb0b5dc28a8
   languageName: node
   linkType: hard
 

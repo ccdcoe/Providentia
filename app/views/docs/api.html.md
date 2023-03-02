@@ -1,13 +1,8 @@
 ### Versioning
 
-Providentia has two API versions working at the moment:
+Providentia has one API version working at the moment:
 
-1. APIv2 _(legacy, deprecated)_
 1. APIv3
-
-APIv2 is in maintenance mode only and will be disabled some time in 2022, please migrate to APIv3 at earliest convenience as numerous new features are missing from APIv2.
-
-Both versions share the same authentication and authorization mechanisms, the differences lie in data structures.
 
 The API is using JSON format and is read-only - no altering the data in any way. Successful responses contain `result` key, errors contain `error` and optionally `code` key.
 
@@ -115,7 +110,7 @@ Example:
     "description": null,
     "role": "server",
     "team_name": "blue",
-    "bt_visible": true,
+    "visibility": "public",
     "hardware_cpu": null,
     "hardware_ram": null,
     "hardware_primary_disk_size": null,

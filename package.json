@@ -2,7 +2,8 @@
   "name": "providentia",
   "private": true,
   "dependencies": {
-    "@codemirror/lang-javascript": "^6.1.1",
+    "@babel/runtime": "^7.20.6",
+    "@codemirror/lang-javascript": "^6.1.2",
     "@codemirror/language": "^6.3.1",
     "@codemirror/legacy-modes": "^6.3.1",
     "@codemirror/stream-parser": "^0.19.9",
@@ -16,7 +17,7 @@
     "@tailwindcss/aspect-ratio": "^0.4.2",
     "@tailwindcss/forms": "^0.5.3",
     "@tailwindcss/typography": "^0.5.8",
-    "@uiw/codemirror-theme-darcula": "^4.15.1",
+    "@uiw/codemirror-theme-darcula": "^4.19.3",
     "codemirror": "^6.0.1",
     "cssnano": "^5.1.14",
     "cytoscape": "^3.23.0",
@@ -24,10 +25,12 @@
     "cytoscape-node-html-label": "^1.2.2",
     "debounce": "^1.2.1",
     "element-matches-polyfill": "^1.0.0",
-    "postcss": "^8.4.19",
-    "postcss-import": "^15.0.0",
+    "hotkeys-js": "^3.10.1",
+    "postcss": "^8.4.20",
+    "postcss-import": "^15.1.0",
     "postcss-nesting": "^10.2.0",
     "postcss-preset-env": "^7.8.3",
+    "stimulus-use": "^0.51.1",
     "tailwindcss": "^3.2.4",
     "tailwindcss-stimulus-components": "^3.0.4",
     "throttleit": "^1.0.0",
@@ -47,7 +50,7 @@
   ],
   "packageManager": "yarn@3.3.0",
   "devDependencies": {
-    "vite": "^3.2.4",
-    "vite-plugin-ruby": "^3.1.2"
+    "vite": "^3.2.5",
+    "vite-plugin-ruby": "^3.1.3"
   }
 }

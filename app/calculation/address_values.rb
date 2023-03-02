@@ -2,7 +2,7 @@
 
 class AddressValues < Patterns::Calculation
   def result
-    if subject.address_pool.last_octet_is_dynamic?
+    if subject.address_pool&.last_octet_is_dynamic?
       values = subject.exercise
         .all_blue_teams
         .values_at(0, 1, -1)

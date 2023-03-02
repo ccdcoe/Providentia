@@ -27,7 +27,6 @@ en:
         cpu: vCPU count
         ram: RAM
         custom_instance_count: Sequential instances
-        bt_visible: Visible to BT
       network:
         cloud_id: ID in cloud
       network_interface:
@@ -56,6 +55,10 @@ en:
   deploy_modes:
     single: Team independent
     bt: Instance for each blue team
+
+  visibility_modes:
+    public: Public
+    team_only: Team only
 
   address_modes:
     ipv4_static: IPv4 static

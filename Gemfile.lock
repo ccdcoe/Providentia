@@ -99,6 +99,7 @@ GEM
     concurrent-ruby (1.1.10)
     connection_pool (2.3.0)
     crass (1.0.6)
+    date (3.3.1)
     descendants_tracker (0.0.4)
       thread_safe (~> 0.3, >= 0.3.1)
     devise (4.8.1)
@@ -117,7 +118,7 @@ GEM
     factory_bot_rails (6.2.0)
       factory_bot (~> 6.2.0)
       railties (>= 5.0.0)
-    faraday (2.7.1)
+    faraday (2.7.2)
       faraday-net_http (>= 2.0, < 3.1)
       ruby2_keywords (>= 0.0.4)
     faraday-follow_redirects (0.3.0)
@@ -132,7 +133,7 @@ GEM
       activerecord (>= 4.0.0)
     globalid (1.0.0)
       activesupport (>= 5.0)
-    haml (6.0.12)
+    haml (6.1.1)
       temple (>= 0.8.2)
       thor
       tilt
@@ -155,8 +156,7 @@ GEM
     i18n (1.12.0)
       concurrent-ruby (~> 1.0)
     ice_nine (0.11.2)
-    jb (0.8.0)
-    json (2.6.2)
+    json (2.6.3)
     json-jwt (1.16.1)
       activesupport (>= 4.2)
       aes_key_wrap
@@ -183,7 +183,7 @@ GEM
     llhttp-ffi (0.4.0)
       ffi-compiler (~> 1.0)
       rake (~> 13.0)
-    loofah (2.19.0)
+    loofah (2.19.1)
       crass (~> 1.0.2)
       nokogiri (>= 1.5.9)
     mail (2.7.1)
@@ -192,15 +192,15 @@ GEM
     memory_profiler (1.0.1)
     method_source (1.0.0)
     mini_mime (1.1.2)
-    mini_portile2 (2.8.0)
     minitest (5.16.3)
     msgpack (1.6.0)
     naturally (2.2.1)
-    net-imap (0.3.1)
+    net-imap (0.3.2)
+      date
       net-protocol
     net-pop (0.1.2)
       net-protocol
-    net-protocol (0.1.3)
+    net-protocol (0.2.1)
       timeout
     net-smtp (0.3.3)
       net-protocol
@@ -208,8 +208,7 @@ GEM
       activerecord (>= 4.0.0)
       activesupport (>= 4.0.0)
     nio4r (2.5.8)
-    nokogiri (1.13.9)
-      mini_portile2 (~> 2.8.0)
+    nokogiri (1.13.10-x86_64-linux)
       racc (~> 1.4)
     oj (3.13.23)
     omniauth (2.1.0)
@@ -253,12 +252,12 @@ GEM
       method_source (~> 1.0)
     pry-rails (0.3.9)
       pry (>= 0.10.4)
-    public_suffix (5.0.0)
+    public_suffix (5.0.1)
     puma (5.6.5)
       nio4r (~> 2.0)
     pundit (2.2.0)
       activesupport (>= 3.0.0)
-    racc (1.6.0)
+    racc (1.6.1)
     rack (2.2.4)
     rack-mini-profiler (3.0.0)
       rack (>= 1.2.0)
@@ -291,8 +290,8 @@ GEM
     rails-dom-testing (2.0.3)
       activesupport (>= 4.2.0)
       nokogiri (>= 1.6)
-    rails-html-sanitizer (1.4.3)
-      loofah (~> 2.3)
+    rails-html-sanitizer (1.4.4)
+      loofah (~> 2.19, >= 2.19.1)
     rails-patterns (0.11.0)
       actionpack (>= 4.2.6)
       activerecord (>= 4.2.6)
@@ -332,7 +331,7 @@ GEM
     rspec-expectations (3.12.0)
       diff-lcs (>= 1.2.0, < 2.0)
       rspec-support (~> 3.12.0)
-    rspec-mocks (3.12.0)
+    rspec-mocks (3.12.1)
       diff-lcs (>= 1.2.0, < 2.0)
       rspec-support (~> 3.12.0)
     rspec-rails (5.1.2)
@@ -344,7 +343,7 @@ GEM
       rspec-mocks (~> 3.10)
       rspec-support (~> 3.10)
     rspec-support (3.12.0)
-    rubocop (1.39.0)
+    rubocop (1.40.0)
       json (~> 2.3)
       parallel (~> 1.10)
       parser (>= 3.1.2.1)
@@ -356,7 +355,7 @@ GEM
       unicode-display_width (>= 1.4.0, < 3.0)
     rubocop-ast (1.24.0)
       parser (>= 3.1.1.0)
-    rubocop-minitest (0.24.0)
+    rubocop-minitest (0.25.0)
       rubocop (>= 0.90, < 2.0)
     rubocop-packaging (0.5.2)
       rubocop (>= 1.33, < 2.0)
@@ -377,10 +376,10 @@ GEM
       rubocop-rails (~> 2.0)
     ruby-progressbar (1.11.0)
     ruby2_keywords (0.0.5)
-    sentry-rails (5.6.0)
+    sentry-rails (5.7.0)
       railties (>= 5.0)
-      sentry-ruby (~> 5.6.0)
-    sentry-ruby (5.6.0)
+      sentry-ruby (~> 5.7.0)
+    sentry-ruby (5.7.0)
       concurrent-ruby (~> 1.0, >= 1.0.2)
     simple_form (5.1.0)
       actionpack (>= 5.2)
@@ -395,7 +394,7 @@ GEM
     thor (1.2.1)
     thread_safe (0.3.6)
     tilt (2.0.11)
-    timeout (0.3.0)
+    timeout (0.3.1)
     turbo-rails (1.3.2)
       actionpack (>= 6.0.0)
       activejob (>= 6.0.0)
@@ -413,7 +412,7 @@ GEM
     validate_url (1.0.15)
       activemodel (>= 3.0.0)
       public_suffix
-    view_component (2.78.0)
+    view_component (2.79.0)
       activesupport (>= 5.0.0, < 8.0)
       concurrent-ruby (~> 1.0)
       method_source (~> 1.0)
@@ -424,7 +423,7 @@ GEM
     vite_rails (3.0.13)
       railties (>= 5.1, < 8)
       vite_ruby (~> 3.0, >= 3.2.2)
-    vite_ruby (3.2.11)
+    vite_ruby (3.2.13)
       dry-cli (~> 0.7.0)
       rack-proxy (~> 0.6, >= 0.6.1)
       zeitwerk (~> 2.2)
@@ -444,7 +443,7 @@ GEM
     zeitwerk (2.6.6)
 
 PLATFORMS
-  ruby
+  x86_64-linux-musl
 
 DEPENDENCIES
   ancestry
@@ -459,11 +458,11 @@ DEPENDENCIES
   hiredis (~> 0.6.3)
   http (~> 5.0)
   ipaddress!
-  jb (~> 0.8.0)
   jwt
   kaminari
   liquid (~> 5.3)
   listen
+  mail (= 2.7.1)
   memory_profiler
   naturally (~> 2.2)
   nilify_blanks (~> 1.4)
@@ -499,4 +498,4 @@ RUBY VERSION
    ruby 3.1.2p20
 
 BUNDLED WITH
-   2.3.7
+   2.3.26

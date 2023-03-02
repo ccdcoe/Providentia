@@ -88,7 +88,7 @@ class VirtualMachinesController < ApplicationController
 
     def virtual_machine_params
       params.require(:virtual_machine).permit(
-        :name, :team_id, :bt_visible,
+        :name, :team_id, :visibility,
         :system_owner_id, :description,
         :deploy_mode, :custom_instance_count,
         :operating_system_id, :cpu, :ram, :primary_disk_size,

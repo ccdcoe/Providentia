@@ -7,6 +7,7 @@ class MergeOsForm < Patterns::Form
   attribute :destination_id, Integer
 
   validate :source_not_same_as_destination
+  validates :source_id, :destination_id, presence: true
 
   private
     def source_not_same_as_destination
