@@ -27,7 +27,7 @@
   - c.column { VirtualMachine.model_name.human }
   - c.column { VirtualMachine.human_attribute_name(:description) }
 
-  - @capability.virtual_machines.each do |vm|
+  - @capability.customization_specs.each do |spec|
     - c.table_row do
-      %td.px-6.py-4= link_to vm.name, [vm.exercise, vm], class: 'text-indigo-600 hover:text-indigo-900 dark:text-indigo-400'
-      %td.px-6.py-4= vm.description
+      %td.px-6.py-4= link_to spec.virtual_machine.name, [spec.virtual_machine.exercise, spec.virtual_machine], class: 'text-indigo-600 hover:text-indigo-900 dark:text-indigo-400'
+      %td.px-6.py-4= spec.description

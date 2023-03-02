@@ -3,12 +3,12 @@
 source 'https://rubygems.org'
 git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
-ruby '3.2.0'
+ruby '3.2.1'
 
 # core
 gem 'bootsnap', '>= 1.4.2', require: false
 gem 'haml-rails', '~> 2.0'
-gem 'rgl', '~> 0.5.7'
+gem 'rgl'
 gem 'pg'
 gem 'puma', '< 6'
 gem 'nilify_blanks', '~> 1.4'
@@ -24,8 +24,8 @@ gem 'turbo-rails', '~> 1.0'
 gem 'liquid', '~> 5.3'
 gem 'redis'
 gem 'hiredis', '~> 0.6.3'
-gem 'mail', '2.7.1' # until fixed
-gem 'nokogiri', '~> 1.14.rc.1'
+gem 'mail', '~> 2.8'
+gem 'nokogiri', '~> 1.14'
 
 # functionality
 gem 'ipaddress', github: 'ipaddress-gem/ipaddress'
@@ -59,7 +59,7 @@ group :development, :test do
   gem 'byebug', platforms: %i[mri mingw x64_mingw]
   gem 'rspec-rails', '~> 5.1.0'
   gem 'factory_bot_rails'
-  gem 'rails-pg-extras', '~> 4.12'
+  gem 'rails-pg-extras'
 end
 
 group :development do

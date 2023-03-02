@@ -3,9 +3,9 @@
     .mb-3.last:mb-0
       .text-xs.font-semibold.text-gray-400.uppercase.px-2.mb-2= group.model_name.human.pluralize
     %ul.text-sm
-      - results.each do |result|
-        %li
-          = link_to link_for_model(result), class: 'flex items-center p-2 text-gray-800 hover:text-white hover:bg-indigo-500 rounded group' do
+      - results.each_with_index do |result, index|
+        %li.group{tabindex: index, data: { action: 'mouseenter->search#focusOn', 'search-target' => 'list'}}
+          = link_to link_for_model(result), class: 'flex items-center p-2 text-gray-800 group-aria-selected:text-white group-aria-selected:bg-indigo-500 rounded' do
             %i.fa.mr-2{class: result.class.to_icon}
             %span
               = result.respond_to?(:name) ? result.name : result.id

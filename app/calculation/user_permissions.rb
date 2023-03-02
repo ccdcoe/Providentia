@@ -31,8 +31,10 @@ class UserPermissions < Patterns::Calculation
     end
 
     def filtered_list
-      subject
-        .select { |resource| resource.match? RESOURCE_REGEX }
-        .map { |resource| resource.sub(RESOURCE_REGEX, '') }
+      (subject || []).filter_map do |resource|
+        if resource.match? RESOURCE_REGEX
+          resource.sub(RESOURCE_REGEX, '')
+        end
+      end
     end
 end

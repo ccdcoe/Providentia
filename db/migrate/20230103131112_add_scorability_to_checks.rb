@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AddScorabilityToChecks < ActiveRecord::Migration[7.0]
   def change
     add_column :special_checks, :scored, :boolean, default: true, null: false

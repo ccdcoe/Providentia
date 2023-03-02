@@ -27,7 +27,7 @@ class SearchComponent < ViewComponent::Base
     def query_data
       {
         search_target: 'input',
-        action: 'input->search#submit'
+        action: 'input->search#submit keydown.down->search#focusDown keydown.up->search#focusUp keydown.enter->search#followFocusLink'
       }
     end
 end

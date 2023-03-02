@@ -1,5 +1,5 @@
 # jemalloc builder
-FROM ruby:3.2.0-alpine AS builder_jemalloc
+FROM alpine AS builder_jemalloc
 
 RUN apk add build-base
 RUN wget -O - https://github.com/jemalloc/jemalloc/releases/download/5.3.0/jemalloc-5.3.0.tar.bz2 | tar -xj && \
@@ -9,7 +9,7 @@ RUN wget -O - https://github.com/jemalloc/jemalloc/releases/download/5.3.0/jemal
   make install
 
 # ruby builder image
-FROM ruby:3.2.0-alpine as builder
+FROM ruby:3.2.1-alpine as builder
 
 RUN apk add --no-cache --update build-base \
   linux-headers \
@@ -25,7 +25,7 @@ WORKDIR /srv
 # RUN bundle config --global frozen 1 && bundle install --no-binstubs --without development test --jobs $(nproc) --retry 3
 RUN bundle config --global frozen 1 && bundle install --no-binstubs --jobs $(nproc) --retry 3
 
-FROM ruby:3.2.0-alpine as development
+FROM ruby:3.2.1-alpine as development
 
 ARG CONTAINER_USER_ID
 ARG CONTAINER_GROUP_ID
@@ -66,7 +66,7 @@ USER $CONTAINER_USER_NAME
 CMD ["rails", "server", "-b", "0.0.0.0"]
 
 # real image
-FROM ruby:3.2.0-alpine as production
+FROM ruby:3.2.1-alpine as production
 
 ARG CONTAINER_USER_ID
 ARG CONTAINER_GROUP_ID

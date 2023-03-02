@@ -12,7 +12,7 @@ class NumberingTools
 
   def self.unsubstitute(template_string:, input:)
     return unless input.present?
-    return input unless /#/.match?(template_string)
+    return input unless template_string.include?('#')
     input.dup.tap do |out|
       /^.*?(\#{1,3})/.match(template_string).tap do |match|
         next unless match

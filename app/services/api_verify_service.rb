@@ -37,7 +37,7 @@ class APIVerifyService < Patterns::Service
     def resource_list(payload)
       case Rails.configuration.authorization_mode
       when 'scope'
-        payload.dig('resurces')
+        payload.dig('resources')
       when 'resource_access'
         payload.dig(
           'resource_access',

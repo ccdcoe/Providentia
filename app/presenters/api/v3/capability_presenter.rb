@@ -8,7 +8,7 @@ module API
           {
             id: capability.slug,
             description: capability.description,
-            virtual_machines: capability.virtual_machines.pluck(:name),
+            virtual_machines: capability.customization_specs.pluck(:slug),
             networks: capability.networks.pluck(:name)
           }
         end

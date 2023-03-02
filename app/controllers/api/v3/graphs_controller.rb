@@ -6,7 +6,6 @@ module API
       before_action :get_exercise
 
       def show
-        hosts = policy_scope(@exercise.virtual_machines)
         render json: {
           result: Rails.cache.fetch(['apiv3', vm_scope, 'network_graph']) do
             NetworkMapGraphSerializer.result_for(graph)
