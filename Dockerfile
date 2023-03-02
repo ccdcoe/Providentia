@@ -1,4 +1,4 @@
-FROM ruby:3.1.1-alpine
+FROM ruby:3.1.2-alpine
 
 ARG CONTAINER_USER_ID
 ARG CONTAINER_GROUP_ID
@@ -13,6 +13,7 @@ ENV RAILS_LOG_TO_STDOUT true
 RUN apk add --no-cache --update build-base \
   linux-headers \
   git \
+  postgresql-client \
   postgresql-dev \
   nodejs-current \
   tzdata \
@@ -30,7 +31,7 @@ RUN mkdir $APP_PATH
 WORKDIR $APP_PATH
 USER $CONTAINER_USER_NAME
 
-COPY Gemfile Gemfile.lock ./
+COPY --chown=$CONTAINER_USER_NAME:$CONTAINER_USER_NAME Gemfile Gemfile.lock ./
 RUN gem install bundler foreman --no-document
 RUN sudo chown $CONTAINER_USER_NAME:$CONTAINER_USER_NAME $APP_PATH
 RUN bundle install --no-binstubs --jobs $(nproc) --retry 3

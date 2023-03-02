@@ -39,10 +39,19 @@ class VirtualMachinesController < ApplicationController
     @virtual_machine ||= @exercise
       .virtual_machines
       .includes(
+          :team,
+          :capabilities,
+          :services,
+          :operating_system,
           networks: [:exercise],
           network_interfaces: [{ addresses: [:network] }, { network: [:team] }]
         )
       .find(params[:id])
+
+    @teams = policy_scope(Team).load_async
+    @system_owners = policy_scope(User).order(:name).load_async
+    @capabilities = policy_scope(@exercise.capabilities).load_async
+    @services = policy_scope(@exercise.services).load_async
 
     authorize @virtual_machine
   end

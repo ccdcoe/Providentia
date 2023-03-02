@@ -1,13 +1,13 @@
 # ruby builder image
-FROM ruby:3.1.1-alpine as builder
+FROM ruby:3.1.2-alpine as builder
 
 RUN apk add --no-cache --update build-base \
-    linux-headers \
-    git \
-    postgresql-dev \
-    tzdata \
-    less \
-    sudo
+  linux-headers \
+  git \
+  postgresql-dev \
+  tzdata \
+  less \
+  sudo
 RUN gem install bundler --no-document
 
 COPY Gemfile Gemfile.lock /srv/
@@ -15,7 +15,7 @@ WORKDIR /srv
 RUN bundle config --global frozen 1 && bundle install --no-binstubs --without development test --jobs $(nproc) --retry 3
 
 # real image
-FROM ruby:3.1.1-alpine
+FROM ruby:3.1.2-alpine
 
 ARG CONTAINER_USER_ID
 ARG CONTAINER_GROUP_ID
@@ -34,10 +34,11 @@ ENV RUBY_HEAP_FREE_MIN 20000
 ENV RUBY_GC_MALLOC_LIMIT 100000000
 
 RUN apk add --no-cache --update \
-    postgresql-dev \
-    nodejs-current \
-    tzdata \
-    less
+  postgresql-client \
+  postgresql-dev \
+  nodejs-current \
+  tzdata \
+  less
 
 RUN corepack enable && yarn set version stable
 
@@ -54,6 +55,6 @@ RUN chown $CONTAINER_USER_NAME:$CONTAINER_USER_NAME $APP_PATH
 
 USER $CONTAINER_USER_NAME
 RUN yarn --immutable
-RUN DATABASE_URL=postgresql://db SECRET_KEY_BASE=`bin/rake secret` bundle exec rake assets:precompile
+RUN SECRET_KEY_BASE=`bin/rake secret` bundle exec rake assets:precompile
 
 CMD ["bundle", "exec", "rails", "server", "-b", "0.0.0.0"]

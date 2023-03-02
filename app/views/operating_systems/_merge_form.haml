@@ -1,6 +1,6 @@
 -# frozen_string_literal: true
 .bg-white.dark:bg-gray-800.shadow{class: 'w-5/12'}
-  = simple_form_for(MergeOsForm.new(source_id: @operating_system.id), url: merge_operating_systems_path, html: { autocomplete: "off" }) do |f|
+  = simple_form_for(@merge, url: merge_operating_systems_path, html: { autocomplete: "off" }) do |f|
     = f.error_notification
     = f.error_notification message: f.object.errors[:base].to_sentence if f.object.errors[:base].present?
 

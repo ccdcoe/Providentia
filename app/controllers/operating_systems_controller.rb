@@ -24,6 +24,7 @@ class OperatingSystemsController < ApplicationController
   end
 
   def show
+    @merge = MergeOsForm.new(source_id: @operating_system.id)
   end
 
   def update
@@ -41,6 +42,7 @@ class OperatingSystemsController < ApplicationController
     if @merge.save
       redirect_to operating_systems_path, flash: { notice: "OS #{@merge.source_id} merged into #{@merge.destination_id}!" }
     else
+      @operating_system ||= OperatingSystem.find(@merge.source_id)
       render :show, status: 400
     end
   end

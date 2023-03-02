@@ -34,6 +34,7 @@ class AddressPool < ApplicationRecord
     where(ip_family: address.ipv4? ? :v4 : :v6)
   }
 
+  before_validation :set_mgmt_default_name
   before_update :clear_dangling_addresses
   after_validation :revert_invalid_network_values
 
@@ -117,5 +118,11 @@ class AddressPool < ApplicationRecord
     def revert_invalid_network_values
       self.gateway = gateway_was if errors[:gateway].any?
       self.network_address = network_address_was if errors[:network_address].any?
+    end
+
+    def set_mgmt_default_name
+      return unless scope_changed? && scope_mgmt?
+      self.name = 'MGMT'
+      self.ip_family = 'v6'
     end
 end

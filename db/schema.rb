@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_08_18_121547) do
+ActiveRecord::Schema[7.0].define(version: 2022_09_01_074149) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -100,7 +100,6 @@ ActiveRecord::Schema[7.0].define(version: 2022_08_18_121547) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.boolean "egress", default: false, null: false
-    t.boolean "connection", default: false, null: false
     t.index ["network_id"], name: "index_network_interfaces_on_network_id"
     t.index ["virtual_machine_id"], name: "index_network_interfaces_on_virtual_machine_id"
   end
@@ -110,20 +109,13 @@ ActiveRecord::Schema[7.0].define(version: 2022_08_18_121547) do
     t.string "name", null: false
     t.string "abbreviation", null: false
     t.string "cloud_id"
-    t.string "ipv4"
-    t.string "ipv6"
     t.text "description"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.bigint "team_id", null: false
     t.string "domain"
-    t.integer "gateway4", default: 0
-    t.bigint "gateway6", default: 1
     t.boolean "ignore_root_domain", default: false, null: false
     t.string "slug"
-    t.integer "address_offset", default: 0, null: false
-    t.integer "range_start"
-    t.integer "range_end"
     t.index ["exercise_id"], name: "index_networks_on_exercise_id"
     t.index ["team_id"], name: "index_networks_on_team_id"
   end

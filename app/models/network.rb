@@ -21,8 +21,6 @@ class Network < ApplicationRecord
 
   validates :name, :abbreviation, presence: true
 
-  serialize :gateway6, Ipv6Offset # TEMPORARY until migrated
-
   scope :for_team, ->(team) { where(team: team) }
   scope :for_grouped_select, -> {
     order(:name).includes(:team).group_by { |network| network.team.name }
@@ -30,43 +28,6 @@ class Network < ApplicationRecord
 
   def self.to_icon
     'fa-network-wired'
-  end
-
-  # TEMPORARY until migrated
-  def self.migrate_to_address_pools
-    find_each do |network|
-      if network.ipv4?
-        network.address_pools.where(name: 'Default IPv4').first_or_create(
-          ip_family: :v4,
-          scope: :default,
-          network_address: network.ipv4,
-          gateway: network.gateway4,
-          range_start: network.range_start,
-          range_end: network.range_end
-        ).tap do |pool|
-          network.addresses.where(mode: %i(ipv4_static ipv4_vip)).each do |address|
-            address.update address_pool: pool
-          end
-        end
-      end
-
-      if network.ipv6?
-        network.address_pools.where(name: 'Default IPv6').first_or_create(
-          ip_family: :v6,
-          scope: :default,
-          network_address: network.ipv6,
-          gateway: network.gateway6.offset
-        ).tap do |pool|
-          network.addresses.where(mode: %i(ipv6_static ipv6_vip)).each do |address|
-            address.update address_pool: pool
-          end
-        end
-      end
-    end
-
-    NetworkInterface.where(connection: true).find_each do |nic|
-      nic.addresses.joins(:address_pool).mode_ipv4_static.first&.update(connection: true)
-    end
   end
 
   def api_short_name
@@ -125,7 +86,7 @@ class Network < ApplicationRecord
     end
 
     def create_default_pools
-      address_pools.create(scope: 'default', ip_family: 'v4', name: 'Default IPv4')
-      address_pools.create(scope: 'default', ip_family: 'v6', name: 'Default IPv6')
+      address_pools.create(scope: 'default', ip_family: 'v4', name: 'IPv4')
+      address_pools.create(scope: 'default', ip_family: 'v6', name: 'IPv6')
     end
 end

@@ -26,6 +26,8 @@
 /config/master.key
 /config/credentials.yml.enc
 
+/public/packs
+/public/packs-test
 /node_modules
 .pnp.*
 .yarn/*

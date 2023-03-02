@@ -16,7 +16,7 @@ module NetworkHelper
         .compact
         .first
         &.offset
-        &.to_i
+        &.to_i || -1
     end
   end
 end

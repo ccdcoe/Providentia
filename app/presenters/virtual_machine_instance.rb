@@ -98,22 +98,24 @@ class VirtualMachineInstance < Struct.new(:virtual_machine, :sequential_number, 
 
     def network_hash(nic)
       addresses = nic.addresses.group_by(&:mode)
+      ipv4 = addresses.dig('ipv4_static', 0)&.ip_object(sequential_number, team_number)
+      ipv6 = addresses.dig('ipv6_static', 0)&.ip_object(sequential_number, team_number)
 
       {
         connection_name: "Link to #{nic.network.abbreviation}",
         name: NumberingTools.substitute(nic.network.cloud_id.to_s, team_number),
-        ipv4: addresses.dig('ipv4_static', 0)&.ip_object(sequential_number, team_number)&.to_string,
-        ipv6: addresses.dig('ipv6_static', 0)&.ip_object(sequential_number, team_number)&.to_string,
+        ipv4: ipv4&.to_string,
+        ipv6: ipv6&.to_string,
         domain: NumberingTools.substitute(nic.network.full_domain, team_number),
         dns_enabled: nic.addresses.any?(&:dns_enabled?),
         no_address: nic.addresses.empty?
       }.tap do |network|
         if virtual_machine.network_interfaces.egress.include?(nic)
-          ipv4_gateway = addresses.dig('ipv4_static', 0)&.address_pool&.gateway_ip(team_number)&.to_string
-          ipv6_gateway = addresses.dig('ipv6_static', 0)&.address_pool&.gateway_ip(team_number)&.to_string
+          ipv4_gateway = addresses.dig('ipv4_static', 0)&.address_pool&.gateway_ip(team_number)
+          ipv6_gateway = addresses.dig('ipv6_static', 0)&.address_pool&.gateway_ip(team_number)
 
-          network[:ipv4_gateway] = ipv4_gateway&.to_s unless addresses['ipv4_static'] == ipv4_gateway
-          network[:ipv6_gateway] = ipv6_gateway&.to_s unless addresses['ipv6_static'] == ipv6_gateway
+          network[:ipv4_gateway] = ipv4_gateway&.address    unless ipv4 == ipv4_gateway
+          network[:ipv6_gateway] = ipv6_gateway&.compressed unless ipv6 == ipv6_gateway
         end
       end
     end
@@ -122,7 +124,7 @@ class VirtualMachineInstance < Struct.new(:virtual_machine, :sequential_number, 
       [
         sequential_group,
         connection_nic&.api_short_name,
-        operating_system&.api_short_name,
+        operating_system&.api_v2_short_name,
         team.api_short_name,
         ("#{team.api_short_name}_#{deploy_mode}_numbered" if !deploy_mode_single? && !team.blue?)
       ].compact

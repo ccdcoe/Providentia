@@ -54,7 +54,7 @@ class Address < ApplicationRecord
 
   before_validation :parse_ipv6, :parse_ipv4
   before_save :clear_on_mode_change, :populate_first_pool_if_empty, :clear_offset
-  after_save :clear_connection_flag_on_other_addresses
+  after_save :fix_connection_flag
 
   validate :check_ip_offset6, :check_ip_offset4, :check_overlap
 
@@ -234,9 +234,20 @@ class Address < ApplicationRecord
       true
     end
 
-    def clear_connection_flag_on_other_addresses
-      return if id_previously_changed?
-      return unless connection == true || !connection_changed?
-      virtual_machine.addresses.where.not(id: self.id).update_all(connection: false)
+    def fix_connection_flag
+      return if id_previously_changed? || !connection_previously_changed?
+      if connection
+        virtual_machine.addresses.where.not(id: self.id).update_all(connection: false)
+      else
+        (first_mgmt_address || first_egress_address).update_column(:connection, true)
+      end
+    end
+
+    def first_mgmt_address
+      virtual_machine.addresses.joins(:address_pool).merge(AddressPool.scope_mgmt).order(:ip_family).first
+    end
+
+    def first_egress_address
+      virtual_machine.addresses.joins(:network_interface).where(network_interfaces: { egress: true }).order(:mode).first
     end
 end
