@@ -280,10 +280,10 @@ Devise.setup do |config|
     discovery: true,
     issuer: Rails.configuration.oidc_issuer,
     # post_logout_redirect_uri: base_url
-    # this is currently not working
+    # this is currently not working in keycloak
     client_options: {
-      identifier: ENV.fetch('KEYCLOAK_CLIENT_ID', ''),
-      secret: ENV.fetch('KEYCLOAK_CLIENT_SECRET', ''),
+      identifier: ENV.fetch('OIDC_CLIENT_ID', ''),
+      secret: ENV.fetch('OIDC_CLIENT_SECRET', ''),
       redirect_uri: "#{base_url}/users/auth/sso/callback"
     }
   }

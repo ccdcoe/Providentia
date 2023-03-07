@@ -88,10 +88,10 @@ services:
       DATABASE_URL: postgres://providentia:secret@db/providentia?pool=5
       REDIS_URL: redis://redis:6379/0
       OIDC_ISSUER: http://keycloak.localhost/realms/Providentia
-      KEYCLOAK_CLIENT_ID: Providentia
-      KEYCLOAK_CLIENT_SECRET: 00000000-0000-0000-0000-000000000000
+      OIDC_CLIENT_ID: Providentia
+      OIDC_CLIENT_SECRET: 00000000-0000-0000-0000-000000000000
+      OIDC_RESOURCE_PREFIX: Providentia_
       BASE_URI: http://providentia.localhost
-      RESOURCE_PREFIX: Providentia_
       AUTH_MODE: resource_access
       VIRTUAL_HOST: providentia.localhost
       VIRTUAL_PORT: 3000

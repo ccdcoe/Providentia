@@ -41,7 +41,7 @@ class APIVerifyService < Patterns::Service
       when 'resource_access'
         payload.dig(
           'resource_access',
-          ENV.fetch('KEYCLOAK_CLIENT_ID', ''), 'roles'
+          ENV.fetch('OIDC_CLIENT_ID', ''), 'roles'
         )
       end
     end

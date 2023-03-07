@@ -32,7 +32,7 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
       when 'resource_access'
         request.env['omniauth.auth'].dig(
           'extra', 'raw_info', 'resource_access',
-          ENV.fetch('KEYCLOAK_CLIENT_ID', ''), 'roles'
+          ENV.fetch('OIDC_CLIENT_ID', ''), 'roles'
         )
       end
     end

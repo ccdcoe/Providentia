@@ -26,7 +26,7 @@ module Providentia
     # Don't generate system test files.
     config.generators.system_tests = nil
 
-    config.resource_prefix = ENV.fetch('RESOURCE_PREFIX', '')
+    config.resource_prefix = ENV.fetch('OIDC_RESOURCE_PREFIX', '')
     config.oidc_issuer = ENV.fetch('OIDC_ISSUER', '')
     config.authorization_mode = ENV.fetch('AUTH_MODE', 'scope')
 
