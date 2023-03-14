@@ -112,6 +112,7 @@ class CloneEnvironment < Patterns::Calculation
     end
 
     def clone_network_interfaces(current_nics:, vm_id:)
+      return if current_nics.empty?
       new_nic_ids = NetworkInterface.insert_all(
         current_nics.map do |nic|
           nic.attributes.merge(
