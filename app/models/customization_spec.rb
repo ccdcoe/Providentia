@@ -16,7 +16,7 @@ class CustomizationSpec < ApplicationRecord
       {
         virtual_machine: [
           :system_owner,
-          :team,
+          :actor,
           :operating_system,
           :host_spec,
           { connection_nic: [:network] },

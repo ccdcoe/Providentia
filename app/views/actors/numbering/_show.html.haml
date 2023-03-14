@@ -1,0 +1,13 @@
+= turbo_frame_tag dom_id(actor, 'numbering') do
+  - if actor.numbering
+    Numbering:
+    %strong= actor.prefs.dig('numbered', 'count')
+    = "#{'team'.pluralize(actor.prefs.dig('numbered', 'count'))}, "
+    %strong= actor.prefs.dig('numbered', 'dev_count').to_i
+    = 'development team'.pluralize(actor.prefs.dig('numbered', 'dev_count'))
+
+  - else
+    %em (None)
+
+  - if policy(@exercise).update?
+    = link_to 'Edit', edit_exercise_actor_path(@exercise, actor), class: 'bg-violet-300 rounded ml-1 p-1 p-y-0.5'

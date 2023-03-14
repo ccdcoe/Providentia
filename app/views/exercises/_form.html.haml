@@ -6,7 +6,7 @@
 
   = render ColumnFormSectionComponent.new(disabled: !policy(@exercise).update?) do |c|
     - c.with_description do
-      %h3.text-lg.leading-6.text-gray-900.dark:text-gray-50 Identity
+      %h3.text-lg.leading-6.text-gray-900.dark:text-gray-50 Identity & Access
       %p.mt-1.text-sm.text-gray-600.dark:text-gray-400
         Name and abbreviation for this environment
 
@@ -18,40 +18,6 @@
 
         = f.input :description
 
-      - if policy(@exercise).update?
-        .px-4.py-3.bg-slate-200.dark:bg-gray-500.text-right.sm:px-6
-          = f.button :submit, 'Save', class: 'form-submit'
-
-  .py-5
-    .border-t.border-gray-200
-
-  = render ColumnFormSectionComponent.new(disabled: !policy(@exercise).update?) do |c|
-    - c.with_description do
-      %h3.text-lg.leading-6.text-gray-900.dark:text-gray-50 Teams
-      %p.mt-1.text-sm.text-gray-600.dark:text-gray-400
-        Blue team settings
-
-    - c.with_main do
-      .px-4.py-5.bg-white.dark:bg-gray-800.space-y-6.sm:p-6
-        .grid.grid-cols-2.gap-6
-          = f.input :blue_team_count
-          = f.input :dev_team_count
-
-      - if policy(@exercise).update?
-        .px-4.py-3.bg-slate-200.dark:bg-gray-500.text-right.sm:px-6
-          = f.button :submit, 'Save', class: 'form-submit'
-
-  .py-5
-    .border-t.border-gray-200
-
-  = render ColumnFormSectionComponent.new(disabled: !policy(@exercise).update?) do |c|
-    - c.with_description do
-      %h3.text-lg.leading-6.text-gray-900.dark:text-gray-50 Access
-      %p.mt-1.text-sm.text-gray-600.dark:text-gray-400
-        Control who gets access to this environment
-
-    - c.with_main do
-      .px-4.py-5.bg-white.dark:bg-gray-800.space-y-6.sm:p-6
         .grid.grid-cols-3.gap-6
           .col-span-3.sm:col-span-2
             = f.label :dev_resource_name
@@ -74,23 +40,6 @@
                 = Rails.configuration.resource_prefix
               = f.text_field :local_admin_resource_name, class: 'focus:ring-indigo-500 focus:border-indigo-500 flex-1 block w-full rounded-none rounded-r-md sm:text-sm border-gray-300 dark:bg-gray-500 dark:border-black'
 
-      - if policy(@exercise).update?
-        .px-4.py-3.bg-slate-200.dark:bg-gray-500.text-right.sm:px-6
-          = f.button :submit, 'Save', class: 'form-submit'
-
-  .py-5
-    .border-t.border-gray-200
-
-  = render ColumnFormSectionComponent.new(disabled: !policy(@exercise).update?) do |c|
-    - c.with_description do
-      %h3.text-lg.leading-6.text-gray-900.dark:text-gray-50 Networking
-      %p.mt-1.text-sm.text-gray-600.dark:text-gray-400
-        Enable/disable specific functionality for this environment
-
-    - c.with_main do
-      .px-4.py-5.bg-white.dark:bg-gray-800.space-y-6.sm:p-6
-        .grid.grid-cols-3.gap-6
-          .col-span-3.sm:col-span-2= f.input :services_read_only
 
       - if policy(@exercise).update?
         .px-4.py-3.bg-slate-200.dark:bg-gray-500.text-right.sm:px-6
@@ -110,6 +59,7 @@
           .grid.grid-cols-3.gap-6
             .col-span-3.sm:col-span-2= f.input :mode, collection: Exercise.modes.map { |a, b| [a.capitalize, a] }, default: 0
             .col-span-3.sm:col-span-2= f.input :root_domain, hint: 'Will be used as default for all machines'
+            .col-span-3.sm:col-span-2= f.input :services_read_only
 
         - if policy(@exercise).update?
           .px-4.py-3.bg-slate-200.dark:bg-gray-500.text-right.sm:px-6
@@ -139,3 +89,22 @@
             = link_to exercise_clone_path(@exercise), class: 'inline-flex items-center justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-orange-600 hover:bg-orange-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500' do
               %i.fas.fa-clone.mr-2
               Clone
+
+
+- if @exercise.persisted?
+
+  %h1.text-2xl.font-bold.py-3.pb-6 Actors
+
+  = render TableComponent.new do |c|
+    - c.with_column { Actor.human_attribute_name(:name) }
+    - c.with_column { Actor.human_attribute_name(:abbreviation) }
+    - c.with_column { Actor.human_attribute_name(:entries) }
+    - c.with_column { Actor.human_attribute_name(:ui_color) }
+
+    - @actors.each do |actor|
+      - c.with_table_row do
+        %td.px-6.py-4= actor.name
+        %td.px-6.py-4= actor.abbreviation
+        %td.px-6.py-4= render 'actors/numbering/show', actor:
+        %td.px-6.py-4
+          = render ActorChipComponent.new(actor:, text: 'Example')

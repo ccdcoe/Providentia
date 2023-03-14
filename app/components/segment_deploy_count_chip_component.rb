@@ -14,14 +14,14 @@ class SegmentDeployCountChipComponent < ViewComponent::Base
 
   private
     def vm_single_instance?
-      @vm.deploy_mode_single? && !@vm.custom_instance_count
+      !@vm.numbered_actor && !@vm.custom_instance_count
     end
 
     def title
       if @vm.custom_instance_count
         'Custom instance count'
       elsif !@network.numbered? && @vm.deploy_count > 1
-        I18n.t("deploy_modes.#{@vm.deploy_mode}")
+        I18n.t('deploy_modes.actor', actor: @vm.numbered_actor.name)
       end
     end
 

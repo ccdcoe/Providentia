@@ -3,7 +3,7 @@
 class NetworkPolicy < ApplicationPolicy
   def show?
     admin? || (
-      user_has_exercise? && (rt? || local_admin? || !record.team.red?)
+      user_has_exercise? && (rt? || local_admin? || !record.actor.red?)
     )
   end
 
@@ -29,8 +29,8 @@ class NetworkPolicy < ApplicationPolicy
         scope.all
       elsif exercise_ids_for_context.any?
         scope
-          .where(exercise_ids_for_context.map do |ex|
-            "(exercise_id = #{ActiveRecord::Base.connection.quote(ex.to_i)} AND team_id IN (#{accessible_teams_for_user(ex).map { |a| ActiveRecord::Base.connection.quote(a) }.join(', ')}))"
+          .where(exercise_ids_for_context.map do |ex_id|
+            "(exercise_id = #{ActiveRecord::Base.connection.quote(ex_id.to_i)} AND actor_id IN (#{accessible_actors_for_user(ex_id).map { |a| ActiveRecord::Base.connection.quote(a) }.join(', ')}))"
           end
           .join(' OR '))
       else

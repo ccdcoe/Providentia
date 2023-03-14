@@ -23,7 +23,7 @@ class VirtualMachinePolicy < ApplicationPolicy
     def vm_is_not_red?
       return unless record.is_a?(VirtualMachine)
 
-      !record.team&.red?
+      !record.actor&.red?
     end
 
     class Scope < Scope
@@ -32,8 +32,8 @@ class VirtualMachinePolicy < ApplicationPolicy
           scope.all
         elsif exercise_ids_for_context.any?
           scope
-            .where(exercise_ids_for_context.map do |ex|
-              "(exercise_id = #{ActiveRecord::Base.connection.quote(ex.to_i)} AND team_id IN (#{accessible_teams_for_user(ex).map { |a| ActiveRecord::Base.connection.quote(a) }.join(', ')}))"
+            .where(exercise_ids_for_context.map do |ex_id|
+              "(exercise_id = #{ActiveRecord::Base.connection.quote(ex_id.to_i)} AND actor_id IN (#{accessible_actors_for_user(ex_id).map { |a| ActiveRecord::Base.connection.quote(a) }.join(', ')}))"
             end
             .join(' OR '))
         else

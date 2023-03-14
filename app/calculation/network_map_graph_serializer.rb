@@ -6,9 +6,9 @@ class NetworkMapGraphSerializer < Patterns::Calculation
       {
         id: inventory_name,
         name: hostname,
-        team: {
-          name: vm.team.name,
-          ui_color: vm.team.ui_color
+        actor: {
+          name: vm.actor.name,
+          ui_color: vm.actor.prefs.dig('ui_color')
         },
         addresses: vm.connection_nic.addresses.for_search.map do |address|
           LiquidReplacer.new(
@@ -17,11 +17,7 @@ class NetworkMapGraphSerializer < Patterns::Calculation
               address_pool: address.address_pool
             )
           ).iterate do |variable_node|
-            if variable_node.name.name == 'team_nr'
-              "[#{vm.exercise.all_blue_teams.values_at(0, -1).map do |team|
-                variable_node.render(Liquid::Context.new('team_nr' => team.to_s))
-              end.join(' - ')}]"
-            end
+            LiquidRangeSubstitution.result_for(vm, node: variable_node)
           end
         end,
         os: {

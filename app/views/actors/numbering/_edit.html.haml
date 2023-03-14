@@ -1,0 +1,9 @@
+= turbo_frame_tag dom_id(actor, 'numbering') do
+  = form_with(model: @form, url: exercise_actor_path(@exercise, actor), html: { autocomplete: "off" }) do |f|
+    Numbering:
+    = f.number_field :count, min: 0, class: 'border-gray-300 w-20 rounded-md dark:bg-gray-500 dark:border-black dark:placeholder:text-gray-400'
+    = "#{'team'.pluralize(actor.prefs.dig('numbered', 'count'))}, "
+    = f.number_field :dev_count, min: 0, class: 'border-gray-300 w-20 rounded-md dark:bg-gray-500 dark:border-black dark:placeholder:text-gray-400'
+    = 'development team'.pluralize(actor.prefs.dig('numbered', 'dev_count'))
+
+    = f.submit :Save, class: 'bg-violet-300 rounded p-1 p-y-0.5 ml-2 cursor-pointer'

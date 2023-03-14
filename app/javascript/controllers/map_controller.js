@@ -66,15 +66,15 @@ export default class extends Controller {
         tpl: function (data) {
           return `<div class='w-40'>
               <div class="px-1 bg-${
-                data.team.ui_color
+                data.actor.ui_color
               }-500 text-gray-200 text-[.8rem] flex items-center">
                 <i class="${data.os.icon} mr-1" title="${data.os.name}"></i>
                 <span class="leading-2 break-all whitespace-pre-wrap">${
                   data.name
                 }</span>
               </div>
-              <div class="bg-${data.team.ui_color}-200 text-${
-            data.team.ui_color
+              <div class="bg-${data.actor.ui_color}-200 text-${
+            data.actor.ui_color
           }-600 text-[.8rem] p-1">
                 ${data.addresses.slice(0, 2).join("<br>")}
               </div>

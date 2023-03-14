@@ -1,11 +1,11 @@
 # frozen_string_literal: true
 
 class LiquidTextComponent < LiquidTooltipSnippetComponent
-  attr_reader :exercise
+  attr_reader :actor
 
-  def initialize(object:, exercise:)
+  def initialize(object:, actor:)
     @object = object
-    @exercise = exercise
+    @actor = actor
   end
 
   private

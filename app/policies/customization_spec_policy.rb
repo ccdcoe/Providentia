@@ -27,7 +27,7 @@ class CustomizationSpecPolicy < ApplicationPolicy
         if user.admin?
           scope.all
         elsif user.accessible_exercises[exercise.id.to_s]
-          scope.joins(:virtual_machine).where(virtual_machine: { exercise:, team_id: accessible_teams_for_user(exercise.id) })
+          scope.joins(:virtual_machine).where(virtual_machines: { exercise:, actor_id: accessible_actors_for_user })
         else
           scope.none
         end

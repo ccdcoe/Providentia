@@ -14,7 +14,8 @@ OperatingSystem.where(name: 'Windows', cloud_id: 'windows').first_or_create!
 OperatingSystem.where(name: 'Network devices', cloud_id: 'networkdevices').first_or_create!
 
 if Rails.env.development?
-  Exercise.where(name: 'Test Exercise', abbreviation: 'TE').first_or_create!(
+  Exercise.where(name: 'Test Exercise', abbreviation: 'TE').first_or_create!
+  Exercise.update_all(
     dev_red_resource_name: 'TE_RT',
     dev_resource_name: 'TE_GT',
     local_admin_resource_name: 'TE_Admin'

@@ -3,10 +3,7 @@
 module API
   module V3
     class InstancePresenter < Struct.new(:spec, :sequential_number, :team_number)
-      delegate :team,
-        :operating_system,
-        :deploy_mode, :deploy_mode_single?,
-        to: :vm
+      delegate :operating_system, to: :vm
 
       def as_json
         {
@@ -61,7 +58,7 @@ module API
         end
 
         def hostname_team_suffix
-          't{{ team_nr_str }}' if !vm.deploy_mode_single?
+          't{{ team_nr_str }}' if vm.numbered_actor
         end
 
         def inventory_name

@@ -3,10 +3,6 @@
 module API
   module V3
     class CustomizationSpecPresenter < Struct.new(:spec)
-      delegate :team,
-        :deploy_mode, :deploy_mode_single?,
-        to: :vm
-
       def as_json(_opts)
         Rails.cache.fetch(['apiv3', vm.cache_key_with_version, spec.cache_key_with_version]) do
           preload_interfaces
@@ -17,17 +13,17 @@ module API
             owner: vm.system_owner&.name,
             description: spec.mode_host? ? vm.description : spec.description,
             role: spec.role,
-            team_name: vm.team.name.downcase,
+            actor_name: vm.actor.name.downcase,
             visibility: vm.visibility,
             hardware_cpu: vm.cpu || vm.operating_system&.applied_cpu,
             hardware_ram: vm.ram || vm.operating_system&.applied_ram,
             hardware_primary_disk_size: vm.primary_disk_size || vm.operating_system&.applied_primary_disk_size,
             tags:,
             capabilities:,
-            services:
+            services:,
+            instances:
           }
           .merge(sequence_info)
-          .merge({ instances: })
         end
       end
 
@@ -59,8 +55,9 @@ module API
             sequential_group,
             vm.connection_nic&.api_short_name,
             (vm.operating_system&.path || []).map(&:api_short_name),
-            team.api_short_name,
-            ("#{team.api_short_name}_#{deploy_mode}_numbered" if !deploy_mode_single? && !team.blue?),
+            vm.actor.api_short_name,
+            vm.actor.as_team_api.dig(:id),
+            ("#{vm.actor.api_short_name}_#{vm.numbered_actor.abbreviation}_numbered" if vm.numbered_actor && vm.actor != vm.numbered_actor),
             ('customization_container' if spec.mode_container?),
             spec.capabilities.map(&:api_short_name)
           ].flatten.compact

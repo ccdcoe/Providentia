@@ -30,21 +30,6 @@
 
       .px-6.py-5.grid.grid-cols-12.gap-4
         .col-span-5
-          %span.font-bold Teams
-          .grid.grid-flow-col.gap-6.auto-cols-fr
-            %div
-              %dt.text-sm.text-gray-500= Exercise.human_attribute_name(:blue_team_count)
-              %dd.mt-1.text-sm.text-gray-900.dark:text-white.mt-0= @exercise.blue_team_count
-
-            %div
-              %dt.text-sm.text-gray-500= Exercise.human_attribute_name(:dev_team_count)
-              %dd.mt-1.text-sm.text-gray-900.dark:text-white.mt-0= @exercise.dev_team_count
-
-      .py-1
-        .border-t.border-gray-200.dark:border-gray-500
-
-      .px-6.py-5.grid.grid-cols-12.gap-4
-        .col-span-5
           %div
             %span.font-bold Inventory
             = render ModalComponent.new(header: "Network map", full_screen: true) do |c|
@@ -85,3 +70,28 @@
                 %dt.text-sm.text-gray-500= OperatingSystem.human_attribute_name(:primary_disk_size)
                 %dd.mt-1.text-sm.text-gray-900.dark:text-white.mt-0
                   %span{title: "#{resource_usage.primary_disk_size} GB"}= number_to_human_size resource_usage.primary_disk_size*1024*1024*1024
+
+%h1.text-2xl.font-bold.py-3.pb-6 Actors
+
+= render TableComponent.new do |c|
+  - c.with_column { Actor.human_attribute_name(:name) }
+  - c.with_column { Actor.human_attribute_name(:abbreviation) }
+  - c.with_column { Actor.human_attribute_name(:entries) }
+  - c.with_column { Actor.human_attribute_name(:ui_color) }
+
+  - @actors.each do |actor|
+    - c.with_table_row do
+      %td.px-6.py-4= actor.name
+      %td.px-6.py-4= actor.abbreviation
+      %td.px-6.py-4
+        - if actor.numbering
+          Numbering:
+          %strong= actor.prefs.dig('numbered', 'count').to_i
+          = "#{'team'.pluralize(actor.prefs.dig('numbered', 'count'))}, "
+          %strong= actor.prefs.dig('numbered', 'dev_count').to_i
+          = 'development team'.pluralize(actor.prefs.dig('numbered', 'dev_count'))
+
+        - else
+          %em (None)
+      %td.px-6.py-4
+        = render ActorChipComponent.new(actor:, text: 'Example')

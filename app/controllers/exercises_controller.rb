@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class ExercisesController < ApplicationController
-  before_action :get_exercise, only: %i[show edit update]
+  before_action :get_exercise, :load_actors, only: %i[show edit update]
 
   def new
     @exercise = Exercise.new
@@ -41,9 +41,12 @@ class ExercisesController < ApplicationController
       @exercise = Exercise.friendly.find(params[:id])
     end
 
+    def load_actors
+      @actors = policy_scope(@exercise.actors).load_async
+    end
+
     def exercise_params
       params.require(:exercise).permit(:name, :abbreviation,
-        :blue_team_count, :dev_team_count,
         :dev_resource_name, :dev_red_resource_name, :local_admin_resource_name,
         :services_read_only,
         :root_domain,

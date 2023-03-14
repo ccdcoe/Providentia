@@ -5,7 +5,7 @@ class NetworksController < ApplicationController
   before_action :get_network, only: %i[show edit update destroy]
 
   def index
-    @networks = policy_scope(@exercise.networks).order(:name).includes(:team, :address_pools)
+    @networks = policy_scope(@exercise.networks).order(:name).includes(:actor, :address_pools)
   end
 
   def new
@@ -45,7 +45,7 @@ class NetworksController < ApplicationController
   private
     def network_params
       params.require(:network).permit(
-        :name, :team_id, :cloud_id, :domain, :abbreviation, :description,
+        :name, :actor_id, :cloud_id, :domain, :abbreviation, :description,
         :ignore_root_domain, { capability_ids: [] }
       )
     end

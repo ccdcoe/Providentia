@@ -4,7 +4,7 @@ module API
   module V3
     class TagsPresenter < Struct.new(:exercise, :scope)
       def as_json(_opts)
-        team_tags + os_tags + zone_tags + type_tags + sequential_tags + numbered_tags + capability_tags
+        actor_tags + os_tags + zone_tags + type_tags + sequential_tags + numbered_tags + capability_tags
       end
 
       private
@@ -18,15 +18,22 @@ module API
           @vm_scope ||= Pundit.policy_scope(scope, exercise.virtual_machines)
         end
 
-        def team_tags
-          Rails.cache.fetch(['apiv3', exercise.cache_key_with_version, 'tags', Team.all.cache_key_with_version]) do
-            Team.all.map do |team|
-              {
-                id: team.api_short_name,
-                name: team.name,
-                config_map: { team_color: team.name },
-                children: [],
-              }
+        def actor_scope
+          @actor_scope ||= Pundit.policy_scope(scope, exercise.actors)
+        end
+
+        def actor_tags
+          Rails.cache.fetch(['apiv3', exercise.cache_key_with_version, 'actors', actor_scope.cache_key_with_version]) do
+            actor_scope.flat_map do |actor|
+              [
+                {
+                  id: actor.api_short_name,
+                  name: actor.name,
+                  config_map: {},
+                  children: [],
+                },
+                actor.as_team_api
+              ].compact
             end
           end
         end
@@ -81,14 +88,14 @@ module API
         def numbered_tags
           Rails.cache.fetch(['apiv3', exercise.cache_key_with_version, 'numbered', vm_scope.cache_key_with_version]) do
             vm_scope
-              .reject(&:deploy_mode_single?)
-              .group_by { |instance| [instance.team, instance.deploy_mode] }
+              .select(&:numbered_actor)
+              .group_by { |instance| [instance.actor, instance.numbered_actor] }
               .filter_map do |group, instances|
-                team, mode = group
-                next if team.blue?
+                actor, numbered_actor = group
+                next if actor == numbered_actor
                 {
-                  id: "#{team.api_short_name}_#{mode}_numbered",
-                  name: "#{team.api_short_name}_#{mode}_numbered",
+                  id: "#{actor.api_short_name}_#{numbered_actor.abbreviation}_numbered",
+                  name: "#{actor.api_short_name}_#{numbered_actor.abbreviation}_numbered",
                   config_map: {},
                   children: [],
                 }

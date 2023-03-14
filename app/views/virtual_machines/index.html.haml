@@ -3,21 +3,36 @@
     = url_for [:new, @exercise, :virtual_machine]
 
 = turbo_frame_tag :vm_search, disabled: true, data: { turbo_action: "advance" } do
-  %section
-    .flex.justify-center.mx-auto{class: 'w-2/3'}
-      %ul.flex.flex-shrink.bg-white.dark:bg-gray-800.rounded-lg.items-center.px-3.shadow-lg.mb-6
-        %li.p-3.min-w-lg.border-b-4.border-transparent{ class: !params[:team].present? && 'border-amber-400' }
-          = link_to 'All', exercise_virtual_machines_path(@exercise, team: nil, query: params[:query]), { data: { turbo_frame: :vm_search }}
-        - policy_scope(Team).each do |team|
-          %li.p-3.min-w-lg.border-b-4.border-transparent{ class: params[:team] == team.name && 'border-amber-400' }
-            = link_to team.name, exercise_virtual_machines_path(@exercise, team: team.name, query: params[:query]), { data: { turbo_frame: :vm_search }}
+  %section.relative.mb-4
+    .flex{"data-controller" => "dropdown"}
+      %button#dropdown-button-2.flex-shrink-0.z-10.inline-flex.items-center.px-4.text-sm.font-medium.text-center.text-gray-500.bg-gray-100.border.border-gray-300.rounded-l-lg.hover:bg-gray-200.focus:ring-4.focus:outline-none.focus:ring-gray-100.dark:bg-gray-700.dark:hover:bg-gray-600.dark:focus:ring-gray-700.dark:text-white.dark:border-gray-600{"data-action" => "click->dropdown#toggle click@window->dropdown#hide", "data-dropdown-target" => "button", :role => "button", :tabindex => "0"}
+        - if @filter_actor
+          %span.inline-flex.w-4.h-4.mr-2.rounded-full{class: actor_color_classes(@filter_actor)}
 
-        %hr.w-px.h-6.bg-gray-200.dark:bg-gray-400.dark:border-gray-400.mx-3/
-        .font-sm.relative.rounded-md.shadow-sm
-          = form_with(url: [@exercise, :virtual_machines], method: :get, data: { controller: 'vmsearch' }) do
-            = hidden_field_tag :team, params[:team]
-            = text_field_tag :query, params[:query], class: 'px-3 py-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full pl-3 pr-9 border-gray-300 rounded-md dark:bg-gray-500 dark:border-black', autocomplete: 'off'
-          %button.absolute.inset-y-0.right-0.pr-3.flex.items-center.pointer-events-none
-            %i.fas.fa-search
+        = @filter_actor&.name || 'All'
+        %svg.w-4.h-4.ml-1{"aria-hidden" => "true", :fill => "currentColor", :viewbox => "0 0 20 20", :xmlns => "http://www.w3.org/2000/svg"}
+          %path{"clip-rule" => "evenodd", :d => "M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z", "fill-rule" => "evenodd"}
+
+      .z-10.absolute.top-full.left-0.mt-2.hidden.bg-white.divide-y.divide-gray-100.rounded-lg.shadow.w-44.dark:bg-gray-700{"data-dropdown-target" => "menu"}
+        %ul.py-2.text-sm.text-gray-700.dark:text-gray-200{"aria-labelledby" => "dropdown-button-2"}
+          %li
+            = link_to 'All', exercise_virtual_machines_path(@exercise, actor: nil, query: params[:query]), { data: { turbo_frame: :vm_search }, role: :menuitem, class: 'inline-flex items-center w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-600 dark:hover:text-white'}
+
+          - policy_scope(@exercise.actors).order(:name).each do |actor|
+            %li
+              = link_to exercise_virtual_machines_path(@exercise, actor: actor.abbreviation, query: params[:query]), { data: { turbo_frame: :vm_search }, role: :menuitem, class: 'inline-flex items-center w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-600 dark:hover:text-white'} do
+                %span.inline-flex.w-4.h-4.mr-2.rounded-full{class: actor_color_classes(actor)}
+                = actor.name
+
+      = form_with(url: [@exercise, :virtual_machines], method: :get, data: { controller: 'vmsearch' }, class: 'relative w-full') do
+        = hidden_field_tag :actor, params[:actor]
+        = text_field_tag :query,
+          params[:query],
+          class: 'block w-full p-2.5 z-20 text-sm text-gray-900 bg-gray-50 rounded-r-lg border-l-gray-50 border-l-2 border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-l-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:border-blue-500',
+          placeholder: "Search",
+          type: :search
+
+        %button.absolute.top-0.bottom-0.right-0.text-sm.font-medium.text-white.bg-blue-700.rounded-r-lg.border.border-blue-700.hover:bg-blue-800.focus:ring-4.focus:outline-none.focus:ring-blue-300.dark:bg-blue-600.dark:hover:bg-blue-700.dark:focus:ring-blue-800{:class => "p-2.5", :type => "submit"}
+          %i.fas.fa-search.w-5.h-5
 
   #results= render 'search_results'

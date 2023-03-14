@@ -15,7 +15,7 @@ class NetworkInterface < ApplicationRecord
     reject_if: proc { |attributes| attributes.all? { |key, value| value.blank? || value == '0' } }
 
   after_save :network_change_cleanup
-  after_save :update_vm_deploy_mode, if: :saved_change_to_network_id?
+  after_save :update_numbered_actor, if: :saved_change_to_network_id?
 
   validate :network_in_exercise
 
@@ -51,7 +51,7 @@ class NetworkInterface < ApplicationRecord
       end
     end
 
-    def update_vm_deploy_mode
-      virtual_machine.update deploy_mode: 'bt' if network.numbered?
+    def update_numbered_actor
+      virtual_machine.update numbered_actor: network.actor if network.numbered?
     end
 end

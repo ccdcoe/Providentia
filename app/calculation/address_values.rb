@@ -2,12 +2,12 @@
 
 class AddressValues < Patterns::Calculation
   def result
-    if subject.address_pool&.last_octet_is_dynamic?
-      values = subject.exercise
-        .all_blue_teams
+    if subject.address_pool&.last_octet_is_dynamic? && subject.network.actor.numbering
+      values = subject.network.actor
+        .numbering[:entries]
         .values_at(0, 1, -1)
         .uniq
-        .map { |team| subject.ip_object(nil, team).to_s }
+        .map { |number| subject.ip_object(nil, number).to_s }
 
       case values.size
       when 2

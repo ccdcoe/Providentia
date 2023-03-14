@@ -62,11 +62,11 @@ class ApplicationPolicy
       end
 
       private
-        def accessible_teams_for_user(ex_id = exercise)
+        def accessible_actors_for_user(ex_id = exercise.id)
           if (user.accessible_exercises[ex_id.to_s] & %w(rt local_admin)).any?
-            Team.pluck(:id)
+            exercise.actors.pluck(:id)
           else
-            Team.where.not(name: 'Red').pluck(:id)
+            exercise.actors.where.not(abbreviation: 'rt').pluck(:id)
           end
         end
 

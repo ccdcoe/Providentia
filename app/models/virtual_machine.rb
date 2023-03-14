@@ -3,6 +3,7 @@
 class VirtualMachine < ApplicationRecord
   has_paper_trail
 
+  # TO BE REMOVED
   enum deploy_mode: {
     single: 0,
     bt: 1
@@ -10,13 +11,15 @@ class VirtualMachine < ApplicationRecord
 
   enum visibility: {
     public: 1,
-    team_only: 2
+    actor_only: 2
   }, _prefix: :visibility
 
   belongs_to :exercise
-  belongs_to :team
+  belongs_to :team, optional: true # TEMPORARY, to be removed
+  belongs_to :actor
   belongs_to :operating_system, optional: true
   belongs_to :system_owner, class_name: 'User', inverse_of: :owned_systems, optional: true
+  belongs_to :numbered_actor, class_name: 'Actor', foreign_key: :numbered_by, inverse_of: :numbered_virtual_machines, optional: true
   has_many :network_interfaces, dependent: :destroy
   has_many :customization_specs, dependent: :destroy
   has_one :connection_nic, -> { connectable },
@@ -34,7 +37,6 @@ class VirtualMachine < ApplicationRecord
   accepts_nested_attributes_for :network_interfaces,
     reject_if: proc { |attributes| attributes.all? { |key, value| value.blank? || value == '0' } }
 
-  scope :for_team, ->(team) { where(team:) }
   scope :search, ->(query) {
     columns = %w{virtual_machines.name customization_specs.dns_name users.name operating_systems.name}
     left_outer_joins(:system_owner, :operating_system, :customization_specs)
@@ -64,15 +66,15 @@ class VirtualMachine < ApplicationRecord
   end
 
   def vm_name
-    "#{exercise.abbreviation}_#{team.abbreviation}_#{name}".downcase
+    "#{exercise.abbreviation}_#{actor.abbreviation}_#{name}".downcase
   end
 
-  def forced_bt_numbering?
+  def forced_numbering?
     networks.any?(&:numbered?)
   end
 
   def single_network_instances(presenter)
-    if !deploy_mode_single? && connection_nic.network.numbered?
+    if numbered_actor && connection_nic.network.numbered?
       1.upto(custom_instance_count || 1).map do |seq|
         presenter.new(host_spec, seq, nil)
       end
@@ -82,12 +84,7 @@ class VirtualMachine < ApplicationRecord
   end
 
   def deploy_count
-    case deploy_mode.to_sym
-    when :bt
-      exercise.last_dev_bt
-    else
-      1
-    end
+    numbered_actor.presence ? numbered_actor.numbering[:entries].last.to_i : 1
   end
 
   private

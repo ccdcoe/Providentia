@@ -16,8 +16,8 @@ module API
       private
         def vm_scope
           policy_scope(@exercise.virtual_machines)
-            .includes(connection_nic: [{ network: [:team] }, :virtual_machine])
-            .includes(:team)
+            .includes(connection_nic: [{ network: [:actor] }, :virtual_machine])
+            .includes(:actor)
         end
 
         def graph

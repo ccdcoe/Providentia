@@ -13,7 +13,7 @@
         .px-4.py-5.bg-white.dark:bg-gray-800.space-y-6.p-6
           .grid.gap-6.grid-cols-2.xl:grid-cols-4
             .col-span-2= f.input :name
-            = f.association :team, collection: @teams, input_html: { data: { controller: 'select' } }
+            = f.association :actor, collection: @actors, include_blank: false, input_html: { data: { controller: 'select' } }
             = f.input :visibility, collection: visibility_modes, include_blank: false, input_html: { data: { controller: 'select' } }
 
           = f.association :system_owner, collection: @system_owners, input_html: { data: { controller: 'select' } }

@@ -15,7 +15,7 @@
         .grid.grid-cols-8.gap-6
           .col-span-4= f.input :name
           .col-span-2= f.input :abbreviation
-          .col-span-2= f.association :team, input_html: { data: { controller: 'select' } }
+          .col-span-2= f.association :actor, collection: policy_scope(@exercise.actors), input_html: { data: { controller: 'select' } }
         = f.input :description
         = f.association :capabilities, collection: policy_scope(@exercise.capabilities), input_html: { data: { controller: 'select' } }
 

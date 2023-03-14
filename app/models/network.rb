@@ -6,7 +6,8 @@ class Network < ApplicationRecord
   has_paper_trail
 
   belongs_to :exercise
-  belongs_to :team
+  belongs_to :team, optional: true # TEMPORARY
+  belongs_to :actor
   has_many :network_interfaces, dependent: :restrict_with_error
   has_many :service_checks, dependent: :restrict_with_error
   has_many :address_pools, dependent: :destroy
@@ -21,9 +22,8 @@ class Network < ApplicationRecord
 
   validates :name, :abbreviation, presence: true
 
-  scope :for_team, ->(team) { where(team:) }
   scope :for_grouped_select, -> {
-    order(:name).includes(:team).group_by { |network| network.team.name }
+    order(:name).includes(:actor).group_by { |network| network.actor.name }
   }
   scope :search, ->(query) {
     columns = %w{

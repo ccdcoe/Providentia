@@ -10,7 +10,12 @@ class LiquidTooltipSnippetComponent < ViewComponent::Base
       content_tag(
         :strong,
         "[ #{variable_node.name.name} ]",
-        { data: { controller: 'tippy', tooltip: tooltip_for(variable_node) } }
+        {
+          data: {
+            controller: 'tippy',
+            tooltip: LiquidRangeSubstitution.result_for(@object, node: variable_node, actor: @actor)
+          }
+        }
       )
     end.html_safe
   end
@@ -18,26 +23,5 @@ class LiquidTooltipSnippetComponent < ViewComponent::Base
   private
     def template_text
       raise 'Implement me!'
-    end
-
-    def exercise
-      @object.exercise
-    end
-
-    def tooltip_for(node)
-      "#{node.name.name}: " +
-      case node.name.name
-      when 'team_nr', 'team_nr_str'
-        exercise.all_blue_teams.values_at(0, -1).map(&:to_s).map do |team|
-          node.render(Liquid::Context.new(
-              'team_nr' => team,
-              'team_nr_str' => team.rjust(2, '0')
-            ))
-        end.join ' - '
-      when 'seq'
-        if @object.is_a?(VirtualMachine)
-          "01 - #{@object.custom_instance_count.to_s.rjust(2, '0')}"
-        end
-      end.to_s
     end
 end

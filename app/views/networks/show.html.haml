@@ -18,8 +18,8 @@
           %dd.mt-1.text-sm.text-gray-900.dark:text-white.mt-0= @network.abbreviation
 
         %div
-          %dt.text-sm.text-gray-500.dark:text-gray-400= Team.model_name.human
-          %dd.mt-1.text-sm.text-gray-900.dark:text-white.mt-0= @network.team.name
+          %dt.text-sm.text-gray-500.dark:text-gray-400= Actor.model_name.human
+          %dd.mt-1.text-sm.text-gray-900.dark:text-white.mt-0= @network.actor.name
 
       .px-6.py-5
         %dt.text-sm.text-gray-500.dark:text-gray-400= Network.human_attribute_name(:description)
@@ -66,7 +66,7 @@
         .col-span-4
           %dt.text-sm.text-gray-500.dark:text-gray-400= Network.human_attribute_name(:domain)
           %dd.mt-1.text-sm.text-gray-900.dark:text-white.mt-0
-            = render LiquidTextComponent.new(object: @network.full_domain, exercise: @network.exercise)
+            = render LiquidTextComponent.new(object: @network.full_domain, actor: @network.actor)
 
       .py-1
         .border-t.border-gray-200.dark:border-gray-500
@@ -74,6 +74,6 @@
       .px-6.py-5
         %dt.text-sm.text-gray-500.dark:text-gray-400= Network.human_attribute_name(:cloud_id)
         %dd.mt-1.text-sm.text-gray-900.dark:text-white.mt-0.col-span-2
-          = render LiquidTextComponent.new(object: @network.cloud_id, exercise: @network.exercise)
+          = render LiquidTextComponent.new(object: @network.cloud_id, actor: @network.actor)
 
 = render 'used_addresses'

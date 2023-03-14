@@ -11,15 +11,15 @@ class VirtualMachinesController < ApplicationController
   def index
     @virtual_machines = policy_scope(@exercise.virtual_machines)
       .preload(
-        :team, :operating_system, :system_owner,
+        :actor, :operating_system, :system_owner,
         :connection_nic, :exercise,
         network_interfaces: [
-          { network: [:team, :exercise] }
+          { network: [:actor, :exercise] }
         ]
       )
       .order(:name)
 
-    filter_by_team
+    filter_by_actor
     filter_by_name
   end
 
@@ -29,7 +29,7 @@ class VirtualMachinesController < ApplicationController
 
   def create
     @virtual_machine = @exercise.virtual_machines.build(
-      params.require(:virtual_machine).permit(:name, :team_id)
+      params.require(:virtual_machine).permit(:name, :actor_id)
     )
 
     if @virtual_machine.valid? && authorize(@virtual_machine).save
@@ -43,10 +43,10 @@ class VirtualMachinesController < ApplicationController
     @virtual_machine ||= @exercise
       .virtual_machines
       .includes(
-          :team,
+          :actor,
           :operating_system,
           networks: [:exercise],
-          network_interfaces: [{ addresses: [:network] }, { network: [:team] }]
+          network_interfaces: [{ addresses: [:network] }, { network: [:actor] }]
         )
       .find(params[:id])
 
@@ -54,7 +54,7 @@ class VirtualMachinesController < ApplicationController
   end
 
   def update
-    @teams = policy_scope(Team).load_async
+    @actors = policy_scope(@exercise.actors).load_async
     @system_owners = policy_scope(User).order(:name).load_async
     @capabilities = policy_scope(@exercise.capabilities).load_async
     @services = policy_scope(@exercise.services).load_async
@@ -75,10 +75,10 @@ class VirtualMachinesController < ApplicationController
       @virtual_machine = authorize(@exercise.virtual_machines.find(params[:id]))
     end
 
-    def filter_by_team
-      return unless params[:team].present?
-      team = policy_scope(Team).find_by(name: params[:team])
-      @virtual_machines = @virtual_machines.where(team:)
+    def filter_by_actor
+      return unless params[:actor].present?
+      @filter_actor = policy_scope(@exercise.actors).find_by(abbreviation: params[:actor])
+      @virtual_machines = @virtual_machines.where(actor: @filter_actor)
     end
 
     def filter_by_name
@@ -88,9 +88,9 @@ class VirtualMachinesController < ApplicationController
 
     def virtual_machine_params
       params.require(:virtual_machine).permit(
-        :name, :team_id, :visibility,
+        :name, :actor_id, :visibility,
         :system_owner_id, :description,
-        :deploy_mode, :custom_instance_count,
+        :numbered_by, :custom_instance_count,
         :operating_system_id, :cpu, :ram, :primary_disk_size,
       )
     end

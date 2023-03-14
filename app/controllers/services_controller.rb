@@ -7,8 +7,8 @@ class ServicesController < ApplicationController
   def index
     @services = policy_scope(@exercise.services)
       .includes(
-        special_checks: { network: [:team] },
-        service_checks: { network: [:team] })
+        special_checks: { network: [:actor] },
+        service_checks: { network: [:actor] })
       .order(:name)
   end
 

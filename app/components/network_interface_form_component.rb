@@ -16,13 +16,7 @@ class NetworkInterfaceFormComponent < ViewComponent::Base
     end
 
     def team_classes
-      color = network_interface.network&.team&.ui_color || 'gray'
-      case color
-      when 'yellow'
-        "bg-#{color}-200 text-#{color}-800 dark:bg-#{color}-500 dark:text-#{color}-700"
-      else
-        "bg-#{color}-200 text-#{color}-800 dark:bg-#{color}-700 dark:text-#{color}-300"
-      end
+      helpers.actor_color_classes(network_interface.network&.actor)
     end
 
     def egress_toggle_text

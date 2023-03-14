@@ -1,9 +1,13 @@
 - cache([vm.cache_key_with_version, 'address_preview']) do
   = render TableComponent.new do |c|
-    - vm.host_spec.deployable_instances(AddressPreviewPresenter).group_by(&:team_number).each do |team, instances|
+    - vm.host_spec.deployable_instances(AddressPreviewPresenter).group_by(&:team_number).each do |team_nr, instances|
       - c.with_table_row do
-        %td.text-center.font-lg.font-bold.py-2.bg-sky-200.text-sky-800.dark:bg-sky-500.dark:text-sky-700{colspan: 100}
-          = "BT#{team.to_s.rjust(2, "0")}"
+        %td.text-center.font-lg.font-bold.py-2{colspan: 100, class: actor_color_classes(team_nr ? vm.numbered_actor : vm.actor)}
+          - if team_nr
+            = vm.numbered_actor.name
+            %strong= team_nr.to_s.rjust(2, "0")
+          - else
+            = vm.actor.name
 
       - instances.each do |instance|
         - c.with_table_row do

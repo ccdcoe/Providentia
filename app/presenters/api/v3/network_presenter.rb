@@ -9,7 +9,7 @@ module API
             id: network.slug,
             name: network.name,
             description: network.description,
-            team: network.team.name.downcase,
+            actor: network.actor.abbreviation.downcase,
             instances:
           }
         end
@@ -23,10 +23,15 @@ module API
         end
 
         def instance_generator
-          if network.numbered?
-            1.upto(network.exercise.last_dev_bt).to_a
-          else
-            [nil]
+          return [nil] unless network.numbered?
+          numbering_source
+        end
+
+        def numbering_source
+          if network.actor.numbering
+            network.actor.numbering[:entries]
+          elsif network.exercise.actors.numbered.size == 1 ## TODO: this seems hacky
+            network.exercise.actors.numbered.first.numbering[:entries]
           end
         end
     end

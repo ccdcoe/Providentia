@@ -12,11 +12,11 @@ Currently, following variables can be used:
 
 ### Network
 
-When `{{ team_nr }}` or `{{ team_nr_str }}` is added to compatible field (domain, cloud ID, network address), the network is switched to be in numbered mode. Any virtual machine attached to this network will be forced to deploy in "one per every blue team" mode.
+When `{{ team_nr }}` or `{{ team_nr_str }}` is added to compatible field (domain, cloud ID, network address), the network is switched to be in numbered mode. Any virtual machine attached to this network will be forced to deploy in "one per each actor entry" mode.
 
 ### Filters
 
-Commonly used filter patterns, when blue team count equals _5_:
+Commonly used filter patterns, when current actor entries count equals _5_:
 
 | Pattern                                    | Description                                                                        | Resulting values             |
 | ------------------------------------------ | ---------------------------------------------------------------------------------- | ---------------------------- |

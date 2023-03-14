@@ -19,7 +19,6 @@ en:
               overlap: overlaps with reserved address(es)
     attributes:
       exercise:
-        dev_team_count: Developer teams count
         dev_resource_name: SSO resource name for GT access
         dev_red_resource_name: SSO resource name for RT access
         local_admin_resource_name: SSO resource name for exercise administration
@@ -55,12 +54,12 @@ en:
     other: Other
 
   deploy_modes:
-    single: Team independent
-    bt: Instance for each blue team
+    single: Independent
+    actor: "Instance for each of: %{actor}"
 
   visibility_modes:
     public: Public
-    team_only: Team only
+    actor_only: Actor only
 
   address_modes:
     ipv4_static: IPv4 static

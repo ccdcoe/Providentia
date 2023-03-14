@@ -49,12 +49,6 @@ module ApplicationHelper
     end
   end
 
-  def deploy_modes
-    VirtualMachine.deploy_modes.keys.map do |mode|
-      [I18n.t("deploy_modes.#{mode}"), mode]
-    end
-  end
-
   def visibility_modes
     VirtualMachine.visibilities.keys.map do |mode|
       [I18n.t("visibility_modes.#{mode}"), mode]
@@ -100,5 +94,21 @@ module ApplicationHelper
 
   def providentia_version_string
     Rails.configuration.x.providentia_version
+  end
+
+  def deploy_modes
+    @actors.select(&:numbering).map do |actor|
+      [I18n.t('deploy_modes.actor', actor: actor.name), actor.id]
+    end
+  end
+
+  def actor_color_classes(actor)
+    color = actor&.prefs&.dig('ui_color') || 'gray'
+    case color
+    when 'yellow'
+      "bg-#{color}-200 text-#{color}-800 dark:bg-#{color}-400 dark:text-#{color}-700"
+    else
+      "bg-#{color}-200 text-#{color}-800 dark:bg-#{color}-700 dark:text-#{color}-300"
+    end
   end
 end
