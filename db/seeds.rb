@@ -8,12 +8,6 @@
 #   movies = Movie.create([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
 #   Character.create(name: 'Luke', movie: movies.first)
 
-Team.where(name: 'Green').first_or_create!
-Team.where(name: 'Red').first_or_create!
-Team.where(name: 'Blue').first_or_create!
-Team.where(name: 'Yellow').first_or_create!
-Team.where(name: 'White').first_or_create!
-
 OperatingSystem.where(name: 'Linux', cloud_id: 'linux').first_or_create!
 OperatingSystem.where(name: 'macOS', cloud_id: 'macos').first_or_create!
 OperatingSystem.where(name: 'Windows', cloud_id: 'windows').first_or_create!

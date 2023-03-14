@@ -10,13 +10,22 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_11_15_141207) do
 ActiveRecord::Schema[7.0].define(version: 2023_01_03_131112) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_buffercache"
   enable_extension "pg_stat_statements"
   enable_extension "plpgsql"
   enable_extension "sslinfo"
+
+  create_table "actors", force: :cascade do |t|
+    t.bigint "exercise_id", null: false
+    t.string "abbreviation", null: false
+    t.string "name", null: false
+    t.jsonb "prefs", default: {}
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["exercise_id"], name: "index_actors_on_exercise_id"
+  end
 
   create_table "address_pools", force: :cascade do |t|
     t.bigint "network_id", null: false
@@ -142,11 +151,13 @@ ActiveRecord::Schema[7.0].define(version: 2023_01_03_131112) do
     t.text "description"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.bigint "team_id", null: false
+    t.integer "team_id"
     t.string "domain"
     t.boolean "ignore_root_domain", default: false, null: false
     t.string "slug"
     t.jsonb "config_map"
+    t.bigint "actor_id"
+    t.index ["actor_id"], name: "index_networks_on_actor_id"
     t.index ["exercise_id"], name: "index_networks_on_exercise_id"
     t.index ["team_id"], name: "index_networks_on_team_id"
   end
@@ -242,7 +253,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_01_03_131112) do
     t.text "description"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.bigint "team_id", null: false
+    t.integer "team_id"
     t.integer "deploy_mode", default: 0, null: false
     t.integer "custom_instance_count"
     t.bigint "operating_system_id"
@@ -254,12 +265,16 @@ ActiveRecord::Schema[7.0].define(version: 2023_01_03_131112) do
     t.boolean "bt_visible", default: true, null: false
     t.integer "primary_disk_size"
     t.integer "visibility", default: 1
+    t.bigint "actor_id"
+    t.integer "numbered_by"
+    t.index ["actor_id"], name: "index_virtual_machines_on_actor_id"
     t.index ["exercise_id"], name: "index_virtual_machines_on_exercise_id"
     t.index ["name", "exercise_id"], name: "index_virtual_machines_on_name_and_exercise_id", unique: true
     t.index ["operating_system_id"], name: "index_virtual_machines_on_operating_system_id"
     t.index ["team_id"], name: "index_virtual_machines_on_team_id"
   end
 
+  add_foreign_key "actors", "exercises"
   add_foreign_key "address_pools", "networks"
   add_foreign_key "addresses", "address_pools"
   add_foreign_key "addresses", "network_interfaces"
@@ -268,6 +283,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_01_03_131112) do
   add_foreign_key "customization_specs", "virtual_machines"
   add_foreign_key "network_interfaces", "networks"
   add_foreign_key "network_interfaces", "virtual_machines"
+  add_foreign_key "networks", "actors"
   add_foreign_key "networks", "exercises"
   add_foreign_key "networks", "teams"
   add_foreign_key "service_checks", "networks"
@@ -275,6 +291,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_01_03_131112) do
   add_foreign_key "services", "exercises"
   add_foreign_key "special_checks", "networks"
   add_foreign_key "special_checks", "services"
+  add_foreign_key "virtual_machines", "actors"
   add_foreign_key "virtual_machines", "exercises"
   add_foreign_key "virtual_machines", "operating_systems"
   add_foreign_key "virtual_machines", "teams"
