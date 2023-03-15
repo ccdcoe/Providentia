@@ -15,7 +15,7 @@ module API
               id: pool.slug,
               ip_family: pool.ip_family,
               network_address: substitute(pool.network_address),
-              gateway: pool.gateway_address_object.ip_object(nil, team_number).to_s
+              gateway: pool.gateway_address_object&.ip_object(nil, team_number)&.to_s
             }
           end,
           config_map: network.config_map&.deep_transform_values do |value|

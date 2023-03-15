@@ -49,6 +49,7 @@ class AddressPool < ApplicationRecord
   end
 
   def gateway_address_object
+    return if gateway.blank?
     Address.new(
       mode: address_mode,
       address_pool: self,
