@@ -13,8 +13,6 @@ class LiquidAddressComponent < LiquidTooltipSnippetComponent
       text = AddressValues.result_for(@object) || calc.send(:result)
 
       case text
-      when /::/
-        text.partition('::').slice(0, 2).join('')
       when /(:.*){7}/
         text.split(':').slice(0, calc.template_string.scan(':').size - 1).join(':')
       else
