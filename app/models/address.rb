@@ -89,7 +89,7 @@ class Address < ApplicationRecord
     when 'ipv4_static', 'ipv4_vip', 'ipv6_static', 'ipv6_vip'
       address_pool.network_address
     when 'ipv6_linklocal'
-      'fe80::/10'
+      'fe80::/64'
     when 'ipv6_uniqlocal'
       'fc00::/7'
     end
