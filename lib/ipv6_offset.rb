@@ -11,10 +11,6 @@ class Ipv6Offset
       .sub(/^::/, '')
   end
 
-  def store_value
-    offset.zero? ? nil : offset
-  end
-
   def to_s
     @hex
   end
@@ -28,10 +24,10 @@ class Ipv6Offset
   class << self
     def dump(obj)
       return unless obj
-      offset = self.new(IPAddress("::#{obj}").to_u128) if obj.is_a?(String)
-      offset = self.new(obj) if obj.is_a?(Integer)
-      offset = obj if obj.is_a?(self)
-      offset.store_value
+      new_obj = self.new(IPAddress("::#{obj}").to_u128) if obj.is_a?(String)
+      new_obj = self.new(obj) if obj.is_a?(Integer)
+      new_obj = obj if obj.is_a?(self)
+      new_obj.offset
     end
 
     def load(obj)

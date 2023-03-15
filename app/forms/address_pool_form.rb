@@ -40,12 +40,16 @@ class AddressPoolForm < Patterns::Form
   end
 
   def gateway6
-    return unless resource.ip_v6?
-    Ipv6Offset.load(attributes[:gateway]).to_s
+    return if !resource.ip_v6? || attributes[:gateway].nil?
+    Ipv6Offset.load(attributes[:gateway]).to_s.presence || "0"
   end
 
   def gateway6=(input)
-    self.gateway = Ipv6Offset.dump(input)
+    self.gateway = if input.blank?
+      nil
+    else
+      Ipv6Offset.dump(input)
+    end
   rescue
     self.gateway = resource.gateway
   end
