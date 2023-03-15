@@ -51,7 +51,7 @@
             = form.label :gateway, class: 'block font-bold text-gray-700 dark:text-gray-200'
             .mt-1.flex.rounded-md.shadow-sm
               %span.inline-flex.items-center.px-3.rounded-l-md.border.border-r-0.border-gray-300.bg-gray-50.text-gray-500.dark:bg-gray-600.dark:text-current.dark:border-black.text-sm
-                = render LiquidAddressComponent.new(object: address_pool.gateway_address_object, net_only: true)
+                = render LiquidNetworkAddressComponent.new(object: address_pool)
               = form.text_field :gateway6, class: 'focus:ring-indigo-500 focus:border-indigo-500 flex-1 block w-full rounded-none border-gray-300 dark:bg-gray-500 dark:border-black'
               %span.inline-flex.items-center.px-3.rounded-r-md.border.border-l-0.border-gray-300.bg-gray-50.text-gray-500.dark:bg-gray-600.dark:text-current.dark:border-black.text-sm<>
                 = "/#{address_pool.ip_network.prefix}"

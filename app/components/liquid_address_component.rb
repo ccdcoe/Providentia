@@ -3,11 +3,6 @@
 class LiquidAddressComponent < LiquidTooltipSnippetComponent
   with_collection_parameter :object
 
-  def initialize(object:, net_only: false)
-    @object = object
-    @net_only = net_only
-  end
-
   def render?
     @object
   end
@@ -16,7 +11,6 @@ class LiquidAddressComponent < LiquidTooltipSnippetComponent
     def template_text
       calc = UnsubstitutedAddress.new(@object)
       text = AddressValues.result_for(@object) || calc.send(:result)
-      return text unless @net_only
 
       case text
       when /::/
