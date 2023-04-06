@@ -7,6 +7,7 @@ module API
         Rails.cache.fetch(['apiv3', capability.cache_key_with_version]) do
           {
             id: capability.slug,
+            name: capability.name,
             description: capability.description,
             virtual_machines: capability.customization_specs.pluck(:slug),
             networks: capability.networks.pluck(:name)
