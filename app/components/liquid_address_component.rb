@@ -9,14 +9,6 @@ class LiquidAddressComponent < LiquidTooltipSnippetComponent
 
   private
     def template_text
-      calc = UnsubstitutedAddress.new(@object)
-      text = AddressValues.result_for(@object) || calc.send(:result)
-
-      case text
-      when /(:.*){7}/
-        text.split(':').slice(0, calc.template_string.scan(':').size - 1).join(':')
-      else
-        text
-      end
+      AddressValues.result_for(@object) || UnsubstitutedAddress.result_for(@object)
     end
 end

@@ -24,3 +24,4 @@
             address
           %dd.mt-1.text-sm.text-gray-900.dark:text-white.mt-0
             = render LiquidAddressComponent.new(object: address)
+            = render SegmentDeployCountChipComponent.new(vm: vm, network: address.network)
