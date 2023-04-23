@@ -147,7 +147,11 @@ module API
 
         def checks
           Current.services_cache ||= {}
-          Current.services_cache[spec.id] ||= spec.services.for_api.to_a
+          Current.services_cache[spec.id] ||= Check
+            .joins(:service)
+            .merge(Service.for_spec(spec))
+            .flat_map(&:slugs)
+            .map(&:last)
           Current.services_cache[spec.id].map do |check_name|
             {
               id: check_name,

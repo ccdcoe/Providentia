@@ -51,6 +51,6 @@ class ServicesController < ApplicationController
     end
 
     def get_service
-      @service = authorize(@exercise.services.find(params[:id]))
+      @service = authorize(@exercise.services.friendly.find(params[:id]))
     end
 end

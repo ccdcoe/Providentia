@@ -9,7 +9,7 @@
 
   - c.with_main do
     .bg-white.dark:bg-gray-800
-      .flex.py-2.px-3.gap-2.items-center.bg-gray-50.dark:bg-gray-500
+      .flex.py-2.px-3.gap-2.items-center.bg-blue-200.dark:bg-gray-500
         = render ModalComponent.new(header: "Network addresses") do |c|
           - c.with_body do
             = turbo_stream_from ["network_addresses", @network.id]

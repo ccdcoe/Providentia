@@ -1,1 +1,49 @@
-= render "form"
+- if policy(@exercise.services.build).create?
+  - provide :new_url do
+    = url_for [:new, @exercise, :service]
+
+%article[@service]
+  = render ColumnFormSectionComponent.new(disabled: !policy(@service).update?) do |c|
+    - c.description do
+      %h3.text-lg.leading-6.text-gray-900.dark:text-gray-50 Identity
+      %p.mt-1.text-gray-600.dark:text-gray-400
+        Name and description for this service
+
+    - c.main do
+      .px-4.py-5.bg-white.dark:bg-gray-800.space-y-6.p-6= render 'form'
+
+  .py-5
+    .border-t.border-gray-200.dark:border-gray-600
+
+  = render ColumnFormSectionComponent.new(disabled: !policy(@service).update?) do |c|
+    - c.description do
+      %h3.text-lg.leading-6.text-gray-900.dark:text-gray-50 Subjects
+      %p.mt-1.text-gray-600.dark:text-gray-400
+        The service will apply on specs using subject rules, which are defined here.
+
+      %p.mt-1.text-gray-600.dark:text-gray-400
+        Subjects are applied using
+        %em OR
+        logic - every added subject can add to effective subjects list.
+
+      %p.mt-1.text-gray-600.dark:text-gray-400
+        Matchers inside the subject are applied using
+        %em AND
+        logic - all conditions must match.
+      %p.mt-1.text-gray-600.dark:text-gray-400
+        For example:
+        %code OperatingSystem
+        must equal
+        %strong Linux
+        %em AND
+        %code Actor
+        must equal
+        %strong Blue teams.
+
+    - c.main do
+      .bg-white.dark:bg-gray-800= render 'subjects'
+
+  .py-5
+    .border-t.border-gray-200.dark:border-gray-600
+
+  = render 'checks'

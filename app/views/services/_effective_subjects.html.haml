@@ -1,0 +1,4 @@
+%label.block.font-bold.text-gray-700.dark:text-gray-200 Effective customization specs
+%p.mt-3
+  - (policy_scope(@exercise.customization_specs).order(:name).where(id: service.cached_spec_ids)).each do |spec|
+    = link_to spec.name, exercise_virtual_machine_path(@exercise, spec.virtual_machine_id), class: 'text-indigo-600 hover:text-indigo-900 dark:text-indigo-400 dark:text-indigo-400'

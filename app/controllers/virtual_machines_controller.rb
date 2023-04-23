@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
 class VirtualMachinesController < ApplicationController
+  include VmPage
   before_action :get_exercise
   before_action :get_virtual_machine, only: %i[update destroy]
-  include VmPage # needs to be after other stuff
-  skip_before_action :preload_form_collections, only: %i[index]
+  before_action :preload_form_collections, only: %i[new create show destroy]
 
   respond_to :turbo_stream
 
@@ -50,16 +50,15 @@ class VirtualMachinesController < ApplicationController
         )
       .find(params[:id])
 
+    preload_services
     authorize @virtual_machine
   end
 
   def update
-    @actors = policy_scope(@exercise.actors).load_async
-    @system_owners = policy_scope(User).order(:name).load_async
-    @capabilities = policy_scope(@exercise.capabilities).load_async
-    @services = policy_scope(@exercise.services).load_async
-
     @virtual_machine.update(virtual_machine_params)
+
+    preload_services
+    preload_form_collections
   end
 
   def destroy

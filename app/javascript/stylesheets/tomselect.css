@@ -155,7 +155,7 @@
 }
 
 .ts-wrapper {
-  @apply text-current mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm border-gray-300 rounded-md dark:bg-gray-500 dark:border-black dark:placeholder:text-gray-400 background-arrow;
+  @apply text-current focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm border-gray-300 rounded-md dark:bg-gray-500 dark:border-black dark:placeholder:text-gray-400 background-arrow;
 
   background-origin: content-box;
   background-position-x: right;
@@ -168,6 +168,10 @@
   &.dropdown-active {
     /* transform: rotate(180deg); */
     @apply rounded-b-none;
+  }
+
+  label + select + & {
+    @apply mt-1;
   }
 }
 

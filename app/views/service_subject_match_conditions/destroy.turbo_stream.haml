@@ -1,0 +1,8 @@
+- if @subject.destroyed?
+  = turbo_stream.remove dom_id(@subject)
+- else
+  = turbo_stream.replace dom_id(@subject) do
+    = render @subject
+
+= turbo_stream.update dom_id(@service, :subject_effective) do
+  = render "services/effective_subjects", service: @service

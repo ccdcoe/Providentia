@@ -1,0 +1,12 @@
+.flex.py-2.px-3.gap-2.items-center.bg-blue-200.dark:bg-gray-500
+  %h1.grow.text-2xl.font-bold.m-2 Service subjects
+  = form_with(url: [@service.exercise, @service, :service_subjects]) do |_form|
+    %button.form-submit-add.text-sm.h-8{type: 'submit'}
+      %i.fas.fa-plus.self-center
+      Add subject
+
+.divide-y-4.divide-double.divide-gray-200.dark:divide-gray-500
+  = render @service.service_subjects
+  .px-4.py-5.text-center.empty:hidden{id: dom_id(@service, :subject_effective)}<
+    - if @service.service_subjects.any?
+      = render 'effective_subjects', service: @service

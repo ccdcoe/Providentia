@@ -1,11 +1,10 @@
 # frozen_string_literal: true
 
 class AddressesController < ApplicationController
+  include VmPage
   before_action :get_exercise, :get_network_interface
-  before_action :preload_forms
+  before_action :preload_form_collections
   before_action :get_address, only: %i[update destroy]
-
-  include VmPage # needs to be after other stuff
 
   respond_to :turbo_stream
 
@@ -39,10 +38,5 @@ class AddressesController < ApplicationController
 
     def get_address
       @address = authorize(@network_interface.addresses.find(params[:id]))
-    end
-
-    def preload_forms
-      @capabilities = policy_scope(@exercise.capabilities).load_async
-      @services = policy_scope(@exercise.services).load_async
     end
 end

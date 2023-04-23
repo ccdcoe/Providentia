@@ -2,11 +2,13 @@
 
 module API
   module V3
-    class ServicePresenter < Struct.new(:service)
+    class ServicePresenter < Struct.new(:service, :spec_scope)
       def as_json(_opts)
         Rails.cache.fetch(['apiv3', service.cache_key_with_version]) do
           {
-            id: service.name,
+            id: service.slug,
+            name: service.name,
+            subjects:,
             checks: network_checks + special_checks
           }
         end
@@ -36,6 +38,13 @@ module API
               special: true
             }
           end
+        end
+
+        def subjects
+          spec_scope
+            .where(id: service.cached_spec_ids)
+            .order(:slug)
+            .pluck(:slug) || []
         end
     end
   end

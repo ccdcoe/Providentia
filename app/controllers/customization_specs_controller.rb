@@ -1,8 +1,9 @@
 # frozen_string_literal: true
 
 class CustomizationSpecsController < ApplicationController
+  include VmPage
   before_action :get_exercise, :get_virtual_machine
-  before_action :preload_forms, only: %i[create update]
+  before_action :preload_form_collections, only: %i[create update]
   before_action :get_customization_spec, only: %i[update destroy]
 
   respond_to :turbo_stream
@@ -15,6 +16,7 @@ class CustomizationSpecsController < ApplicationController
   end
 
   def update
+    preload_services
     @customization_spec.update(spec_params)
   end
 
@@ -37,10 +39,5 @@ class CustomizationSpecsController < ApplicationController
         :name, :dns_name, :role_name, :description,
         { service_ids: [] }, { capability_ids: [] }
       )
-    end
-
-    def preload_forms
-      @capabilities = policy_scope(@exercise.capabilities).load_async
-      @services = policy_scope(@exercise.services).load_async
     end
 end

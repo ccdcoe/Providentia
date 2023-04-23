@@ -33,6 +33,8 @@ en:
       address:
         offset: Address
         dns_enabled: Publish to DNS
+      service_subject:
+        customization_spec_ids: Effective customization specs
       service_check:
         ip_family: IP family
         network: Source network

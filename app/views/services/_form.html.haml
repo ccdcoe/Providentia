@@ -1,35 +1,18 @@
-.mt-5.md:mt-0.shadow.bg-white.dark:bg-gray-800.rounded-md[@service]
-  = form_with(model: [@service.exercise, @service], html: { autocomplete: "off" }, class: 'p-6', data: { controller: 'model', action: "change->model#update"}, class: 'px-3 py-2') do |f|
-    .space-y-6
-      %div
+= form_with(model: [@service.exercise, @service], html: { autocomplete: "off" }, data: { controller: 'model', action: "change->model#update"}) do |f|
+  .space-y-6
+    .flex.flex-row.flex-wrap.gap-x-4.gap-y-2
+      .grow
         = f.label :name, class: 'block font-bold text-gray-700 dark:text-gray-200'
         = f.text_field :name, class: 'form-input'
         - if @service.errors[:name].any?
           %span.text-red-600= @service.errors[:name].join(', ')
 
       %div
-        = f.label :description, class: 'block font-bold text-gray-700 dark:text-gray-200'
-        = f.text_area :description, class: 'form-input'
-        - if @service.errors[:description].any?
-          %span.text-red-600= @service.errors[:description].join(', ')
+        %span.block.font-bold.text-gray-700.dark:text-gray-200 API ID
+        %p.my-3= @service.slug
 
-  .border-t.border-gray-200.dark:border-gray-500
-
-  .space-y-6.p-6
-    .flex.w-full
-      %h1.text-xl.font-bold Checks
-      .flex-grow.text-right.space-x-2
-        - if @service.persisted? && policy(@service).update?
-          = form_with(url: [@service.exercise, @service, :service_checks], class: 'inline-block') do |form|
-            %button.leading-5.p-1.px-2.rounded-sm.text-white.bg-indigo-500{type: 'submit'}
-              %i.fas.fa-plus.self-center
-              Add network check
-
-          = form_with(url: [@service.exercise, @service, :special_checks], class: 'inline-block') do |form|
-            %button.leading-5.p-1.px-2.rounded-sm.text-white.bg-indigo-500{type: 'submit'}
-              %i.fas.fa-plus.self-center
-              Add special check
-
-    #checks-table.flex.flex-col.align-middle.border.border-gray-200.dark:border-gray-500.bg-white.dark:bg-gray-700.divide-y.divide-double.divide-gray-200.dark:divide-gray-500
-      = render @service.service_checks.order(:created_at)
-      = render @service.special_checks.order(:created_at)
+    %div
+      = f.label :description, class: 'block font-bold text-gray-700 dark:text-gray-200'
+      = f.text_area :description, class: 'form-input'
+      - if @service.errors[:description].any?
+        %span.text-red-600= @service.errors[:description].join(', ')

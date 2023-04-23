@@ -1,11 +1,11 @@
 # frozen_string_literal: true
 
 class NetworkInterfacesController < ApplicationController
+  include VmPage
   before_action :get_exercise, :get_virtual_machine
-  before_action :preload_forms
+  before_action :preload_form_collections, :preload_services
   before_action :get_network_interface, only: %i[destroy update]
 
-  include VmPage # needs to be after other stuff
 
   respond_to :turbo_stream
 
@@ -41,10 +41,5 @@ class NetworkInterfacesController < ApplicationController
     def get_network_interface
       @network_interface = @virtual_machine.network_interfaces.find(params[:id])
       authorize @network_interface
-    end
-
-    def preload_forms
-      @capabilities = policy_scope(@exercise.capabilities).load_async
-      @services = policy_scope(@exercise.services).load_async
     end
 end

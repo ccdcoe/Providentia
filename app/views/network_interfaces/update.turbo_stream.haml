@@ -7,3 +7,7 @@
 = simple_form_for([@exercise, @virtual_machine]) do |f|
   = turbo_stream.update "deployment_section" do
     = render "virtual_machines/deployment_section", f:
+
+- @virtual_machine.customization_specs.each do |spec|
+  = turbo_stream.replace dom_id(spec) do
+    = render spec

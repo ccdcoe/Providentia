@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_01_03_131112) do
+ActiveRecord::Schema[7.0].define(version: 2023_02_09_084608) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_buffercache"
   enable_extension "pg_stat_statements"
@@ -190,12 +190,22 @@ ActiveRecord::Schema[7.0].define(version: 2023_01_03_131112) do
     t.index ["service_id"], name: "index_service_checks_on_service_id"
   end
 
+  create_table "service_subjects", force: :cascade do |t|
+    t.bigint "service_id", null: false
+    t.jsonb "customization_spec_ids", default: []
+    t.jsonb "match_conditions", default: {}, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["service_id"], name: "index_service_subjects_on_service_id"
+  end
+
   create_table "services", force: :cascade do |t|
     t.bigint "exercise_id", null: false
     t.string "name"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.text "description"
+    t.string "slug"
     t.index ["exercise_id"], name: "index_services_on_exercise_id"
   end
 
@@ -288,6 +298,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_01_03_131112) do
   add_foreign_key "networks", "teams"
   add_foreign_key "service_checks", "networks"
   add_foreign_key "service_checks", "services"
+  add_foreign_key "service_subjects", "services"
   add_foreign_key "services", "exercises"
   add_foreign_key "special_checks", "networks"
   add_foreign_key "special_checks", "services"

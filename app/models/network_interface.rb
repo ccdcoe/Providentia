@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class NetworkInterface < ApplicationRecord
+  include SpecCacheUpdater
   has_paper_trail
 
   default_scope { order(:created_at) }

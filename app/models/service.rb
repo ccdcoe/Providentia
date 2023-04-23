@@ -2,27 +2,47 @@
 
 class Service < ApplicationRecord
   include VmCacheBuster
+  include SpecCacheUpdater
+  extend FriendlyId
+  friendly_id :name, use: :slugged, sequence_separator: '_'
 
   has_paper_trail
 
   belongs_to :exercise
+  has_many :service_subjects, dependent: :destroy
   has_many :service_checks, dependent: :destroy
   has_many :special_checks, dependent: :destroy
-
-  has_and_belongs_to_many :customization_specs
 
   validates_associated :service_checks, :special_checks
   validates :name, uniqueness: { scope: :exercise }, presence: true, length: { minimum: 1, maximum: 63 }
 
-  scope :for_api, -> {
-    eager_load(service_checks: [:network, :service], special_checks: [:network, :service])
-      .flat_map do |service|
-        service.service_checks.flat_map(&:virtual_checks).map(&:slug) +
-          service.special_checks.map(&:slug)
-      end
+  scope :for_spec, ->(*specs) {
+    joins(:service_subjects)
+      .where("service_subjects.customization_spec_ids @> ':id'::jsonb", id: specs.flatten.map(&:id))
   }
 
   def self.to_icon
     'fa-flask'
+  end
+
+  def self.migrate_to_subjects
+    ServiceSubject.transaction do
+      find_each do |service|
+        service.customization_specs.each do |spec|
+          service
+            .service_subjects
+            .where('match_conditions @> ?', [{ matcher_type: 'CustomizationSpec', matcher_id: spec.id.to_s }].to_json)
+            .first_or_create!(match_conditions: [{ matcher_type: 'CustomizationSpec', matcher_id: spec.id.to_s }])
+        end
+      end
+    end
+  end
+
+  def should_generate_new_friendly_id?
+    name_changed? || super
+  end
+
+  def cached_spec_ids
+    service_subjects.pluck(:customization_spec_ids).flatten
   end
 end

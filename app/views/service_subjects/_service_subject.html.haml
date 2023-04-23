@@ -1,0 +1,7 @@
+.px-4.py-5.flex.flex-row.gap-x-3[service_subject]
+  = form_with(method: :post, url: [@service.exercise, @service, service_subject, :conditions], data: { controller: 'model' }, class: 'place-self-end') do |form|
+    %button.form-submit-add.text-sm.h-8.w-8.my-1.5
+      %i.fas.fa-plus.self-center
+
+  .flex.flex-row.flex-wrap.grow.gap-x-2.gap-y-2{id: dom_id(service_subject, :conditions)}
+    = render service_subject.match_conditions, service_subject: service_subject

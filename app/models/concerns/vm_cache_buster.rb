@@ -10,6 +10,15 @@ module VmCacheBuster
 
   private
     def update_specs
-      customization_specs.touch_all
+      l_service = case self
+                  when Service
+                    self
+                  else
+                    service
+      end
+      exercise
+        .customization_specs
+        .where(id: l_service.cached_spec_ids)
+        .touch_all
     end
 end

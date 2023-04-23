@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class VirtualMachine < ApplicationRecord
+  include SpecCacheUpdater
   has_paper_trail
 
   # TO BE REMOVED

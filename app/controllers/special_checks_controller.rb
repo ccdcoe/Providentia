@@ -24,7 +24,7 @@ class SpecialChecksController < ApplicationController
     end
 
     def get_service
-      @service = policy_scope(@exercise.services).find(params[:service_id])
+      @service = policy_scope(@exercise.services).friendly.find(params[:service_id])
     end
 
     def get_check

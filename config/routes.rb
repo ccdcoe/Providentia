@@ -20,6 +20,10 @@ Rails.application.routes.draw do
       resources :address_pools
     end
     resources :services, except: :edit do
+      resources :service_subjects, only: %i[create] do
+        resources :conditions, only: %i[create update destroy]
+      end
+
       resources :service_checks, only: %i[create update destroy]
       resources :special_checks, only: %i[create update destroy]
     end

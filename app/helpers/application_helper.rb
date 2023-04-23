@@ -67,6 +67,12 @@ module ApplicationHelper
     end
   end
 
+  def service_subject_types
+    ServiceSubjectMatchCondition::VALID_TYPES.map do |type_klass|
+      [type_klass.model_name.human, type_klass.to_s]
+    end
+  end
+
   def nic_tooltip(nic)
     [
       nic.network.name,
@@ -109,6 +115,31 @@ module ApplicationHelper
       "bg-#{color}-200 text-#{color}-800 dark:bg-#{color}-400 dark:text-#{color}-700"
     else
       "bg-#{color}-200 text-#{color}-800 dark:bg-#{color}-700 dark:text-#{color}-300"
+    end
+  end
+
+  def subject_selector_scope(match_condition)
+    case match_condition.matcher_type
+    when 'CustomizationSpec'
+      policy_scope(@exercise.customization_specs).select(:id, :name).order(:name).map do |spec|
+        [spec.name, spec.id]
+      end
+    when 'Capability'
+      policy_scope(@exercise.capabilities).select(:id, :name).order(:name).map do |spec|
+        [spec.name, spec.id]
+      end
+    when 'Actor'
+      policy_scope(@exercise.actors).select(:id, :name).order(:name).map do |spec|
+        [spec.name, spec.id]
+      end
+    when 'OperatingSystem'
+      sorted_os_options
+    when 'Network'
+      policy_scope(@exercise.networks).select(:id, :name).order(:name).map do |spec|
+        [spec.name, spec.id]
+      end
+    else
+      []
     end
   end
 end

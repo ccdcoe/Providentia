@@ -65,7 +65,7 @@ module API
         end
 
         def services
-          spec.services.pluck(:name)
+          Service.for_spec(spec).pluck(:slug)
         end
 
         def instances

@@ -1,0 +1,20 @@
+.w-full
+  = form_with(model: service_subject_match_condition, method: :patch, url: exercise_service_service_subject_condition_path(@service.exercise, @service, service_subject, service_subject_match_condition.id), data: { controller: 'model', action: "change->model#update" }) do |form|
+    .flex.grow.gap-x-2.place-items-center
+      .font-bold.text-gray-700.dark:text-gray-200.text-right{class: 'basis-1/6'}
+        = service_subject_match_condition.class.human_attribute_name(:matcher_type)
+      %div{class: 'basis-1/3'}= form.collection_select :matcher_type, service_subject_types, :last, :first, { include_blank: service_subject_match_condition.matcher_type.blank? }, { class: 'form-input', data: { controller: 'select'} }
+
+      - if service_subject.errors[:matcher_type].any?
+        %span.text-red-600= vm.errors[:matcher_type].join(', ')
+
+      .font-bold.text-gray-700.dark:text-gray-200.text-right{class: 'basis-1/6'}
+        = service_subject_match_condition.class.human_attribute_name(:matcher_id)
+      %div{class: 'basis-1/3'}= form.collection_select :matcher_id, subject_selector_scope(service_subject_match_condition), :last, :first, { include_blank: service_subject_match_condition.matcher_id.blank? || !service_subject_match_condition.matched.exists? }, { class: 'form-input', disabled: !policy(@service).update?, data: { controller: 'select'} }
+
+      - if service_subject.errors[:matcher_id].any?
+        %span.text-red-600= vm.errors[:matcher_id].join(', ')
+
+      %div
+        = link_to 'javascript:;', data: { action: "model#delete" } do
+          %i.fas.fa-times-circle.text-red-600

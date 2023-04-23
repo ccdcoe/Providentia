@@ -71,7 +71,7 @@
 
     - c.with_main do
       .bg-white.dark:bg-gray-800
-        .flex.py-2.px-3.gap-2.items-center.bg-gray-50.dark:bg-gray-500
+        .flex.py-2.px-3.gap-2.items-center.bg-blue-200.dark:bg-gray-500
           %h1.grow.text-2xl.font-bold.m-2= CustomizationSpec.model_name.human.pluralize
           = form_with(url: [@virtual_machine.exercise, @virtual_machine, :customization_specs]) do |_form|
             %button.form-submit-add.text-sm.h-8{type: 'submit'}

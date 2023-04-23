@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class CustomizationSpec < ApplicationRecord
+  include SpecCacheUpdater
   extend FriendlyId
   has_paper_trail
 
@@ -30,10 +31,8 @@ class CustomizationSpec < ApplicationRecord
 
   belongs_to :virtual_machine, touch: true
   has_one :exercise, through: :virtual_machine
-  has_and_belongs_to_many :services,
-    after_add: :invalidate_cache, after_remove: :invalidate_cache
   has_and_belongs_to_many :capabilities,
-    after_add: :invalidate_cache, after_remove: :invalidate_cache
+    after_add: :invalidate_capability_cache, after_remove: :invalidate_capability_cache
 
   validates :name, uniqueness: { scope: :virtual_machine }, presence: true, length: { minimum: 1, maximum: 63 }, hostname: true
   validates :dns_name, length: { minimum: 1, maximum: 63, allow_blank: true }, hostname: { allow_blank: true }
@@ -95,9 +94,10 @@ class CustomizationSpec < ApplicationRecord
       name_changed? || super
     end
 
-    def invalidate_cache(_service_or_capability)
+    def invalidate_capability_cache(capability)
       touch
       virtual_machine.touch
+      schedule_spec_cache_update(capability)
     end
 
     def lowercase_fields
