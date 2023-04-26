@@ -4,12 +4,12 @@
     = f.error_notification message: f.object.errors[:base].to_sentence if f.object.errors[:base].present?
 
     = render ColumnFormSectionComponent.new(disabled: !policy(@virtual_machine).update?) do |c|
-      - c.description do
+      - c.with_description do
         %h3.text-lg.leading-6.text-gray-900.dark:text-gray-50 Identity
         %p.mt-1.text-gray-600.dark:text-gray-400
           Name, owner and other identity information for this VM
 
-      - c.main do
+      - c.with_main do
         .px-4.py-5.bg-white.dark:bg-gray-800.space-y-6.p-6
           .grid.gap-6.grid-cols-2.xl:grid-cols-4
             .col-span-2= f.input :name
@@ -23,12 +23,12 @@
       .border-t.border-gray-200.dark:border-gray-600
 
     = render ColumnFormSectionComponent.new(disabled: !policy(@virtual_machine).update?) do |c|
-      - c.description do
+      - c.with_description do
         %h3.text-lg.leading-6.text-gray-900.dark:text-gray-50 Hardware
         %p.mt-1.text-gray-600.dark:text-gray-400 Resources for this VM
         %p.mt-1.text-gray-600.dark:text-gray-400 Default vCPU and RAM for operating system will be used, if left blank
 
-      - c.main do
+      - c.with_main do
         .px-4.py-5.bg-white.dark:bg-gray-800.space-y-6.p-6
           .grid.gap-6.grid-cols-3
             .col-span-3= f.association :operating_system, collection: sorted_os_options, input_html: { data: { controller: 'select' } }
@@ -51,12 +51,12 @@
       .border-t.border-gray-200.dark:border-gray-600
 
     = render ColumnFormSectionComponent.new(disabled: !policy(@virtual_machine).update?) do |c|
-      - c.description do
+      - c.with_description do
         %h3.text-lg.leading-6.text-gray-900.dark:text-gray-50 Deployment
         %p.mt-1.text-gray-600.dark:text-gray-400
           Strategy and count of VM-s to be deployed
 
-      - c.main do
+      - c.with_main do
         .px-4.py-5.bg-white.dark:bg-gray-800.space-y-6.p-6#deployment_section
           = render 'deployment_section', f:
 
@@ -64,12 +64,12 @@
     .border-t.border-gray-200.dark:border-gray-600
 
   = render ColumnFormSectionComponent.new(disabled: !policy(@virtual_machine).update?) do |c|
-    - c.description do
+    - c.with_description do
       %h3.text-lg.font-medium.leading-6.text-gray-900.dark:text-gray-50 Customization
       %p.mt-1.text-gray-600.dark:text-gray-400
         Defines how instances of this host are customized
 
-    - c.main do
+    - c.with_main do
       .bg-white.dark:bg-gray-800
         .flex.py-2.px-3.gap-2.items-center.bg-gray-50.dark:bg-gray-500
           %h1.grow.text-2xl.font-bold.m-2= CustomizationSpec.model_name.human.pluralize

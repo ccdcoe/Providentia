@@ -2,16 +2,16 @@
   .border-t.border-gray-200.dark:border-gray-600
 
 = render ColumnFormSectionComponent.new(disabled: !policy(@network).update?) do |c|
-  - c.description do
+  - c.with_description do
     %h3.text-lg.leading-6.text-gray-900.dark:text-gray-50 Addressing
     %p.mt-1.text-sm.text-gray-600.dark:text-gray-400
       The addressing is handled by creating address pools. There can be multiple pools in each IP family.
 
-  - c.main do
+  - c.with_main do
     .bg-white.dark:bg-gray-800
       .flex.py-2.px-3.gap-2.items-center.bg-gray-50.dark:bg-gray-500
         = render ModalComponent.new(header: "Network addresses") do |c|
-          - c.body do
+          - c.with_body do
             = turbo_stream_from ["network_addresses", @network.id]
             #address_preview= render 'address_preview', network: @network
 

@@ -1,14 +1,14 @@
 - if @virtual_machines.any?
   = render TableComponent.new do |c|
-    - c.column { VirtualMachine.human_attribute_name(:name) }
-    - c.column { Team.model_name.human }
-    - c.column { VirtualMachine.human_attribute_name(:system_owner) }
-    - c.column { Capability.model_name.human.pluralize }
-    - c.column { OperatingSystem.model_name.human }
-    - c.column { '' }
+    - c.with_column { VirtualMachine.human_attribute_name(:name) }
+    - c.with_column { Team.model_name.human }
+    - c.with_column { VirtualMachine.human_attribute_name(:system_owner) }
+    - c.with_column { Capability.model_name.human.pluralize }
+    - c.with_column { OperatingSystem.model_name.human }
+    - c.with_column { '' }
 
     - @virtual_machines.each do |machine|
-      - c.table_row(id: dom_id(machine, 'first')) do
+      - c.with_table_row(id: dom_id(machine, 'first')) do
         - cache([machine.exercise.cache_key_with_version, machine.cache_key_with_version, 'index_fragment_1']) do
           %td.px-6.py-4
             %div= link_to machine.name, [machine.exercise, machine], class: 'text-indigo-600 hover:text-indigo-900 dark:text-indigo-400 dark:text-indigo-400', data: { turbo_frame: '_top'}
@@ -29,7 +29,7 @@
               %i.fas.fa-times-circle.text-red-600
 
       - if machine.addresses.any?
-        - c.table_row(classes: '!border-t-0', id: dom_id(machine, 'second')) do
+        - c.with_table_row(classes: '!border-t-0', id: dom_id(machine, 'second')) do
           - cache([machine.exercise.cache_key_with_version, machine.cache_key_with_version, 'index_fragment_2']) do
             %td.px-6.pb-4.text-sm.text-gray-500.dark:text-gray-50{colspan: 6}
               .flex.flex-wrap.gap-2

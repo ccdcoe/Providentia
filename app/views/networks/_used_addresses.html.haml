@@ -1,12 +1,12 @@
 %h1.text-2xl.font-bold.py-3.pb-6 Used addresses
 
 = render TableComponent.new do |c|
-  - c.column { VirtualMachine.model_name.human }
-  - c.column { 'IPv4 address' }
-  - c.column { 'IPv6 address' }
+  - c.with_column { VirtualMachine.model_name.human }
+  - c.with_column { 'IPv4 address' }
+  - c.with_column { 'IPv6 address' }
 
   - sorted_used_addresses(@network).each do |vm, addresses|
-    - c.table_row do
+    - c.with_table_row do
       %td.px-6.py-4= link_to vm.name, [vm.exercise, vm], class: 'text-indigo-600 hover:text-indigo-900 dark:text-indigo-400'
       - addresses.each do |group, address_list|
         %td.px-6.py-4

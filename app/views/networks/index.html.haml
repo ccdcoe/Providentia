@@ -10,18 +10,18 @@
       .border-t.border-gray-200.dark:border-gray-600
 
     = render TableComponent.new do |c|
-      - c.column do
+      - c.with_column do
         = Network.human_attribute_name(:name)
         \/
         = Network.human_attribute_name(:abbreviation)
 
-      - c.column { 'Network' }
-      - c.column { Network.human_attribute_name(:domain) }
-      - c.column { Network.human_attribute_name(:description) }
-      - c.column { '' }
+      - c.with_column { 'Network' }
+      - c.with_column { Network.human_attribute_name(:domain) }
+      - c.with_column { Network.human_attribute_name(:description) }
+      - c.with_column { '' }
 
       - networks.each do |network|
-        - c.table_row do
+        - c.with_table_row do
           %td.px-6.py-4
             .text-sm
               = link_to_if policy(network).show?, network.name, [network.exercise, network], class: 'text-indigo-600 hover:text-indigo-900 dark:text-indigo-400'

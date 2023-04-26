@@ -4,11 +4,11 @@
 
 - if @capabilities.any?
   = render TableComponent.new do |c|
-    - c.column { Capability.human_attribute_name(:name) }
-    - c.column { '' }
+    - c.with_column { Capability.human_attribute_name(:name) }
+    - c.with_column { '' }
 
     - @capabilities.each do |capability|
-      - c.table_row do
+      - c.with_table_row do
         %td.px-6.py-4
           .text-sm
             = link_to_if policy(capability).show?, capability.name, [capability.exercise, capability], class: 'text-indigo-600 hover:text-indigo-900 dark:text-indigo-400'

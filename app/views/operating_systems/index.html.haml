@@ -3,13 +3,13 @@
 
 - if @operating_systems.any?
   = render TableComponent.new do |c|
-    - c.column { OperatingSystem.human_attribute_name(:name) }
-    - c.column { OperatingSystem.human_attribute_name(:cpu) }
-    - c.column { OperatingSystem.human_attribute_name(:ram) + ' (GB)' }
-    - c.column { OperatingSystem.human_attribute_name(:primary_disk_size) + ' (GB)' }
+    - c.with_column { OperatingSystem.human_attribute_name(:name) }
+    - c.with_column { OperatingSystem.human_attribute_name(:cpu) }
+    - c.with_column { OperatingSystem.human_attribute_name(:ram) + ' (GB)' }
+    - c.with_column { OperatingSystem.human_attribute_name(:primary_disk_size) + ' (GB)' }
 
     - @operating_systems.each do |os|
-      - c.table_row do
+      - c.with_table_row do
         %td.px-6.py-4= link_to "#{'-' * os.depth} #{os.name}", os, class: 'text-indigo-600 hover:text-indigo-900 dark:text-indigo-400'
         %td.px-6.py-4= os.cpu || content_tag(:span, os.applied_cpu, class: 'opacity-40')
         %td.px-6.py-4= os.ram || content_tag(:span, os.applied_ram, class: 'opacity-40')

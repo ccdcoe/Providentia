@@ -3,12 +3,12 @@
   = f.error_notification message: f.object.errors[:base].to_sentence if f.object.errors[:base].present?
 
   = render ColumnFormSectionComponent.new do |c|
-    - c.description do
+    - c.with_description do
       %h3.text-lg.leading-6.text-gray-900.dark:text-gray-50 Basic information
       %p.mt-1.text-gray-600.dark:text-gray-400
         Basic information for new virtual machine
 
-    - c.main do
+    - c.with_main do
       .px-4.py-5.bg-white.dark:bg-gray-800.space-y-6.sm:p-6
         .grid.grid-cols-2.gap-6
           = f.input :name

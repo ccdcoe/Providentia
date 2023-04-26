@@ -5,12 +5,12 @@
   = f.error_notification message: f.object.errors[:base].to_sentence if f.object.errors[:base].present?
 
   = render ColumnFormSectionComponent.new(disabled: !policy(@exercise).update?) do |c|
-    - c.description do
+    - c.with_description do
       %h3.text-lg.leading-6.text-gray-900.dark:text-gray-50 Identity
       %p.mt-1.text-sm.text-gray-600.dark:text-gray-400
         Name and abbreviation for this environment
 
-    - c.main do
+    - c.with_main do
       .px-4.py-5.bg-white.dark:bg-gray-800.space-y-6.sm:p-6
         .grid.grid-cols-3.gap-6
           .col-span-3.sm:col-span-2= f.input :name
@@ -26,12 +26,12 @@
     .border-t.border-gray-200
 
   = render ColumnFormSectionComponent.new(disabled: !policy(@exercise).update?) do |c|
-    - c.description do
+    - c.with_description do
       %h3.text-lg.leading-6.text-gray-900.dark:text-gray-50 Teams
       %p.mt-1.text-sm.text-gray-600.dark:text-gray-400
         Blue team settings
 
-    - c.main do
+    - c.with_main do
       .px-4.py-5.bg-white.dark:bg-gray-800.space-y-6.sm:p-6
         .grid.grid-cols-2.gap-6
           = f.input :blue_team_count
@@ -45,12 +45,12 @@
     .border-t.border-gray-200
 
   = render ColumnFormSectionComponent.new(disabled: !policy(@exercise).update?) do |c|
-    - c.description do
+    - c.with_description do
       %h3.text-lg.leading-6.text-gray-900.dark:text-gray-50 Access
       %p.mt-1.text-sm.text-gray-600.dark:text-gray-400
         Control who gets access to this environment
 
-    - c.main do
+    - c.with_main do
       .px-4.py-5.bg-white.dark:bg-gray-800.space-y-6.sm:p-6
         .grid.grid-cols-3.gap-6
           .col-span-3.sm:col-span-2
@@ -82,12 +82,12 @@
     .border-t.border-gray-200
 
   = render ColumnFormSectionComponent.new(disabled: !policy(@exercise).update?) do |c|
-    - c.description do
+    - c.with_description do
       %h3.text-lg.leading-6.text-gray-900.dark:text-gray-50 Networking
       %p.mt-1.text-sm.text-gray-600.dark:text-gray-400
         Enable/disable specific functionality for this environment
 
-    - c.main do
+    - c.with_main do
       .px-4.py-5.bg-white.dark:bg-gray-800.space-y-6.sm:p-6
         .grid.grid-cols-3.gap-6
           .col-span-3.sm:col-span-2= f.input :services_read_only
@@ -101,11 +101,11 @@
       .border-t.border-gray-200
 
     = render ColumnFormSectionComponent.new(disabled: !policy(@exercise).update?) do |c|
-      - c.description do
+      - c.with_description do
         %h3.text-lg.leading-6.text-gray-900.dark:text-gray-50 Feature toggles
         %p.mt-1.text-sm.text-gray-600.dark:text-gray-400
           Enable/disable specific functionality for this environment
-      - c.main do
+      - c.with_main do
         .px-4.py-5.bg-white.dark:bg-gray-800.space-y-6.sm:p-6
           .grid.grid-cols-3.gap-6
             .col-span-3.sm:col-span-2= f.input :mode, collection: Exercise.modes.map { |a, b| [a.capitalize, a] }, default: 0
@@ -120,7 +120,7 @@
         .border-t.border-gray-200
 
       = render ColumnFormSectionComponent.new(disabled: !policy(@exercise).update?, shadow: false) do |c|
-        - c.description do
+        - c.with_description do
           %h3.text-lg.leading-6.text-gray-900.dark:text-gray-50 Archival & Cloning
           %p.mt-1.text-sm.text-gray-600.dark:text-gray-400
             If this environment is no longer in active use, it can be archived. Archived environments are hidden in UI, but still accessible from API.
@@ -130,7 +130,7 @@
             %strong= @exercise.name
             \.
 
-        - c.main do
+        - c.with_main do
           .flex.flex-row-reverse.gap-x-2.leading-8
             = link_to exercise_path(@exercise, exercise: { archived: true }), class: 'inline-flex items-center justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500', data: { turbo_method: :put, turbo_confirm: "Are you sure you want to archive #{@exercise.name}?"} do
               %i.fas.fa-box.mr-2

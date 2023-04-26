@@ -8,12 +8,12 @@
   = @version.created_at
 
 = render TableComponent.new do |c|
-  - c.column { 'attribute' }
-  - c.column { 'before' }
-  - c.column { 'after' }
+  - c.with_column { 'attribute' }
+  - c.with_column { 'before' }
+  - c.with_column { 'after' }
 
   - @version.changeset.each do |row, (before, after)|
-    - c.table_row do
+    - c.with_table_row do
       %td.px-6.py-4= row
       %td.px-6.py-4
         - if before.nil?
