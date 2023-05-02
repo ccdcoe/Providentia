@@ -94,37 +94,37 @@ class Actor < ApplicationRecord
     case abbreviation
     when 'gt'
       {
-        id: "team_green",
-        name: "Green",
+        id: 'team_green',
+        name: 'Green',
         config_map: {
-          team_color: "Green"
+          team_color: 'Green'
         },
         children: []
       }
     when 'rt'
       {
-        id: "team_red",
-        name: "Red",
+        id: 'team_red',
+        name: 'Red',
         config_map: {
-          team_color: "Red"
+          team_color: 'Red'
         },
         children: []
       }
     when 'yt'
       {
-        id: "team_yellow",
-        name: "Yellow",
+        id: 'team_yellow',
+        name: 'Yellow',
         config_map: {
-          team_color: "Yellow"
+          team_color: 'Yellow'
         },
         children: []
       }
     when 'bt'
       {
-        id: "team_blue",
-        name: "Blue",
+        id: 'team_blue',
+        name: 'Blue',
         config_map: {
-          team_color: "Blue"
+          team_color: 'Blue'
         },
         children: []
       }
@@ -144,8 +144,8 @@ class Actor < ApplicationRecord
     count = prefs.dig('numbered', 'count').presence || 0
     dev_count = prefs.dig('numbered', 'dev_count').presence || 0
     {
-      entries: 1.step(by: 1).take(count+dev_count),
-      dev_entries: (count+1).step(by: 1).take(dev_count)
+      entries: 1.step(by: 1).take(count + dev_count),
+      dev_entries: (count + 1).step(by: 1).take(dev_count)
     }
   end
 end
