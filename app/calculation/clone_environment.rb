@@ -18,8 +18,8 @@ class CloneEnvironment < Patterns::Calculation
 
           clone_capabilities
           clone_networks
-          clone_services
           clone_vms
+          clone_services
 
           cloned_environment
         end
@@ -69,8 +69,7 @@ class CloneEnvironment < Patterns::Calculation
       )
 
       combined_data = {
-        capabilities: [],
-        services: []
+        capabilities: []
       }
       current_specs.zip(new_specs).each_with_object(combined_data) do |(spec, new_spec), memo|
         cloned_environment
@@ -83,30 +82,12 @@ class CloneEnvironment < Patterns::Calculation
               'customization_spec_id' => ActiveRecord::Base.connection.quote(new_spec['id'])
             }
           end
-
-        cloned_environment
-          .services
-          .where(name: spec.services.pluck(:name))
-          .pluck(:id)
-          .each do |new_service_id|
-            memo[:services] << {
-              'service_id' => ActiveRecord::Base.connection.quote(new_service_id),
-              'customization_spec_id' => ActiveRecord::Base.connection.quote(new_spec['id'])
-            }
-          end
       end
 
       if combined_data[:capabilities].any?
         ActiveRecord::Base.connection.execute <<-SQL
           INSERT INTO capabilities_customization_specs (#{combined_data[:capabilities].first.keys.join(",")}) VALUES
           #{combined_data[:capabilities].map(&:values).map { |values| "(#{values.join(",")})" }.join(", ")}
-        SQL
-      end
-
-      if combined_data[:services].any?
-        ActiveRecord::Base.connection.execute <<-SQL
-          INSERT INTO customization_specs_services (#{combined_data[:services].first.keys.join(",")}) VALUES
-          #{combined_data[:services].map(&:values).map { |values| "(#{values.join(",")})" }.join(", ")}
         SQL
       end
     end
@@ -156,23 +137,58 @@ class CloneEnvironment < Patterns::Calculation
       )
 
       current_services.zip(new_service_ids).each do |service, new_service_id|
-        if service.service_checks.any?
-          ServiceCheck.insert_all(
-            service.service_checks.map do |service_check|
-              service_check.attributes.merge(
+        if service.service_subjects.any?
+          ServiceSubject.insert_all(
+            service.service_subjects.map do |subject|
+              subject.attributes.merge(
                 'service_id' => new_service_id['id'],
-                'network_id' => find_network_in_cloned_environment(service_check.network).id
+                'match_conditions' => subject.match_conditions.map do |condition|
+                  case condition.matcher_type
+                  when 'CustomizationSpec'
+                    condition.matcher_id = find_spec_in_cloned_environment(
+                      source_environment.customization_specs.find(condition.matcher_id)
+                    ).id
+                  when 'Capability'
+                    condition.matcher_id = find_capability_in_cloned_environment(
+                      source_environment.capabilities.find(condition.matcher_id)
+                    ).id
+                  when 'Network'
+                    condition.matcher_id = find_network_in_cloned_environment(
+                      source_environment.networks.find(condition.matcher_id)
+                    ).id
+                  when 'Actor'
+                    condition.matcher_id = find_actor_in_cloned_environment(
+                      source_environment.actors.find(condition.matcher_id)
+                    ).id
+                  end
+                  condition
+                end
               ).except('id')
             end
           )
         end
 
-        if service.special_checks.any?
-          SpecialCheck.insert_all(
-            service.special_checks.map do |special_check|
-              special_check.attributes.merge(
+        if service.checks.any?
+          Check.insert_all(
+            service.checks.map do |check|
+              check.attributes.merge(
                 'service_id' => new_service_id['id'],
-                'network_id' => find_network_in_cloned_environment(special_check.network).id
+                'source_id' => case check.source
+                               when Network
+                                 find_network_in_cloned_environment(check.source).id
+                               when CustomizationSpec
+                                 find_spec_in_cloned_environment(check.source).id
+                               else
+                                 check.source_id
+                               end,
+                'destination_id' => case check.destination
+                                    when Network
+                                      find_network_in_cloned_environment(check.destination).id
+                                    when CustomizationSpec
+                                      find_spec_in_cloned_environment(check.destination).id
+                                    else
+                                      check.destination_id
+                                    end
               ).except('id')
             end
           )
@@ -182,5 +198,17 @@ class CloneEnvironment < Patterns::Calculation
 
     def find_network_in_cloned_environment(source_net)
       (@cached_networks ||= cloned_environment.networks.group_by(&:slug)).dig(source_net.slug, 0)
+    end
+
+    def find_actor_in_cloned_environment(source_actor)
+      cloned_environment.actors.detect { |actor| actor.abbreviation == source_actor.abbreviation }
+    end
+
+    def find_spec_in_cloned_environment(source_spec)
+      cloned_environment.customization_specs.detect { |spec| spec.slug == source_spec.slug }
+    end
+
+    def find_capability_in_cloned_environment(source_cap)
+      cloned_environment.capabilities.detect { |cap| cap.abbreviation == source_cap.abbreviation }
     end
 end
