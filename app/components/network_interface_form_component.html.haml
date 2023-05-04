@@ -1,7 +1,7 @@
 .shadow.rounded-md.flex.flex-col[network_interface]
   .py-4.flex.flex-row.leading-5{class: team_classes}
     .flex-grow.items-center.px-6.text-3xl
-      %span.opacity-60= network_interface_counter
+      %span.opacity-60= network_interface_counter+1
       = network_interface.network&.name || '-'
 
     .flex.justify-end.items-center.px-6.text-lg.font-semibold.items-center.space-x-2

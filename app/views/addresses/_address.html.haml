@@ -39,10 +39,16 @@
         - if address.address_pool.present? && address.address_pool.ip_network
           - cache([address.virtual_machine.cache_key_with_version, address.cache_key_with_version, address.network.cache_key_with_version, address.address_pool.cache_key_with_version, 'ip_picker_static']) do
             .grow= render IPPickerComponent.new(form: form, field: :offset, hosts: :available_for_object, label: false)
+          - if address.connection?
+            .shrink-0.ml-2.self-center.inline-flex.items-center.justify-center.rounded-full.bg-orange-200.text-orange-800.w-7.h-7{title: Address.human_attribute_name(:connection)}
+              %i.fas.fa-cogs.text-sm
       - when "ipv4_vip"
         - if address.address_pool.present? && address.address_pool.ip_network
           - cache([address.cache_key_with_version, address.network.cache_key_with_version, 'ip_picker_vip']) do
             .grow= render IPPickerComponent.new(form: form, field: :offset, hosts: :all, label: false)
+          - if address.connection?
+            .shrink-0.ml-2.self-center.inline-flex.items-center.justify-center.rounded-full.bg-orange-200.text-orange-800.w-7.h-7{title: Address.human_attribute_name(:connection)}
+              %i.fas.fa-cogs.text-sm
 
       - when "ipv6_static", "ipv6_linklocal", "ipv6_uniqlocal", "ipv6_vip"
         - if address.mode_ipv6_uniqlocal? || address.mode_ipv6_linklocal? || address.address_pool&.ip_network.present?

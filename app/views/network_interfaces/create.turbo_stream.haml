@@ -1,2 +1,2 @@
 = turbo_stream.replace "network_interface_new" do
-  = render NetworkInterfaceFormComponent.new(network_interface: @network_interface, network_interface_counter: @virtual_machine.network_interfaces.index(@network_interface)+1)
+  = render NetworkInterfaceFormComponent.new(network_interface: @network_interface, network_interface_counter: @virtual_machine.network_interfaces.index(@network_interface))

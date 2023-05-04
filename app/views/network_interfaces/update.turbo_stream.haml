@@ -1,5 +1,5 @@
 = turbo_stream.update dom_id(@network_interface) do
-  = render NetworkInterfaceFormComponent.new(network_interface: @network_interface, network_interface_counter: @virtual_machine.network_interfaces.index(@network_interface)+1)
+  = render NetworkInterfaceFormComponent.new(network_interface: @network_interface, network_interface_counter: @virtual_machine.network_interfaces.index(@network_interface))
 
 = turbo_stream.update "connection_info" do
   = render "virtual_machines/connection_info", vm: @network_interface.virtual_machine
