@@ -2,23 +2,19 @@
   "name": "providentia",
   "private": true,
   "dependencies": {
-    "@babel/runtime": "^7.21.0",
-    "@codemirror/lang-javascript": "^6.1.7",
     "@codemirror/language": "^6.6.0",
     "@codemirror/legacy-modes": "^6.3.2",
-    "@codemirror/stream-parser": "^0.19.9",
     "@fortawesome/fontawesome-svg-core": "^6.4.0",
     "@fortawesome/free-brands-svg-icons": "^6.4.0",
     "@fortawesome/free-solid-svg-icons": "^6.4.0",
     "@hotwired/stimulus": "^3.2.1",
     "@hotwired/turbo-rails": "^7.3.0",
-    "@lezer/highlight": "^1.1.4",
     "@rails/actioncable": "^7.0.4-3",
     "@rails/activestorage": "^7.0.4-3",
     "@tailwindcss/aspect-ratio": "^0.4.2",
     "@tailwindcss/forms": "^0.5.3",
     "@tailwindcss/typography": "^0.5.9",
-    "@uiw/codemirror-theme-darcula": "^4.19.16",
+    "cm6-theme-solarized-dark": "^0.2.0",
     "codemirror": "^6.0.1",
     "cssnano": "^6.0.0",
     "cytoscape": "^3.24.0",
@@ -44,11 +40,6 @@
     "web-worker": "^1.2.0"
   },
   "version": "0.1.0",
-  "scripts": {
-    "build": "node esbuild.config.js",
-    "start": "node esbuild-dev.config.js",
-    "build:css": "postcss ./app/assets/stylesheets/application.css -o ./app/assets/builds/application.css"
-  },
   "browserslist": [
     "defaults"
   ],

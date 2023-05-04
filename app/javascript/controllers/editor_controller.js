@@ -4,7 +4,8 @@ import throttle from "throttleit";
 import { StreamLanguage } from "@codemirror/language";
 import { yaml } from "@codemirror/legacy-modes/mode/yaml";
 import { EditorView, minimalSetup } from "codemirror";
-import { darcula } from "@uiw/codemirror-theme-darcula";
+import { solarizedDark } from "cm6-theme-solarized-dark";
+
 export default class extends Controller {
   editor;
 
@@ -22,7 +23,7 @@ export default class extends Controller {
       extensions: [
         minimalSetup,
         StreamLanguage.define(yaml),
-        darcula,
+        solarizedDark,
         EditorView.updateListener.of((v) => {
           if (v.docChanged) {
             textarea.value = v.state.doc.toString();
