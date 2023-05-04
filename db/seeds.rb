@@ -21,3 +21,7 @@ if Rails.env.development?
     local_admin_resource_name: 'TE_Admin'
   )
 end
+
+CustomCheckSubject.where(base_class: 'CustomizationSpec', meaning: 'self').first_or_create!
+CustomCheckSubject.where(base_class: 'Network', meaning: 'First egress NIC').first_or_create!
+CustomCheckSubject.where(base_class: 'Network', meaning: 'Connection NIC').first_or_create!

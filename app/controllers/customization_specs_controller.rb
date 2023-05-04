@@ -37,7 +37,7 @@ class CustomizationSpecsController < ApplicationController
     def spec_params
       params.require(:customization_spec).permit(
         :name, :dns_name, :role_name, :description,
-        { service_ids: [] }, { capability_ids: [] }
+        { capability_ids: [] }
       )
     end
 end

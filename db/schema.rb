@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_02_09_084608) do
+ActiveRecord::Schema[7.0].define(version: 2023_04_23_134534) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_buffercache"
   enable_extension "pg_stat_statements"
@@ -91,6 +91,33 @@ ActiveRecord::Schema[7.0].define(version: 2023_02_09_084608) do
     t.bigint "capability_id", null: false
     t.bigint "virtual_machine_id", null: false
     t.index ["virtual_machine_id", "capability_id"], name: "vm_capability_index"
+  end
+
+  create_table "checks", force: :cascade do |t|
+    t.bigint "service_id", null: false
+    t.string "source_type", null: false
+    t.bigint "source_id", null: false
+    t.string "destination_type", null: false
+    t.bigint "destination_id", null: false
+    t.integer "check_mode", default: 1, null: false
+    t.string "special_label"
+    t.integer "protocol"
+    t.integer "ip_family"
+    t.string "port"
+    t.jsonb "config_map"
+    t.boolean "scored", default: true, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["destination_type", "destination_id"], name: "index_checks_on_destination"
+    t.index ["service_id"], name: "index_checks_on_service_id"
+    t.index ["source_type", "source_id"], name: "index_checks_on_source"
+  end
+
+  create_table "custom_check_subjects", force: :cascade do |t|
+    t.string "base_class", null: false
+    t.string "meaning", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "customization_specs", force: :cascade do |t|
@@ -290,6 +317,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_02_09_084608) do
   add_foreign_key "addresses", "network_interfaces"
   add_foreign_key "api_tokens", "users"
   add_foreign_key "capabilities", "exercises"
+  add_foreign_key "checks", "services"
   add_foreign_key "customization_specs", "virtual_machines"
   add_foreign_key "network_interfaces", "networks"
   add_foreign_key "network_interfaces", "virtual_machines"

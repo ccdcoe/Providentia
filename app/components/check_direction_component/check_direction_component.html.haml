@@ -1,0 +1,9 @@
+.px-4.flex.flex-col{class: 'flex-[2]'}
+  %header.text-xl.font-semibold.block= self.class::DIRECTION.to_s.humanize
+
+  .grow
+  .text-left.mt-6
+    .flex.items-center
+      .shrink
+        %i.fas.mr-2{class: relation_icon}
+      .grow= f.grouped_collection_select value_field_name, collection, :last, :first, :to_gid, :name, {include_blank: false}, { data: { controller: 'select' }, disabled: disabled}

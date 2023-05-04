@@ -8,7 +8,6 @@ module VmPage
       @actors = policy_scope(@exercise.actors).load_async
       @system_owners = policy_scope(User).order(:name).load_async
       @capabilities = policy_scope(@exercise.capabilities).load_async
-      @services = policy_scope(@exercise.services).load_async
     end
 
     def preload_services

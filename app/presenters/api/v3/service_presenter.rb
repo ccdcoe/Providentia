@@ -9,34 +9,29 @@ module API
             id: service.slug,
             name: service.name,
             subjects:,
-            checks: network_checks + special_checks
+            checks:
           }
         end
       end
 
       private
-        def network_checks
-          service.service_checks.flat_map(&:virtual_checks).map do |check|
-            {
-              id: check.slug,
-              source_network_id: check.network.slug,
-              scored: check.scored,
-              protocol: check.protocol,
-              ip: check.ip_family,
-              port: check.destination_port
-            }
-          end
-        end
-
-        def special_checks
-          service.special_checks.map do |check|
-            {
-              id: check.slug,
-              source_network_id: check.network&.slug,
-              scored: check.scored,
-              name: check.name,
-              special: true
-            }
+        def checks
+          service.checks.flat_map do |check|
+            check.slugs.map do |ip_family, slug|
+              {
+                id: slug,
+                source_type: relation_type_for_api(check.source),
+                source_id: check.relation_to_api_name(check.source),
+                destination_type: relation_type_for_api(check.destination),
+                destination_id: check.relation_to_api_name(check.destination),
+                scored: check.scored,
+                protocol: check.check_mode_network? ? check.protocol : nil,
+                ip: check.check_mode_network? ? ip_family : nil,
+                port: check.check_mode_network? ? check.port : nil,
+                special_label: check.check_mode_special? ? check.special_label : nil,
+                config_map: check.check_mode_special? ? check.config_map : nil,
+              }
+            end
           end
         end
 
@@ -45,6 +40,15 @@ module API
             .where(id: service.cached_spec_ids)
             .order(:slug)
             .pluck(:slug) || []
+        end
+
+        def relation_type_for_api(relation)
+          case relation
+          when CustomCheckSubject
+            'custom'
+          else
+            relation.class.to_s
+          end.downcase
         end
     end
   end

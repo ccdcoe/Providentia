@@ -6,7 +6,7 @@ class ServicePolicy < ApplicationPolicy
   end
 
   def create?
-    show? && (admin? || local_admin? || !record.exercise.services_read_only)
+    show? && !record.exercise.services_read_only
   end
 
   def update?

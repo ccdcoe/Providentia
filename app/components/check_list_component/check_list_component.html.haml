@@ -1,0 +1,9 @@
+.flex.items-center
+  %span.bg-blue-100.text-blue-800.text-sm.font-medium.mr-2.inline-flex.items-center.rounded.dark:bg-blue-900.dark:text-blue-300{:class => "px-2.5 py-0.5"}
+    - if direction_icon
+      %i.fas.mr-2{class: direction_icon}
+    = direction_text
+  .gap-1.leading-8
+    - checks.map do |check|
+      .inline-block{title: relation_for(check)&.name}
+        = render ActorChipComponent.new(actor: actor_for(check), text: check.display_name)

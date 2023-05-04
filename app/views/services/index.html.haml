@@ -5,18 +5,23 @@
 - if @services.any?
   = render TableComponent.new do |c|
     - c.with_column { Service.human_attribute_name(:name) }
-    - c.with_column { ServiceCheck.model_name.human.pluralize }
+    - c.with_column { ServiceSubject.model_name.human.pluralize }
+    - c.with_column { Check.model_name.human.pluralize }
     - c.with_column { '' }
 
     - @services.each do |service|
       - c.with_table_row do
         %td.px-6.py-4= link_to service.name, [@exercise, service], class: 'text-indigo-600 hover:text-indigo-900 dark:text-indigo-400'
-        %td.px-6.py-4.addresses.space-y-3
-          - all_checks = service.service_checks + service.special_checks
-          - all_checks.group_by(&:network).each do |network, checks|
-            - next unless network
-            .inline-block{title: network.name}
-              = render ActorChipComponent.new(actor: network.actor, text: checks.map(&:display_name).join(', '))
+        %td.px-6.py-4.space-y-3
+          - cache([service.cache_key_with_version, 'index_fragnment']) do
+            - specs = policy_scope(@exercise.customization_specs).order(:name).limit(4).where(id: service.cached_spec_ids)
+            - specs[0..2].each do |spec|
+              = link_to spec.name, exercise_virtual_machine_path(@exercise, spec.virtual_machine_id), class: 'text-indigo-600 hover:text-indigo-900 dark:text-indigo-400 dark:text-indigo-400'
+            - if specs.size == 4
+              \…
+        %td.px-6.py-4.space-y-2
+          - service.checks.group_by(&:direction).each do |direction, checks|
+            = render CheckListComponent.new(direction:, checks:)
 
         %td.px-6.py-4.text-right
           = link_to [@exercise, service], data: { turbo_method: 'delete', turbo_confirm: 'Are you sure?' } do

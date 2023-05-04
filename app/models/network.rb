@@ -9,7 +9,7 @@ class Network < ApplicationRecord
   belongs_to :team, optional: true # TEMPORARY
   belongs_to :actor
   has_many :network_interfaces, dependent: :restrict_with_error
-  has_many :service_checks, dependent: :restrict_with_error
+  has_many :service_checks, dependent: :restrict_with_error # TODO: remove after migration
   has_many :address_pools, dependent: :destroy
   has_many :virtual_machines, through: :network_interfaces
   has_many :addresses, through: :network_interfaces

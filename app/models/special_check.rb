@@ -14,16 +14,4 @@ class SpecialCheck < ApplicationRecord
   def self.to_icon
     'fa-flask'
   end
-
-  def display_name
-    name
-  end
-
-  def slug
-    [
-      service.name,
-      network&.abbreviation,
-      name
-    ].compact.join '-'
-  end
 end

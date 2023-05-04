@@ -18,8 +18,12 @@ import {
   faAngleRight,
   faAngleDoubleLeft,
   faAngleDoubleRight,
+  faRightFromBracket,
+  faRightToBracket,
+  faRotateRight,
   faHistory,
   faSearch,
+  faUpRightFromSquare,
   faIdBadge,
   faKey,
   faLayerGroup,
@@ -31,6 +35,7 @@ import {
   faDatabase,
   faSlash,
   faEllipsisVertical,
+  faCircleQuestion,
 } from "@fortawesome/free-solid-svg-icons";
 
 import { faUbuntu, faWindows } from "@fortawesome/free-brands-svg-icons";
@@ -55,8 +60,12 @@ library.add(
   faAngleRight,
   faAngleDoubleLeft,
   faAngleDoubleRight,
+  faRightFromBracket,
+  faRightToBracket,
+  faRotateRight,
   faHistory,
   faSearch,
+  faUpRightFromSquare,
   faIdBadge,
   faKey,
   faLayerGroup,
@@ -69,7 +78,8 @@ library.add(
   faServer,
   faDatabase,
   faSlash,
-  faEllipsisVertical
+  faEllipsisVertical,
+  faCircleQuestion
 );
 
 dom.watch();

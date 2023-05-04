@@ -33,13 +33,9 @@ en:
       address:
         offset: Address
         dns_enabled: Publish to DNS
-      service_subject:
-        customization_spec_ids: Effective customization specs
-      service_check:
-        ip_family: IP family
-        network: Source network
-      special_check:
-        network: Source network
+      check:
+        source_gid: Source
+        destination_gid: Destination
       operating_system:
         cpu: vCPU count
         ram: RAM
@@ -75,11 +71,20 @@ en:
     ipv6_vip: IPv6 virtual
 
   protocols:
-    icmp: ICMP
+    icmp: ICMP(6)
     tcp: TCP
     udp: UDP
     tcp_and_udp: TCP + UDP
     sctp: SCTP
+    http: HTTP
+    https: HTTPS
+    smtp: SMTP
+    rdp: RDP
+    ssh: SSH
+    ftp: FTP
+    vnc: VNC
+    dns: DNS
+    ntp: NTP
 
   ip_families:
     v4v6: IPv4 + IPv6

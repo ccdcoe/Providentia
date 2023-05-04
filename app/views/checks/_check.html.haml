@@ -1,0 +1,57 @@
+= render ModalComponent.new(header: "Configuration map") do |c|
+  - c.with_body do
+    = form_with(model: ConfigMapForm.new(check), url: [@exercise, @service, check], id: 'config_map_form', data: { controller: 'model', action: "change->model#update"}) do |form|
+      = form.text_area :config_map_as_yaml, data: {controller: 'editor'}
+
+  = form_with(model: check, url: [@exercise, @service, check], class: 'py-4 relative', id: dom_id(check), data: { controller: 'model', action: "change->model#update"}) do |f|
+    .flex.flex-row.divide-x.divide-dashed.text-center
+      = render CheckSourceComponent.new(check:, f:, disabled: !policy(@service).update?)
+
+      .px-4.text-left{class: 'flex-[3]'}
+        .flex.items-center
+          %header.text-xl.font-semibold{class: 'flex-[1]'} Method
+          .grow.text-right{class: 'flex-[3]'}
+            .inline-flex.-space-x-0.divide-x.divide-gray-400.overflow-hidden.rounded-lg.border.border-gray-400.shadow-sm
+              = f.radio_button "check_mode", 'network', class: 'hidden peer/network', hidden: true, id: "check_#{check.id}_mode_network", disabled: !policy(@service).update?
+              = f.label "#{check.id}_mode_network", class: 'inline-flex items-center px-3 py-2 peer-disabled/network:cursor-not-allowed cursor-pointer text-center text-sm font-medium text-gray-600 shadow-sm bg-white peer-enabled/network:hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-200 peer-enabled/network:dark:hover:bg-gray-400 peer-checked/network:bg-blue-200 peer-checked/network:dark:bg-blue-600' do
+                Network
+
+              = f.radio_button "check_mode", :special, class: 'hidden peer/special', hidden: true, id: "check_#{check.id}_mode_special", disabled: !policy(@service).update?
+              = f.label "#{check.id}_mode_special", class: 'inline-flex items-center px-3 py-2 peer-disabled/special:cursor-not-allowed cursor-pointer text-center text-sm font-medium text-gray-600 shadow-sm bg-white peer-enabled/special:hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-200 peer-enabled/special:dark:hover:bg-gray-400 peer-checked/special:bg-blue-200 peer-checked/special:dark:bg-blue-600' do
+                Special
+
+          .text-right{class: 'flex-[1]'}
+            %label.font-bold
+              = f.check_box :scored, disabled: !policy(@service).update?
+              = f.object.class.human_attribute_name(:scored)
+
+        .text-left.mt-7
+          - if check.check_mode_special?
+            .flex
+              .grow
+                = f.label :special_label, class: 'font-bold'
+                = f.text_field :special_label, class: 'form-input', disabled: !policy(@service).update?
+              .pt-9.ml-2
+                = link_to 'javascript:;', class: 'text-white bg-gradient-to-r from-cyan-400 via-cyan-500 to-cyan-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-cyan-300 dark:focus:ring-cyan-800 font-medium rounded-lg text-sm  text-center px-5 py-2.5', data: { action: "click->modal#open" } do
+                  Config map
+                  %i.fas.fa-up-right-from-square
+
+          - else
+            .grid.grid-cols-3.gap-x-3
+              %div
+                = f.label :protocol, class: 'font-bold'
+                = f.grouped_collection_select :protocol, Check::Protocols.to_grouped_options, :last, :first, :last, :first, {}, class: 'form-input', disabled: !policy(@service).update?, data: { controller: 'select' }
+
+              %div
+                = f.label :ip_family, class: 'font-bold'
+                = f.collection_select :ip_family, ip_families, :last, :first, {}, class: 'form-input', disabled: !policy(@service).update?, data: { controller: 'select' }
+
+              %div
+                = f.label :port, class: 'font-bold'
+                = f.text_field :port, class: 'form-input'
+
+
+      = render CheckDestinationComponent.new(check:, f:, disabled: !policy(@service).update?)
+    .absolute.top-2.right-4
+      = link_to 'javascript:;', data: { action: "model#delete" } do
+        %i.fas.fa-times-circle.text-red-500

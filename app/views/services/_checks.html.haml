@@ -1,17 +1,24 @@
-.flex.w-full.py-3.pb-6
+.flex.w-full.items-center.gap-x-2.py-3.pb-6
   %h1.text-2xl.font-bold Checks
+  = render ModalComponent.new(header: "Checks") do |c|
+    - c.with_body do
+      %p The check can originate from a customization spec or a network.
+      %p
+        There are special cases for the
+        %em subject itself
+        and attached
+        %em egress
+        and
+        %em connection
+        networks
+    = link_to 'javascript:;', class: 'text-indigo-600 hover:text-indigo-900 dark:text-indigo-400', data: { action: "click->modal#open" } do
+      %i.fas.fa-circle-question
   .flex-grow.text-right.space-x-2
     - if @service.persisted? && policy(@service).update?
-      = form_with(url: [@service.exercise, @service, :service_checks], class: 'inline-block') do |form|
+      = form_with(url: [@service.exercise, @service, :checks], class: 'inline-block') do |form|
         %button.leading-5.p-1.px-2.rounded-sm.text-white.bg-indigo-500{type: 'submit'}
           %i.fas.fa-plus.self-center
-          Add network check
-
-      = form_with(url: [@service.exercise, @service, :special_checks], class: 'inline-block') do |form|
-        %button.leading-5.p-1.px-2.rounded-sm.text-white.bg-indigo-500{type: 'submit'}
-          %i.fas.fa-plus.self-center
-          Add special check
+          Add check
 
 #checks-table.flex.flex-col.align-middle.border.border-gray-200.dark:border-gray-500.bg-white.dark:bg-gray-700.divide-y.divide-double.divide-gray-200.dark:divide-gray-500
-  = render @service.service_checks.order(:created_at)
-  = render @service.special_checks.order(:created_at)
+  = render @service.checks.sort_by(&:created_at)

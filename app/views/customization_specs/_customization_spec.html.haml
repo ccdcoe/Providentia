@@ -53,5 +53,8 @@
       = form.collection_select :capability_ids, @capabilities, :id, :name, {}, multiple: true, data: { controller: 'select' }
 
     .mt-2
-      = form.label :service_ids, Service.model_name.human.pluralize, class: 'block font-bold text-gray-700 dark:text-gray-200'
-      = form.collection_select :service_ids, @services, :id, :name, { disabled: @exercise.services_read_only && !current_user.admin? }, multiple: true, data: { controller: 'select' }
+      %h3.font-bold Services
+
+      %p.text-center.pt-1
+        - @services.each do |service|
+          = link_to service.name, [@exercise, service], class: 'text-indigo-600 hover:text-indigo-900 dark:text-indigo-400 dark:text-indigo-400 px-1 whitespace-nowrap'

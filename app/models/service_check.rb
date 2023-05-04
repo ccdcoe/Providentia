@@ -26,26 +26,4 @@ class ServiceCheck < ApplicationRecord
   def self.to_icon
     'fa-flask'
   end
-
-  def display_name
-    "#{I18n.t("protocols.#{protocol}")} (#{I18n.t("ip_families.#{ip_family}")}): #{destination_port}"
-  end
-
-  def slug
-    [
-      service.name,
-      network.abbreviation,
-      ip_family,
-      protocol,
-      destination_port
-    ].compact.join '-'
-  end
-
-  def virtual_checks
-    return [self] unless ip_family_v4v6?
-    [
-      self.dup.tap { |a| a.network = self.network; a.service = self.service; a.ip_family = 'v4' },
-      self.dup.tap { |a| a.network = self.network; a.service = self.service; a.ip_family = 'v6' }
-    ]
-  end
 end

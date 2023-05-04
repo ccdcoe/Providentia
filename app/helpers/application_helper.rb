@@ -55,12 +55,6 @@ module ApplicationHelper
     end
   end
 
-  def service_protocols
-    ServiceCheck.protocols.keys.map do |mode|
-      [I18n.t("protocols.#{mode}"), mode]
-    end
-  end
-
   def ip_families
     ServiceCheck.ip_families.keys.map do |mode|
       [I18n.t("ip_families.#{mode}"), mode]

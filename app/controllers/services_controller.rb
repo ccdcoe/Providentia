@@ -2,13 +2,12 @@
 
 class ServicesController < ApplicationController
   before_action :get_exercise
-  before_action :get_service, only: %i[show update destroy]
+  before_action :get_service, only: %i[update destroy]
+  include ServicePage
 
   def index
     @services = policy_scope(@exercise.services)
-      .includes(
-        special_checks: { network: [:actor] },
-        service_checks: { network: [:actor] })
+      .includes(:checks)
       .order(:name)
   end
 
@@ -27,6 +26,11 @@ class ServicesController < ApplicationController
   end
 
   def show
+    @service = authorize(
+      @exercise.services
+        .includes(:service_subjects, { checks: [:source, :destination] })
+        .friendly.find(params[:id])
+    )
   end
 
   def update

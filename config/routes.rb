@@ -24,8 +24,7 @@ Rails.application.routes.draw do
         resources :conditions, only: %i[create update destroy]
       end
 
-      resources :service_checks, only: %i[create update destroy]
-      resources :special_checks, only: %i[create update destroy]
+      resources :checks, only: %i[create update destroy]
     end
     resources :capabilities
     resource :clone, only: %i[show create]

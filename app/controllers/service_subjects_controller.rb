@@ -6,6 +6,7 @@ class ServiceSubjectsController < ApplicationController
   respond_to :turbo_stream
 
   def create
+    authorize(@service, :update?)
     @subject = @service.service_subjects.create
   end
 

@@ -1,9 +1,9 @@
-= form_with(model: [@service.exercise, @service], html: { autocomplete: "off" }, data: { controller: 'model', action: "change->model#update"}) do |f|
+= form_with(model: [@service.exercise, @service], html: { autocomplete: "off", disabled: !policy(@service).update? }, data: { controller: 'model', action: "change->model#update"}) do |f|
   .space-y-6
     .flex.flex-row.flex-wrap.gap-x-4.gap-y-2
       .grow
         = f.label :name, class: 'block font-bold text-gray-700 dark:text-gray-200'
-        = f.text_field :name, class: 'form-input'
+        = f.text_field :name, class: 'form-input', disabled: !policy(@service).update?
         - if @service.errors[:name].any?
           %span.text-red-600= @service.errors[:name].join(', ')
 
@@ -13,6 +13,6 @@
 
     %div
       = f.label :description, class: 'block font-bold text-gray-700 dark:text-gray-200'
-      = f.text_area :description, class: 'form-input'
+      = f.text_area :description, class: 'form-input', disabled: !policy(@service).update?
       - if @service.errors[:description].any?
         %span.text-red-600= @service.errors[:description].join(', ')
