@@ -19,6 +19,13 @@ module API
             hardware_cpu: vm.cpu || vm.operating_system&.applied_cpu,
             hardware_ram: vm.ram || vm.operating_system&.applied_ram,
             hardware_primary_disk_size: vm.primary_disk_size || vm.operating_system&.applied_primary_disk_size,
+            egress_networks: Current.interfaces_cache[vm.id].filter_map do |nic|
+              nic.network.slug if nic.egress?
+            end,
+            connection_network: Current.interfaces_cache[vm.id]
+              .detect(&:connection?)
+              &.network
+              &.slug,
             tags:,
             capabilities:,
             services:,
