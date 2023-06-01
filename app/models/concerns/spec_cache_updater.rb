@@ -29,8 +29,8 @@ module SpecCacheUpdater
         acc = []
         if from.previous_changes[:operating_system_id]
           acc << from.previous_changes[:operating_system_id].flat_map do |os_id|
-            OperatingSystem.path_of(os_id)
-          end
+            OperatingSystem.path_of(os_id) if os_id
+          end.compact
         end
         if from.previous_changes[:actor_id]
           acc << Actor.where(id: from.previous_changes[:actor_id])
