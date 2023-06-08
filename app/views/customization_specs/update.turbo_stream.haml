@@ -1,4 +1,5 @@
 - if @customization_spec.mode_host?
+  - @customization_spec.virtual_machine.customization_specs.reload
   - @customization_spec.virtual_machine.customization_specs.each do |spec|
     = turbo_stream.replace dom_id(spec) do
       = render spec
