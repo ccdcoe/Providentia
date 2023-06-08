@@ -2,8 +2,8 @@
 
 class AddressesController < ApplicationController
   include VmPage
-  before_action :get_exercise, :get_network_interface
-  before_action :preload_form_collections
+  before_action :get_exercise, :get_network_interface, :get_virtual_machine
+  before_action :preload_form_collections, :preload_services
   before_action :get_address, only: %i[update destroy]
 
   respond_to :turbo_stream
@@ -34,6 +34,10 @@ class AddressesController < ApplicationController
         .find(params[:virtual_machine_id])
         .network_interfaces
         .find(params[:network_interface_id])
+    end
+
+    def get_virtual_machine
+      @virtual_machine = @network_interface.virtual_machine
     end
 
     def get_address
