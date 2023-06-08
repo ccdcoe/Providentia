@@ -5,6 +5,8 @@ require 'service_subject_match_condition'
 class ServiceSubject < ApplicationRecord
   include SpecCacheUpdater
 
+  has_paper_trail
+
   belongs_to :service, touch: true
   has_one :exercise, through: :service
 
@@ -27,6 +29,10 @@ class ServiceSubject < ApplicationRecord
       ))
     end
   }
+
+  def self.to_icon
+    'fa-flask'
+  end
 
   def matched_spec_ids
     return [] unless match_conditions.any?

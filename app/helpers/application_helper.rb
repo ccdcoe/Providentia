@@ -23,6 +23,8 @@ module ApplicationHelper
       [model]
     when ServiceCheck, SpecialCheck
       [model.service.exercise, model.service]
+    when Check, ServiceSubject
+      [model.exercise, model.service]
     else
       [model.exercise, model]
     end

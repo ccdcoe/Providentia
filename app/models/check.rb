@@ -2,6 +2,9 @@
 
 class Check < ApplicationRecord
   include VmCacheBuster
+
+  has_paper_trail
+
   belongs_to :service, touch: true
   belongs_to :source, polymorphic: true
   belongs_to :destination, polymorphic: true
@@ -19,6 +22,10 @@ class Check < ApplicationRecord
     network: 1,
     special: 2
   }, _prefix: :check_mode
+
+  def self.to_icon
+    'fa-flask'
+  end
 
   def source_gid
     source&.to_gid
