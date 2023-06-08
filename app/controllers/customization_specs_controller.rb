@@ -3,7 +3,7 @@
 class CustomizationSpecsController < ApplicationController
   include VmPage
   before_action :get_exercise, :get_virtual_machine
-  before_action :preload_form_collections, only: %i[create update]
+  before_action :preload_form_collections, :preload_services, only: %i[create update]
   before_action :get_customization_spec, only: %i[update destroy]
 
   respond_to :turbo_stream
