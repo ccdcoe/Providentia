@@ -5,6 +5,10 @@ module ApplicationHelper
     new_user_session_path
   end
 
+  def title(page_title)
+    provide(:title) { page_title }
+  end
+
   def link_for_model(model)
     return unless model
 

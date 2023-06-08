@@ -2,7 +2,12 @@
 %html
   %head
     %meta{:content => "text/html; charset=UTF-8", "http-equiv" => "Content-Type"}/
-    %title Providentia
+    %title
+      Providentia
+      - if content_for?(:title)
+        §
+        = content_for(:title)
+
     = csrf_meta_tags
     = csp_meta_tag
     = vite_stylesheet_tag "application", "data-turbo-track": "reload"

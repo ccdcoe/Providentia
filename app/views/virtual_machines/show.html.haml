@@ -2,6 +2,7 @@
   - provide :new_url do
     = url_for [:new, @exercise, :virtual_machine]
 
+- title @virtual_machine.name
 = render 'form'
 
 .mt-5
