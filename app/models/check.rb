@@ -82,9 +82,7 @@ class Check < ApplicationRecord
     case relation
     when CustomCheckSubject
       relation.api_name
-    when Network
-      relation.abbreviation
-    when CustomizationSpec
+    when Network, CustomizationSpec
       relation.slug
     end
   end
