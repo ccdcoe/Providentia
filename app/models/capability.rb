@@ -15,10 +15,6 @@ class Capability < ApplicationRecord
     'fa-layer-group'
   end
 
-  def api_short_name
-    "capability_#{slug}".downcase.tr('-', '_')
-  end
-
   private
     def should_generate_new_friendly_id?
       name_changed? || super

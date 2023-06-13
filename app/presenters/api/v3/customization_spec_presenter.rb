@@ -35,11 +35,6 @@ module API
         end
       end
 
-      def sequential_group
-        return unless vm.custom_instance_count.to_i > 1
-        "sequential_#{spec.slug}".tr('-', '_')
-      end
-
       private
         def vm
           spec.virtual_machine
@@ -59,16 +54,14 @@ module API
         end
 
         def tags
-          [
-            sequential_group,
-            vm.connection_nic&.api_short_name,
-            (vm.operating_system&.path || []).map(&:api_short_name),
-            vm.actor.api_short_name,
-            vm.actor.as_team_api.dig(:id),
-            ("#{vm.actor.api_short_name}_#{vm.numbered_actor.abbreviation}_numbered" if vm.numbered_actor && vm.actor != vm.numbered_actor),
-            ('customization_container' if spec.mode_container?),
-            spec.capabilities.map(&:api_short_name)
-          ].flatten.compact
+          GenerateTags.result_for([
+            Current.interfaces_cache[vm.id].detect(&:connection?)&.network,
+            vm.operating_system&.path,
+            vm.actor,
+            vm,
+            spec,
+            spec.capabilities
+          ], spec:).map { |tag_hash| tag_hash[:id] }
         end
 
         def services
@@ -84,10 +77,17 @@ module API
         end
 
         def sequence_info
-          {
-            sequence_tag: sequential_group,
-            sequence_total: vm.custom_instance_count.to_i > 1 ? vm.custom_instance_count : nil
-          }
+          if vm.custom_instance_count.to_i > 1
+            {
+              sequence_tag: "sequential_#{spec.slug}".tr('-', '_'),
+              sequence_total: vm.custom_instance_count
+            }
+          else
+            {
+              sequence_tag: nil,
+              sequence_total: nil
+            }
+          end
         end
     end
   end

@@ -16,6 +16,7 @@ module API
           connection_address: connection_address&.ip_object(sequential_number, team_number)&.to_s,
           interfaces:,
           checks:,
+          tags:,
           config_map: {}
         }.merge(team_numbers).merge(sequence_info)
       end
@@ -159,6 +160,10 @@ module API
               exercise_unique_id: "#{inventory_name}_#{check_name}"
             }
           end
+        end
+
+        def tags
+          GenerateTags.result_for(self).map { |tag| tag[:id] }
         end
 
         def connection_address

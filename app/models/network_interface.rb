@@ -26,8 +26,6 @@ class NetworkInterface < ApplicationRecord
     eager_load(addresses: [:address_pool], network: [:exercise, :address_pools])
   }
 
-  delegate :api_short_name, to: :network
-
   def self.to_icon
     'fa-network-wired'
   end
