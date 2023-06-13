@@ -17,7 +17,6 @@
           .col-span-2= f.input :abbreviation
           .col-span-2= f.association :actor, collection: policy_scope(@exercise.actors), input_html: { data: { controller: 'select' } }
         = f.input :description
-        = f.association :capabilities, collection: policy_scope(@exercise.capabilities), input_html: { data: { controller: 'select' } }
 
       - if policy(@network).update?
         .px-4.py-3.bg-slate-200.dark:bg-gray-500.text-right.sm:px-6

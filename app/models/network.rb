@@ -13,8 +13,6 @@ class Network < ApplicationRecord
   has_many :address_pools, dependent: :destroy
   has_many :virtual_machines, through: :network_interfaces
   has_many :addresses, through: :network_interfaces
-  has_and_belongs_to_many :capabilities,
-    after_add: :invalidate_cache, after_remove: :invalidate_cache
 
   after_create :create_default_pools
   after_save :invalidate_vm_cache
@@ -95,10 +93,6 @@ class Network < ApplicationRecord
 
     def invalidate_vm_cache
       virtual_machines.touch_all
-    end
-
-    def invalidate_cache(_capability)
-      touch
     end
 
     def create_default_pools

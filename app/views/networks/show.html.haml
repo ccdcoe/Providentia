@@ -27,11 +27,6 @@
         %dt.text-sm.text-gray-500.dark:text-gray-400= Network.human_attribute_name(:description)
         %dd.mt-1.text-sm.text-gray-900.dark:text-white.mt-0.col-span-2= @network.description
 
-      .px-6.py-5
-        %dt.text-sm.text-gray-500.dark:text-gray-400= Capability.model_name.human.pluralize
-        %dd.mt-1.text-sm.text-gray-900.dark:text-white.mt-0.col-span-2.py-1
-          = render(CapabilityChipComponent.with_collection(@network.capabilities.pluck(:name)))
-
       .py-1
         .border-t.border-gray-200.dark:border-gray-500
 

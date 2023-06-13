@@ -80,7 +80,7 @@ module API
         end
 
         def capabilities
-          [] + spec.capabilities.pluck(:slug).to_a + vm.connection_nic&.network&.capabilities&.pluck(:slug).to_a
+          spec.capabilities.pluck(:slug).to_a
         end
 
         def sequence_info
