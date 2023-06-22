@@ -31,8 +31,9 @@ services:
       - KEYCLOAK_CLIENT_ID=Providentia
       - KEYCLOAK_CLIENT_SECRET=00000000-0000-0000-0000-000000000000
       - KEYCLOAK_CLIENT_SCOPE=resources
-      - VIRTUAL_HOST=keycloak.localhost
-      - VIRTUAL_PORT=8080
+    labels:
+      caddy: keycloak.localhost:80
+      caddy.reverse_proxy: "{{upstreams 8080}}"
 
   keycloak_config:
     image: adorsys/keycloak-config-cli:latest-21.0.1
@@ -83,8 +84,13 @@ services:
       interval: 5s
       timeout: 5s
       retries: 20
+    labels:
+      caddy: providentia.localhost:80
+      caddy.reverse_proxy: "{{upstreams 3000}}"
     environment:
       VITE_RUBY_HOST: vite.localhost
+      VITE_RUBY_PORT: 80
+      VITE_RUBY_SKIP_PROXY: true
       DATABASE_URL: postgres://providentia:secret@db/providentia?pool=5
       REDIS_URL: redis://redis:6379/0
       OIDC_ISSUER: http://keycloak.localhost/realms/Providentia
@@ -93,8 +99,6 @@ services:
       OIDC_RESOURCE_PREFIX: Providentia_
       BASE_URI: http://providentia.localhost
       AUTH_MODE: resource_access
-      VIRTUAL_HOST: providentia.localhost
-      VIRTUAL_PORT: 3000
       RUBY_GC_HEAP_INIT_SLOTS: 10000000
       RUBY_HEAP_SLOTS_INCREMENT: 1000000
       RUBY_HEAP_SLOTS_GROWTH_FACTOR: 1
@@ -117,43 +121,32 @@ services:
     environment:
       RAILS_ENV: development
       VITE_RUBY_HOST: 0.0.0.0
-    networks:
-      default:
-        aliases:
-          - vite
-          - vite.localhost
-    ports:
-      - "3036:3036"
+      VITE_RUBY_PORT: 80
+    labels:
+      caddy: vite.localhost:80
+      caddy.reverse_proxy: "{{upstreams 80}}"
 
-  omgwtfssl:
-    image: paulczar/omgwtfssl
-    restart: "no"
-    volumes:
-      - certs:/certs
-    environment:
-      - SSL_CERT=localhost.crt
-      - SSL_KEY=localhost.key
-      - SSL_SUBJECT=*.localhost
-
-  nginx-proxy:
-    image: nginxproxy/nginx-proxy
+  caddy:
+    image: lucaslorentz/caddy-docker-proxy:ci-alpine
     ports:
       - "80:80"
-      - "443:443"
     networks:
       default:
         aliases:
-          - nginx-proxy
-          - proxy
+          - caddy
           - keycloak.localhost
-    environment:
-      - HTTPS_METHOD=noredirect
+          - vite.localhost
     volumes:
-      - certs:/etc/nginx/certs
-      - ${DOCKER_SOCKET_PATH:-/var/run/docker.sock}:/tmp/docker.sock:ro
+      - /var/run/docker.sock:/var/run/docker.sock
+      - caddy_data:/data
+    restart: unless-stopped
+    labels:
+      caddy_0:
+      caddy_0.auto_https: off
+      # caddy_0.debug:
 
 volumes:
+  caddy_data:
   redis:
-  certs:
   postgres_providentia:
   postgres_keycloak:

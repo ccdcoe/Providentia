@@ -12,14 +12,15 @@ Rails.application.configure do
     policy.default_src :none
     policy.base_uri    :none
     policy.font_src    :self
+    policy.font_src(*policy.font_src, "http://#{ ViteRuby.config.host_with_port }") if Rails.env.development?
     policy.style_src   :self, :unsafe_inline # needed for codemirror
     # Allow @vite/client to hot reload style changes in development
-    # policy.style_src(*policy.style_src, :unsafe_inline) if Rails.env.development?
+    policy.style_src(*policy.style_src, "http://#{ ViteRuby.config.host_with_port }") if Rails.env.development?
 
     policy.img_src     :self, :https, :data
     policy.script_src  :self
     # Allow @vite/client to hot reload javascript changes in development
-    policy.script_src(*policy.script_src, :unsafe_eval, "http://#{ ViteRuby.config.host_with_port }", 'ws://providentia.localhost:3036') if Rails.env.development?
+    policy.script_src(*policy.script_src, :unsafe_eval, "http://#{ ViteRuby.config.host_with_port }") if Rails.env.development?
 
     # You may need to enable this in production as well depending on your setup.
     # policy.script_src *policy.script_src, :blob if Rails.env.test?
@@ -27,7 +28,7 @@ Rails.application.configure do
     policy.manifest_src :self
     policy.connect_src :self
     # Allow @vite/client to hot reload changes in development
-    policy.connect_src(*policy.connect_src, "ws://#{ ViteRuby.config.host_with_port }", 'ws://providentia.localhost:3036') if Rails.env.development?
+    policy.connect_src(*policy.connect_src, "ws://#{ ViteRuby.config.host_with_port }") if Rails.env.development?
   end
 
   # Generate session nonces for permitted importmap and inline scripts
