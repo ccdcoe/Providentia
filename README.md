@@ -104,7 +104,7 @@ TODO
 
 Providentia was created and is maintaned by [mromulus](https://github.com/mromulus).
 
-Thanks to [Clarified Security]() for enabling this work to continue.
+Thanks to [Clarified Security](https://clarifiedsecurity.com) for enabling this work to continue.
 
 <p align="center">
   <a href="https://clarifiedsecurity.com">
