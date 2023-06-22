@@ -13,6 +13,7 @@ module SpecCacheUpdater
       ServiceSubject.transaction do
         [self, item_hint].compact.flat_map(&method(:gather_subjects)).uniq.each do |subject|
           subject.update_column(:customization_spec_ids, subject.matched_spec_ids)
+          subject.touch
         end
       end
     end
