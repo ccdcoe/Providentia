@@ -5,6 +5,7 @@
 - if @capabilities.any?
   = render TableComponent.new do |c|
     - c.with_column { Capability.human_attribute_name(:name) }
+    - c.with_column { CustomizationSpec.model_name.human.pluralize }
     - c.with_column { '' }
 
     - @capabilities.each do |capability|
@@ -12,6 +13,14 @@
         %td.px-6.py-4
           .text-sm
             = link_to_if policy(capability).show?, capability.name, [capability.exercise, capability], class: 'text-indigo-600 hover:text-indigo-900 dark:text-indigo-400'
+
+        %td.px-6.py-4.space-y-3
+          - cache([capability.cache_key_with_version, 'index_fragnment']) do
+            - specs = policy_scope(capability.customization_specs).order(:name).limit(4)
+            - specs[0..2].each do |spec|
+              = link_to spec.name, exercise_virtual_machine_path(@exercise, spec.virtual_machine_id), class: 'text-indigo-600 hover:text-indigo-900 dark:text-indigo-400 dark:text-indigo-400'
+            - if specs.size == 4
+              \…
 
         %td.px-6.py-4.whitespace-nowrap.text-right
           - if policy(capability).destroy?
