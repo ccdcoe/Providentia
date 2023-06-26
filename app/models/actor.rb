@@ -1,15 +1,17 @@
 # frozen_string_literal: true
 
 class Actor < ApplicationRecord
-  belongs_to :exercise
+  has_ancestry
 
-  scope :numbered, -> {
-    where("prefs @? '$.numbered'")
-  }
+  belongs_to :exercise
 
   has_many :networks
   has_many :virtual_machines
   has_many :numbered_virtual_machines, class_name: 'VirtualMachine', foreign_key: :numbered_by
+
+  scope :numbered, -> {
+    where("prefs @? '$.numbered'")
+  }
 
   ### TEMPORARY: until migrated
   def self.migrate_from_teams
