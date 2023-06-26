@@ -111,7 +111,14 @@ class GenerateTags < Patterns::Calculation
 
     def spec_result
       many_items = subject.virtual_machine.custom_instance_count.to_i > 1 || subject.virtual_machine.numbered_actor
-      [
+      subject.tag_list.map do |custom_tag|
+        {
+          id: "custom_#{custom_tag}",
+          name: "Custom tag #{custom_tag}",
+          config_map: {},
+          children: []
+        }
+      end + [
         ({ id: subject.slug.tr('-', '_'), name: "All instances of #{subject.slug}", config_map: {}, children: [] } if many_items),
         ({ id: 'customization_container', name: 'customization_container', config_map: {}, children: [] } if subject.mode_container?),
       ]

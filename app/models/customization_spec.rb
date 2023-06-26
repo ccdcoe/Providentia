@@ -4,6 +4,8 @@ class CustomizationSpec < ApplicationRecord
   include SpecCacheUpdater
   extend FriendlyId
   has_paper_trail
+  acts_as_taggable_on :tags
+  acts_as_taggable_tenant :tenant_id
 
   friendly_id :api_id, use: [:slugged, :scoped], scope: :virtual_machine
 
@@ -74,6 +76,11 @@ class CustomizationSpec < ApplicationRecord
       .map do |team_number, sequential_number|
         presenter.new(self, sequential_number, team_number)
       end
+  end
+
+  def tenant_id
+    raise "No exercise!" unless exercise
+    "exercise_#{exercise.id}"
   end
 
   private

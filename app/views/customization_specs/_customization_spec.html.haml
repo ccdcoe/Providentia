@@ -53,6 +53,20 @@
       = form.collection_select :capability_ids, @capabilities, :id, :name, {}, multiple: true, data: { controller: 'select' }
 
     .mt-2
+      = render ModalComponent.new(header: "Checks") do |c|
+        - c.with_body do
+          %p
+            The tags will be added to the API with
+            %code custom_
+            prefix
+        = form.label :tag_list, class: 'block font-bold text-gray-700 dark:text-gray-200' do
+          = CustomizationSpec.human_attribute_name(:tag_list)
+          = link_to 'javascript:;', class: 'text-indigo-600 hover:text-indigo-900 dark:text-indigo-400', data: { action: "click->modal#open" } do
+            %i.fas.fa-circle-question
+
+      = form.text_field :tag_list, { value: customization_spec.tag_list.join(', '), data: { controller: 'select', create: true, select_options_value: ActsAsTaggableOn::Tag.for_tenant("exercise_#{@exercise.id}").uniq.pluck(:name) } }
+
+    .mt-2
       %h3.font-bold Services
 
       %p.text-center.pt-1

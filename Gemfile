@@ -28,6 +28,7 @@ gem 'mail', '~> 2.8'
 gem 'nokogiri', '~> 1.14'
 
 # functionality
+gem 'acts-as-taggable-on', '~> 9.0'
 gem 'ipaddress', github: 'ipaddress-gem/ipaddress'
 gem 'simple_form', '~> 5.0'
 gem 'ancestry'
