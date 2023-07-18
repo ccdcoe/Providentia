@@ -141,6 +141,10 @@ class Actor < ApplicationRecord
     abbreviation == 'rt'
   end
 
+  def downcased_name
+    name.downcase
+  end
+
   def numbering
     return unless prefs['numbered']
     count = prefs.dig('numbered', 'count').presence || 0

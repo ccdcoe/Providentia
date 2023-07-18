@@ -91,7 +91,7 @@ module ApplicationHelper
   end
 
   def sorted_os_options(collection = nil)
-    OrderedOperatingSystems
+    OrderedTree
       .result_for(policy_scope(OperatingSystem))
       .map { |i| ["#{'-' * i.depth} #{i.name}", i.id] }
   end

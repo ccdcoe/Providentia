@@ -55,7 +55,7 @@ class OperatingSystemsController < ApplicationController
     end
 
     def load_arranged_operating_systems
-      @operating_systems = OrderedOperatingSystems.result_for(policy_scope(OperatingSystem))
+      @operating_systems = OrderedTree.result_for(policy_scope(OperatingSystem))
     end
 
     def operating_system_params

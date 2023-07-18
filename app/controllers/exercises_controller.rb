@@ -42,7 +42,7 @@ class ExercisesController < ApplicationController
     end
 
     def load_actors
-      @actors = policy_scope(@exercise.actors).load_async
+      @actors = OrderedTree.result_for(policy_scope(@exercise.actors))
     end
 
     def exercise_params

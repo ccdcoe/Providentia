@@ -76,9 +76,9 @@
   - c.with_column { Actor.human_attribute_name(:entries) }
   - c.with_column { Actor.human_attribute_name(:ui_color) }
 
-  - @actors.each do |actor|
+  - @actors.each do |actor, sub|
     - c.with_table_row do
-      %td.px-6.py-4= actor.name
+      %td.px-6.py-4= "#{'-' * actor.depth} #{actor.name}"
       %td.px-6.py-4= actor.abbreviation
       %td.px-6.py-4
         - if actor.numbering
@@ -91,4 +91,4 @@
         - else
           %em (None)
       %td.px-6.py-4
-        = render ActorChipComponent.new(actor:, text: 'Example')
+        = render ActorChipComponent.new(actor:, text: 'Example') if actor.is_root?

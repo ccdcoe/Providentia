@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class OrderedOperatingSystems < Patterns::Calculation
+class OrderedTree < Patterns::Calculation
   private
     def result
       build_array(subject.order('lower(name) asc').arrange)
