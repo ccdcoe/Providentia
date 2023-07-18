@@ -10,11 +10,12 @@ class ServiceSubjectMatchCondition
     OperatingSystem,
     Capability,
     Network,
-    Actor
+    Actor,
+    ActsAsTaggableOn::Tagging
   ]
 
   validates :matcher_type, inclusion: { in: VALID_TYPES.map(&:to_s), allow_blank: true }
-  validates :matcher_id, numericality: true, allow_blank: true
+  validates :matcher_id, numericality: true, allow_blank: true, unless: -> { matcher_type == 'ActsAsTaggableOn::Tagging' }
 
   def attributes
     {

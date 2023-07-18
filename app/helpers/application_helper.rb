@@ -125,18 +125,22 @@ module ApplicationHelper
         [spec.name, spec.id]
       end
     when 'Capability'
-      policy_scope(@exercise.capabilities).select(:id, :name).order(:name).map do |spec|
-        [spec.name, spec.id]
+      policy_scope(@exercise.capabilities).select(:id, :name).order(:name).map do |cap|
+        [cap.name, cap.id]
       end
     when 'Actor'
-      policy_scope(@exercise.actors).select(:id, :name).order(:name).map do |spec|
-        [spec.name, spec.id]
+      policy_scope(@exercise.actors).select(:id, :name).order(:name).map do |actor|
+        [actor.name, actor.id]
       end
     when 'OperatingSystem'
       sorted_os_options
     when 'Network'
-      policy_scope(@exercise.networks).select(:id, :name).order(:name).map do |spec|
-        [spec.name, spec.id]
+      policy_scope(@exercise.networks).select(:id, :name).order(:name).map do |network|
+        [network.name, network.id]
+      end
+    when 'ActsAsTaggableOn::Tagging'
+      ActsAsTaggableOn::Tag.for_tenant("exercise_#{@exercise.id}").map do |tag|
+        [tag.name] * 2
       end
     else
       []
