@@ -40,7 +40,7 @@
               - network.address_pools.group_by(&:ip_family).each do |_mode, pools|
                 %div
                   - pools.each do |pool|
-                    -# %p= render LiquidPoolNetworkComponent.new(object: pool)
+                    %p= render LiquidPoolNetworkComponent.new(object: pool)
 
           %td.px-6.py-4.whitespace-nowrap
             - if network.domain.present?
