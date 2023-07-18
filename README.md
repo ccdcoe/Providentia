@@ -14,7 +14,7 @@
 
 Providentia manages the technical inventory of a cyber exercise environment: networks, hosts and more. This centralizes the information and provides a single source of truth, which can be used by other tools using its JSON API.
 
-The main use case is integrating consume the API to create [Ansible](https://www.ansible.com/) inventory in order to deploy networks and hosts to a cyber range environment.
+The main use case is consuming the API to create [Ansible](https://www.ansible.com/) inventory in order to deploy networks and hosts to a cyber range environment.
 
 Since its creation in 2020, Providentia has been used to plan and deploy numerous Locked Shields (LS), Crossed Swords (XS) and non-public cyber exercises.
 
