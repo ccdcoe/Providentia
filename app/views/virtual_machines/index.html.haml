@@ -13,16 +13,16 @@
         %svg.w-4.h-4.ml-1{"aria-hidden" => "true", :fill => "currentColor", :viewbox => "0 0 20 20", :xmlns => "http://www.w3.org/2000/svg"}
           %path{"clip-rule" => "evenodd", :d => "M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z", "fill-rule" => "evenodd"}
 
-      .z-10.absolute.top-full.left-0.mt-2.hidden.bg-white.divide-y.divide-gray-100.rounded-lg.shadow.w-44.dark:bg-gray-700{"data-dropdown-target" => "menu"}
+      .z-10.absolute.top-full.left-0.mt-2.hidden.bg-white.divide-y.divide-gray-100.rounded-lg.shadow.w-50.dark:bg-gray-700{"data-dropdown-target" => "menu"}
         %ul.py-2.text-sm.text-gray-700.dark:text-gray-200{"aria-labelledby" => "dropdown-button-2"}
           %li
             = link_to 'All', exercise_virtual_machines_path(@exercise, actor: nil, query: params[:query]), { data: { turbo_frame: :vm_search }, role: :menuitem, class: 'inline-flex items-center w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-600 dark:hover:text-white'}
 
-          - policy_scope(@exercise.actors).order(:name).each do |actor|
+          - OrderedTree.result_for(policy_scope(@exercise.actors)).each do |actor|
             %li
               = link_to exercise_virtual_machines_path(@exercise, actor: actor.abbreviation, query: params[:query]), { data: { turbo_frame: :vm_search }, role: :menuitem, class: 'inline-flex items-center w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-600 dark:hover:text-white'} do
                 %span.inline-flex.w-4.h-4.mr-2.rounded-full{class: actor_color_classes(actor)}
-                = actor.name
+                = "#{'-' * actor.depth} #{actor.name}"
 
       = form_with(url: [@exercise, :virtual_machines], method: :get, data: { controller: 'vmsearch' }, class: 'relative w-full') do
         = hidden_field_tag :actor, params[:actor]

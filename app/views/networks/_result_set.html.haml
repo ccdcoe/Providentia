@@ -1,0 +1,52 @@
+- c.with_column do
+  = Network.human_attribute_name(:name)
+  \/
+  = Network.human_attribute_name(:abbreviation)
+
+- c.with_column { 'Network' }
+- c.with_column { Network.human_attribute_name(:domain) }
+- c.with_column { Network.human_attribute_name(:description) }
+- c.with_column { '' }
+
+- actor.networks.each do |network|
+  - c.with_table_row do
+    %td.px-6.py-4
+      .text-sm
+        = link_to_if policy(network).show?, network.name, [network.exercise, network], class: 'text-indigo-600 hover:text-indigo-900 dark:text-indigo-400'
+      .text-sm.text-gray-500.dark:text-gray-50
+        = network.abbreviation
+
+    %td.px-6.py-4.whitespace-nowrap
+      .text-sm.light:text-gray-900
+        - if network.cloud_id
+          = render LiquidTextComponent.new(object: network.cloud_id, actor: network.actor)
+        - else
+          %em (None)
+      .text-sm.text-gray-500.dark:text-gray-400.gap-x-6.flex
+        .only:block.hidden
+          %em (None)
+        - network.address_pools.group_by(&:ip_family).each do |_mode, pools|
+          %div
+            - pools.each do |pool|
+              %p= render LiquidPoolNetworkComponent.new(object: pool)
+
+    %td.px-6.py-4.whitespace-nowrap
+      - if network.domain.present?
+        = render LiquidTextComponent.new(object: network.domain, actor: network.actor)
+        - unless network.ignore_root_domain
+          %span<>= ".#{network.exercise.root_domain}"
+      - else
+        %span.text-gray{title: 'Default from exercise'}= network.exercise.root_domain
+    %td.px-6.py-4= network.description
+    %td.px-6.py-4.whitespace-nowrap.text-right
+      - if policy(network).destroy?
+        = link_to [network.exercise, network], data: { turbo_method: 'delete', turbo_confirm: 'Are you sure?' } do
+          %i.fas.fa-times-circle.text-red-600
+
+- if sub.any?
+  - c.with_table_row do
+    %td.p-4.opacity-90{colspan: 100}
+      - sub.each do |actor, sub|
+        %section.text-xl.font-bold.text-center.pb-2= actor.name
+        = render TableComponent.new do |c|
+          = render 'result_set', actor:, c:, sub:

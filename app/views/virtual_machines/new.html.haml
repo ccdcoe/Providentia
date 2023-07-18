@@ -12,7 +12,7 @@
       .px-4.py-5.bg-white.dark:bg-gray-800.space-y-6.sm:p-6
         .grid.grid-cols-2.gap-6
           = f.input :name
-          = f.association :actor, collection: policy_scope(@exercise.actors), input_html: { data: { controller: 'select' } }
+          = f.association :actor, collection: sorted_tree_options(policy_scope(@exercise.actors)), input_html: { data: { controller: 'select' } }
 
       .px-4.py-3.bg-slate-200.dark:bg-gray-500.text-right.sm:px-6
         = f.button :submit, 'Save', class: 'form-submit'

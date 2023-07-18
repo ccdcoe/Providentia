@@ -13,7 +13,7 @@
         .px-4.py-5.bg-white.dark:bg-gray-800.space-y-6.p-6
           .grid.gap-6.grid-cols-2.xl:grid-cols-4
             .col-span-2= f.input :name
-            = f.association :actor, collection: @actors, include_blank: false, input_html: { data: { controller: 'select' } }
+            = f.association :actor, collection: sorted_tree_options(@actors), include_blank: false, input_html: { data: { controller: 'select' } }
             = f.input :visibility, collection: visibility_modes, include_blank: false, input_html: { data: { controller: 'select' } }
 
           = f.association :system_owner, collection: @system_owners, input_html: { data: { controller: 'select' } }
@@ -31,7 +31,7 @@
       - c.with_main do
         .px-4.py-5.bg-white.dark:bg-gray-800.space-y-6.p-6
           .grid.gap-6.grid-cols-3
-            .col-span-3= f.association :operating_system, collection: sorted_os_options, input_html: { data: { controller: 'select' } }
+            .col-span-3= f.association :operating_system, collection: sorted_tree_options, input_html: { data: { controller: 'select' } }
             = f.input :cpu, placeholder: @virtual_machine.operating_system&.applied_cpu.to_s
             %div
               = f.label :ram

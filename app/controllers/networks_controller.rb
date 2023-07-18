@@ -5,6 +5,9 @@ class NetworksController < ApplicationController
   before_action :get_network, only: %i[show edit update destroy]
 
   def index
+    @actors = policy_scope(@exercise.actors)
+      .joins(:networks)
+      .arrange
     @networks = policy_scope(@exercise.networks).order(:name).includes(:actor, :address_pools)
   end
 

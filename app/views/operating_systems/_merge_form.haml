@@ -10,7 +10,7 @@
         Merges this operating system into another. All VM references will be updated.
 
       = f.input :source_id, as: :hidden
-      = f.input :destination_id, collection: sorted_os_options(@operating_systems), input_html: { data: { controller: 'select' } }
+      = f.input :destination_id, collection: sorted_tree_options(@operating_systems), input_html: { data: { controller: 'select' } }
 
     .px-4.py-3.bg-slate-200.dark:bg-gray-500.text-right.sm:px-6
       = f.button :submit, 'Merge', class: 'form-submit'

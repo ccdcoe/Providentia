@@ -90,9 +90,9 @@ module ApplicationHelper
     ].compact.join ', '
   end
 
-  def sorted_os_options(collection = nil)
+  def sorted_tree_options(collection = policy_scope(OperatingSystem))
     OrderedTree
-      .result_for(policy_scope(OperatingSystem))
+      .result_for(collection)
       .map { |i| ["#{'-' * i.depth} #{i.name}", i.id] }
   end
 
@@ -118,7 +118,7 @@ module ApplicationHelper
   end
 
   def actor_color_classes(actor)
-    color = actor&.prefs&.dig('ui_color') || 'gray'
+    color = (actor || Actor.new).ui_color
     case color
     when 'yellow'
       "bg-#{color}-200 text-#{color}-800 dark:bg-#{color}-400 dark:text-#{color}-700"
@@ -138,13 +138,11 @@ module ApplicationHelper
         [cap.name, cap.id]
       end
     when 'Actor'
-      policy_scope(@exercise.actors).select(:id, :name).order(:name).map do |actor|
-        [actor.name, actor.id]
-      end
+      sorted_tree_options(policy_scope(@exercise.actors))
     when 'OperatingSystem'
-      sorted_os_options
+      sorted_tree_options(policy_scope(OperatingSystem))
     when 'Network'
-      policy_scope(@exercise.networks).select(:id, :name).order(:name).map do |network|
+      policy_scope(@exercise.networks).order(:name).map do |network|
         [network.name, network.id]
       end
     when 'ActsAsTaggableOn::Tagging'

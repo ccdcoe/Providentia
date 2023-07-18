@@ -6,7 +6,7 @@
 
     .px-4.py-5.space-y-6.sm:p-6
       = f.input :name
-      = f.input :parent_id, collection: sorted_os_options(@operating_systems), input_html: { data: { controller: 'select' } }
+      = f.input :parent_id, collection: sorted_tree_options(@operating_systems), input_html: { data: { controller: 'select' } }
 
     .px-4.py-5.space-y-1.sm:p-6
       %h2.text-xl Hardware

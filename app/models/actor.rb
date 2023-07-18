@@ -154,4 +154,8 @@ class Actor < ApplicationRecord
       dev_entries: (count + 1).step(by: 1).take(dev_count)
     }
   end
+
+  def ui_color
+    parent&.ui_color || prefs&.dig('ui_color') || 'gray'
+  end
 end
