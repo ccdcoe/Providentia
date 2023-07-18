@@ -12,8 +12,10 @@ module SpecCacheUpdater
     def schedule_spec_cache_update(item_hint = nil)
       ServiceSubject.transaction do
         [self, item_hint].compact.flat_map(&method(:gather_subjects)).uniq.each do |subject|
-          subject.update_column(:customization_spec_ids, subject.matched_spec_ids)
-          subject.touch
+          subject.update_columns(
+            customization_spec_ids: subject.matched_spec_ids,
+            updated_at: Time.current
+          )
         end
       end
     end
