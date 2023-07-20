@@ -65,6 +65,7 @@ class GenerateTags < Patterns::Calculation
       subject
         .numbered_virtual_machines
         .map(&:actor)
+        .select(&:is_root?)
         .uniq
         .excluding(subject)
         .map do |vm_actor|
@@ -99,7 +100,7 @@ class GenerateTags < Patterns::Calculation
     end
 
     def virtual_machine_result
-      return unless subject.numbered_actor && subject.actor != subject.numbered_actor
+      return unless subject.numbered_actor && !subject.numbered_actor.subtree.include?(subject.actor)
       id = "#{subject.actor.api_short_name}_#{subject.numbered_actor.abbreviation}_numbered"
       [{
         id:,
@@ -138,7 +139,8 @@ class GenerateTags < Patterns::Calculation
 
       actor = subject.spec.virtual_machine.actor
       nr_actor = subject.spec.virtual_machine.numbered_actor
-      if actor == nr_actor
+
+      if nr_actor.subtree.include?(actor)
         [{
           id: "#{actor.api_short_name}_t#{subject.team_number.to_s.rjust(2, "0")}",
           name: "#{actor.name} number #{subject.team_number}",
