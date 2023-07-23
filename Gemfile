@@ -59,7 +59,7 @@ gem 'sentry-rails'
 group :development, :test do
   gem 'rubocop-rails_config'
   gem 'byebug', platforms: %i[mri mingw x64_mingw]
-  gem 'rspec-rails', '~> 5.1.0'
+  gem 'rspec-rails'
   gem 'factory_bot_rails'
   gem 'rails-pg-extras'
 end

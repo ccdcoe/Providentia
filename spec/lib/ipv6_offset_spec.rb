@@ -28,8 +28,8 @@ RSpec.describe Ipv6Offset do
   context 'with offset 0' do
     let(:offset) { 0 }
 
-    it 'should return nil for store_value' do
-      expect(instance.store_value).to be_nil
+    it 'equal to empty string' do
+      expect(instance.to_s).to eq ''
     end
   end
 

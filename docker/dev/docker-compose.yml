@@ -2,26 +2,28 @@ version: "3"
 
 name: providentia
 services:
-  keycloak_db:
+  db:
     image: "postgres:14-alpine"
     volumes:
-      - "postgres_keycloak:/var/lib/postgresql/data"
+      - "postgres_providentia:/var/lib/postgresql/data"
+      - ./initdb.sql:/docker-entrypoint-initdb.d/001-initdb.sql
+    command: postgres -c shared_preload_libraries=pg_stat_statements -c pg_stat_statements.track=all
     environment:
-      - POSTGRES_USER=keycloak
+      - POSTGRES_USER=providentia
       - POSTGRES_PASSWORD=secret
-      - POSTGRES_DB=keycloak
+      - POSTGRES_DB=providentia
 
   keycloak:
     image: bitnami/keycloak:21.1.1
     depends_on:
-      - keycloak_db
+      - db
     environment:
       - KEYCLOAK_PROXY_ADDRESS_FORWARDING=true
       - KEYCLOAK_ADMIN_USER=admin
       - KEYCLOAK_ADMIN_PASSWORD=adminsecret
       - KEYCLOAK_MANAGEMENT_USER=mgmt
       - KEYCLOAK_MANAGEMENT_PASSWORD=mgmtsecret
-      - KEYCLOAK_DATABASE_HOST=keycloak_db
+      - KEYCLOAK_DATABASE_HOST=db
       - KEYCLOAK_DATABASE_PORT=5432
       - KEYCLOAK_DATABASE_NAME=keycloak
       - KEYCLOAK_DATABASE_USER=keycloak
@@ -48,16 +50,6 @@ services:
       - KEYCLOAK_AVAILABILITYCHECK_ENABLED=true
       - KEYCLOAK_AVAILABILITYCHECK_TIMEOUT=30s
       - IMPORT_FILES='/config/*'
-
-  db:
-    image: "postgres:14-alpine"
-    volumes:
-      - "postgres_providentia:/var/lib/postgresql/data"
-    command: postgres -c shared_preload_libraries=pg_stat_statements -c pg_stat_statements.track=all
-    environment:
-      - POSTGRES_USER=providentia
-      - POSTGRES_PASSWORD=secret
-      - POSTGRES_DB=providentia
 
   redis:
     image: "redis:alpine"

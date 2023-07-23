@@ -36,8 +36,14 @@ RSpec.describe UserPermissions do
     end
 
     context 'with exercise present' do
-      let!(:exercise) { create(:exercise) }
-      let!(:exercise) { create(:exercise) }
+      let(:exercise) { create(:exercise) }
+      let(:list) {
+        [
+          "Providentia_#{exercise.dev_red_resource_name}",
+          "Providentia_#{exercise.dev_resource_name}",
+          'Providentia_Admin'
+        ]
+      }
 
       it 'should return admin permissions' do
         expect(subject).to be_a(Hash)
