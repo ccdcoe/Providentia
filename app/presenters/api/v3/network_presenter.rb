@@ -28,10 +28,8 @@ module API
         end
 
         def numbering_source
-          if network.actor.numbering
-            network.actor.numbering[:entries]
-          elsif network.exercise.actors.numbered.size == 1 ## TODO: this seems hacky
-            network.exercise.actors.numbered.first.numbering[:entries]
+          if network.actor.number?
+            network.actor.all_numbers
           end
         end
     end

@@ -3,7 +3,7 @@
 # This will guess the User class
 FactoryBot.define do
   factory :customization_spec do
-    virtual_machine { nil }
+    virtual_machine
     name { 'MyString' }
     role_name { 'MyString' }
     dns_name { 'MyString' }
@@ -17,29 +17,28 @@ FactoryBot.define do
   end
 
   factory :address do
-    network_interface { nil }
+    network_interface
     mode { 1 }
     offset { 'MyString' }
     dns_enabled { false }
   end
 
-  factory :service_check do
-    service { nil }
-    network { nil }
-    protocol { 1 }
-    destination_port { 1 }
+  factory :address_pool do
+    network
+    network_address { '1.2.3.0/24' }
   end
 
   factory :exercise do
     name { 'Crocked Fields' }
-    abbreviation { 'CF' }
+    abbreviation { Faker::Alphanumeric.alpha(number: 5) }
     dev_resource_name { "#{abbreviation.upcase}_GT" }
     dev_red_resource_name { "#{abbreviation.upcase}_RT" }
+    actors { build_list(:actor, 2, exercise: instance) }
   end
 
   factory :virtual_machine do
     name { 'CoolTarget' }
-    team
+    actor
     operating_system
     exercise
   end
@@ -49,19 +48,36 @@ FactoryBot.define do
     cloud_id { 'door_os' }
   end
 
-  factory :team do
-    name { 'blurple' }
+  factory :actor do
+    name { Faker::Company.department }
+    abbreviation { name.dasherize }
+    exercise
+
+    trait :numbered do
+      number { 3 }
+    end
+
+    trait :numbered_2 do
+      number { 2 }
+    end
   end
 
   factory :network do
-    name { 'moo' }
-    abbreviation { 'M' }
-    team
+    name { Faker::Internet.domain_name }
+    abbreviation { Faker::Alphanumeric.alpha(number: 5) }
+    actor { exercise.actors.sample }
     exercise
   end
 
   factory :network_interface do
     network
     virtual_machine
+  end
+
+  factory :user do
+  end
+
+  factory :api_token do
+    user
   end
 end

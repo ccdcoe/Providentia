@@ -49,8 +49,8 @@ class GenerateTags < Patterns::Calculation
     end
 
     def numbered_actors
-      return [] if options[:spec] || !subject.numbering
-      subject.numbering[:entries].map do |number|
+      return [] if options[:spec] || !subject.number?
+      subject.all_numbers.map do |number|
         {
           id: "#{subject.api_short_name}_t#{number.to_s.rjust(2, "0")}",
           name: "#{subject.name} number #{number}",
@@ -69,8 +69,8 @@ class GenerateTags < Patterns::Calculation
         .uniq
         .excluding(subject)
         .map do |vm_actor|
-          children = subject.numbering[:entries].map do |number|
-            id = "#{vm_actor.api_short_name}_#{subject.abbreviation}_numbered_t#{number.to_s.rjust(2, "0")}"
+          children = subject.all_numbers.map do |number|
+            id = "#{vm_actor.api_short_name}_#{subject.abbreviation.downcase}_numbered_t#{number.to_s.rjust(2, "0")}"
             {
               id:,
               name: "#{vm_actor.name}, numbered by #{subject.name} - number #{number}",
@@ -80,7 +80,7 @@ class GenerateTags < Patterns::Calculation
           end
 
           [{
-            id: "#{vm_actor.api_short_name}_#{subject.abbreviation}_numbered",
+            id: "#{vm_actor.api_short_name}_#{subject.abbreviation.downcase}_numbered",
             name: "#{vm_actor.name}, numbered by #{subject.name}",
             config_map: {},
             children: children.map { |entry| entry[:id] },

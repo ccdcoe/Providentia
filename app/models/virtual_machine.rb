@@ -85,7 +85,7 @@ class VirtualMachine < ApplicationRecord
   end
 
   def deploy_count
-    numbered_actor.presence ? numbered_actor.numbering[:entries].last.to_i : 1
+    numbered_actor.presence&.number || 1
   end
 
   private

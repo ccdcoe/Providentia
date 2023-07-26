@@ -14,7 +14,16 @@ class LiquidRangeSubstitution < Patterns::Calculation
     def actor
       options[:actor] ||= case subject
                           when Address
-                            (subject.virtual_machine || subject.network).actor
+                            if subject.virtual_machine
+                              case subject.virtual_machine.numbered_by
+                              when Actor
+                                subject.virtual_machine.numbered_by
+                              else
+                                subject.virtual_machine.numbered_by.actor
+                              end || subject.virtual_machine.actor
+                            else
+                              subject.network.actor
+                            end
                           when AddressPool
                             subject.network.actor
                           else
@@ -40,10 +49,8 @@ class LiquidRangeSubstitution < Patterns::Calculation
     end
 
     def numbering_range
-      if actor.numbering
-        actor.numbering[:entries].values_at(0, -1)
-      elsif actor.exercise.actors.numbered.size == 1 ## TODO: this seems hacky
-        actor.exercise.actors.numbered.first.numbering[:entries].values_at(0, -1)
+      if actor.number
+        [1, actor.number]
       end
     end
 end

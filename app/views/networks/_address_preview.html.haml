@@ -1,17 +1,17 @@
 - cache([network.cache_key_with_version, 'address_preview']) do
   = render TableComponent.new do |c|
     - c.with_column { Actor.model_name.human }
-    - c.with_column { 'Numbering' }
+    - c.with_column { 'Numbering' } if network.actor.number?
     - c.with_column { 'IPv4' }
     - c.with_column { 'IPv6' }
 
     - pools = network.address_pools.group_by(&:ip_family)
-    - ((network.actor.numbering || {})[:entries] || [nil]).each do |entry|
+    - (network.actor.all_numbers || [nil]).each do |entry|
       - c.with_table_row do
         %td.px-6.py-4
           = network.actor.name
-        %td.px-6.py-4
-          - if entry
+        - if network.actor.number?
+          %td.px-6.py-4
             %strong= entry.to_s.rjust(2, "0")
         %td.px-6.py-4
           - (pools['v4'] || []).each do |pool|

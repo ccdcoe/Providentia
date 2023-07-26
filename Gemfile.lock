@@ -102,6 +102,10 @@ GEM
     concurrent-ruby (1.2.2)
     connection_pool (2.4.1)
     crass (1.0.6)
+    database_cleaner-active_record (2.1.0)
+      activerecord (>= 5.a)
+      database_cleaner-core (~> 2.0.0)
+    database_cleaner-core (2.0.1)
     date (3.3.3)
     descendants_tracker (0.0.4)
       thread_safe (~> 0.3, >= 0.3.1)
@@ -121,6 +125,8 @@ GEM
     factory_bot_rails (6.2.0)
       factory_bot (~> 6.2.0)
       railties (>= 5.0.0)
+    faker (3.2.0)
+      i18n (>= 1.8.11, < 2)
     faraday (2.7.10)
       faraday-net_http (>= 2.0, < 3.1)
       ruby2_keywords (>= 0.0.4)
@@ -478,8 +484,10 @@ DEPENDENCIES
   bootsnap (>= 1.4.2)
   bullet
   byebug
+  database_cleaner-active_record
   devise
   factory_bot_rails
+  faker (~> 3.2)
   flamegraph
   friendly_id (~> 5.5.0)
   haml-rails (~> 2.0)

@@ -7,11 +7,14 @@ class Actor < ApplicationRecord
 
   has_many :networks
   has_many :virtual_machines
+  has_many :actor_number_configs
   has_many :numbered_virtual_machines, class_name: 'VirtualMachine', foreign_key: :numbered_by
 
   scope :numbered, -> {
-    where("prefs @? '$.numbered'")
+    where.not(number: nil)
   }
+
+  validates :number, numericality: { only_integer: true, greater_than: 0, allow_blank: true }
 
   ### TEMPORARY: until migrated
   def self.migrate_from_teams
@@ -153,6 +156,11 @@ class Actor < ApplicationRecord
       entries: 1.step(by: 1).take(count + dev_count),
       dev_entries: (count + 1).step(by: 1).take(dev_count)
     }
+  end
+
+  def all_numbers
+    return if !number?
+    1.upto(number).to_a
   end
 
   def ui_color

@@ -10,14 +10,10 @@ module API
             name: exercise.name,
             description: exercise.description,
             actors: exercise.actors.map do |actor|
-              numbering = actor.numbering || {}
               {
                 id: actor.abbreviation,
                 name: actor.name,
-                numbered: {
-                  entries: numbering.dig(:entries) || [],
-                  dev_entries: numbering.dig(:dev_entries) || []
-                },
+                numbered: { entries: actor.all_numbers },
                 config_map: {}
               }
             end
