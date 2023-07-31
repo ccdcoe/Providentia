@@ -10,9 +10,19 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_07_23_105219) do
+ActiveRecord::Schema[7.0].define(version: 2023_07_31_080628) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "actor_number_configs", force: :cascade do |t|
+    t.bigint "actor_id", null: false
+    t.string "name", null: false
+    t.jsonb "config_map", default: {}, null: false
+    t.jsonb "matcher", default: [], null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["actor_id"], name: "index_actor_number_configs_on_actor_id"
+  end
 
   create_table "actors", force: :cascade do |t|
     t.bigint "exercise_id", null: false
@@ -342,6 +352,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_07_23_105219) do
     t.index ["team_id"], name: "index_virtual_machines_on_team_id"
   end
 
+  add_foreign_key "actor_number_configs", "actors"
   add_foreign_key "actors", "exercises"
   add_foreign_key "address_pools", "networks"
   add_foreign_key "addresses", "address_pools"

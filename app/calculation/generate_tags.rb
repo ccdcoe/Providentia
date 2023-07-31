@@ -51,10 +51,13 @@ class GenerateTags < Patterns::Calculation
     def numbered_actors
       return [] if options[:spec] || !subject.number?
       subject.all_numbers.map do |number|
+        configs = subject
+          .actor_number_configs
+          .where('matcher @> :nr::jsonb', nr: [number].to_json)
         {
           id: "#{subject.api_short_name}_t#{number.to_s.rjust(2, "0")}",
           name: "#{subject.name} number #{number}",
-          config_map: {},
+          config_map: configs.map(&:config_map).reduce(&:merge) || {},
           children: [],
         }
       end
@@ -71,10 +74,13 @@ class GenerateTags < Patterns::Calculation
         .map do |vm_actor|
           children = subject.all_numbers.map do |number|
             id = "#{vm_actor.api_short_name}_#{subject.abbreviation.downcase}_numbered_t#{number.to_s.rjust(2, "0")}"
+            configs = subject
+              .actor_number_configs
+              .where('matcher @> :nr::jsonb', nr: [number].to_json)
             {
               id:,
               name: "#{vm_actor.name}, numbered by #{subject.name} - number #{number}",
-              config_map: {},
+              config_map: configs.map(&:config_map).reduce(&:merge) || {},
               children: [],
             }
           end

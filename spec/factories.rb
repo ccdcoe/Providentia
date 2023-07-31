@@ -2,6 +2,13 @@
 
 # This will guess the User class
 FactoryBot.define do
+  factory :actor_number_config do
+    actor
+    config_map { {} }
+    name { 'MyString' }
+    matcher { [] }
+  end
+
   factory :customization_spec do
     virtual_machine
     name { 'MyString' }
