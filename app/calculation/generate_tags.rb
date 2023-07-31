@@ -37,7 +37,7 @@ class GenerateTags < Patterns::Calculation
     def actor_result
       [
         {
-          id: subject.api_short_name,
+          id: ActorAPIName.result_for(subject),
           name: subject.name,
           config_map: {},
           children: numbered_actors.map { |h| h[:id] },
@@ -49,13 +49,14 @@ class GenerateTags < Patterns::Calculation
     end
 
     def numbered_actors
-      return [] if options[:spec] || !subject.number?
-      subject.all_numbers.map do |number|
+      return [] if options[:spec] || !subject.root.number?
+      subject.root.all_numbers.map do |number|
         configs = subject
+          .root
           .actor_number_configs
-          .where('matcher @> :nr::jsonb', nr: [number].to_json)
+          .where('matcher @> :nr::jsonb', nr: [number.to_s].to_json)
         {
-          id: "#{subject.api_short_name}_t#{number.to_s.rjust(2, "0")}",
+          id: ActorAPIName.result_for(subject, number:),
           name: "#{subject.name} number #{number}",
           config_map: configs.map(&:config_map).reduce(&:merge) || {},
           children: [],
@@ -73,12 +74,11 @@ class GenerateTags < Patterns::Calculation
         .excluding(subject)
         .map do |vm_actor|
           children = subject.all_numbers.map do |number|
-            id = "#{vm_actor.api_short_name}_#{subject.abbreviation.downcase}_numbered_t#{number.to_s.rjust(2, "0")}"
             configs = subject
               .actor_number_configs
-              .where('matcher @> :nr::jsonb', nr: [number].to_json)
+              .where('matcher @> :nr::jsonb', nr: [number.to_s].to_json)
             {
-              id:,
+              id: ActorAPIName.result_for(vm_actor, numbered_by: subject, number:),
               name: "#{vm_actor.name}, numbered by #{subject.name} - number #{number}",
               config_map: configs.map(&:config_map).reduce(&:merge) || {},
               children: [],
@@ -86,7 +86,7 @@ class GenerateTags < Patterns::Calculation
           end
 
           [{
-            id: "#{vm_actor.api_short_name}_#{subject.abbreviation.downcase}_numbered",
+            id: ActorAPIName.result_for(vm_actor, numbered_by: subject),
             name: "#{vm_actor.name}, numbered by #{subject.name}",
             config_map: {},
             children: children.map { |entry| entry[:id] },
@@ -107,10 +107,9 @@ class GenerateTags < Patterns::Calculation
 
     def virtual_machine_result
       return unless subject.numbered_actor && !subject.numbered_actor.subtree.include?(subject.actor)
-      id = "#{subject.actor.api_short_name}_#{subject.numbered_actor.abbreviation}_numbered"
       [{
-        id:,
-        name: id,
+        id: ActorAPIName.result_for(subject.actor, numbered_by: subject.numbered_actor),
+        name: ActorAPIName.result_for(subject.actor, numbered_by: subject.numbered_actor),
         config_map: {},
         children: []
       }]
@@ -148,14 +147,14 @@ class GenerateTags < Patterns::Calculation
 
       if nr_actor.subtree.include?(actor)
         [{
-          id: "#{actor.api_short_name}_t#{subject.team_number.to_s.rjust(2, "0")}",
+          id: ActorAPIName.result_for(actor, number: subject.team_number),
           name: "#{actor.name} number #{subject.team_number}",
           config_map: {},
           children: [],
         }]
       else
         [{
-          id: "#{actor.api_short_name}_#{nr_actor.abbreviation}_numbered_t#{subject.team_number.to_s.rjust(2, "0")}",
+          id: ActorAPIName.result_for(actor, numbered_by: nr_actor, number: subject.team_number),
           name: "#{actor.name}, numbered by #{nr_actor.name} - number #{subject.team_number}",
           config_map: {},
           children: [],

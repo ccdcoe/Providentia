@@ -19,7 +19,7 @@ class ConfigMapForm < Patterns::Form
 
     def persist
       resource.update(
-        config_map: parsed_config_map
+        config_map: parsed_config_map || resource.class.column_defaults['config_map']
       )
     end
 end

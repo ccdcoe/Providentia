@@ -18,19 +18,16 @@ module API
       private
         def instances
           instance_generator
-            .map { |team_number| NetworkInstancePresenter.new(network, team_number) }
+            .map { |actor_number| NetworkInstancePresenter.new(network, actor_number) }
             .map(&:as_json)
         end
 
         def instance_generator
-          return [nil] unless network.numbered?
-          numbering_source
+          numbering_source || [nil]
         end
 
         def numbering_source
-          if network.actor.number?
-            network.actor.all_numbers
-          end
+          network.actor.root.all_numbers if network.numbered? && network.actor.root.number?
         end
     end
   end

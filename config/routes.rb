@@ -53,6 +53,7 @@ Rails.application.routes.draw do
         resource :inventory, only: %i[show]
         resource :graph, only: %i[show]
         resources :customization_specs, path: 'hosts', only: %i[index show]
+        resources :actors, only: %i[index]
       end
     end
   end

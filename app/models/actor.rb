@@ -16,6 +16,8 @@ class Actor < ApplicationRecord
 
   validates :number, numericality: { only_integer: true, greater_than: 0, allow_blank: true }
 
+  before_save :set_exercise_from_parent
+
   ### TEMPORARY: until migrated
   def self.migrate_from_teams
     Exercise.find_each do |ex|
@@ -136,10 +138,6 @@ class Actor < ApplicationRecord
     end
   end
 
-  def api_short_name
-    "actor_#{abbreviation}".downcase
-  end
-
   def red? # TEMPORARY
     abbreviation == 'rt'
   end
@@ -166,4 +164,10 @@ class Actor < ApplicationRecord
   def ui_color
     parent&.ui_color || prefs&.dig('ui_color') || 'gray'
   end
+
+  private
+    def set_exercise_from_parent
+      return if exercise_id && !parent
+      parent.exercise_id
+    end
 end
