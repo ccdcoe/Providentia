@@ -45,7 +45,8 @@
 
             %div
               %dt.text-sm.text-gray-500 Virtual machine instances
-              %dd.mt-1.text-sm.text-gray-900.dark:text-white.mt-0= policy_scope(@exercise.virtual_machines).map(&:deploy_count).inject(&:+)
+              %dd.mt-1.text-sm.text-gray-900.dark:text-white.mt-0
+                = policy_scope(@exercise.virtual_machines).map { |vm| vm.deploy_count * (vm.custom_instance_count || 1) }.sum
 
             %div
               %dt.text-sm.text-gray-500 Networks
