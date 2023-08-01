@@ -26,6 +26,7 @@ en:
         cpu: vCPU count
         ram: RAM
         custom_instance_count: Sequential instances
+        numbered_by: Deploy strategy
       network:
         cloud_id: ID in cloud
       network_interface:
@@ -45,6 +46,8 @@ en:
         api_id: Instance ID in API
         role_name: Customization role name
         dns_name: DNS name
+      actor_number_config:
+        matcher: Applies to numbers
 
   pool_scopes:
     default: Default

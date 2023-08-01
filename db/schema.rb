@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_07_31_080628) do
+ActiveRecord::Schema[7.0].define(version: 2023_08_03_122706) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -33,6 +33,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_07_31_080628) do
     t.datetime "updated_at", null: false
     t.string "ancestry"
     t.integer "number"
+    t.text "description"
     t.index ["ancestry"], name: "index_actors_on_ancestry"
     t.index ["exercise_id"], name: "index_actors_on_exercise_id"
   end

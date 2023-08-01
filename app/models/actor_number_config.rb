@@ -2,6 +2,7 @@
 
 class ActorNumberConfig < ApplicationRecord
   belongs_to :actor, touch: true
+  has_one :exercise, through: :network
   has_many :numbered_virtual_machines, class_name: 'VirtualMachine', as: :numbered_by
 
   validates :name, presence: true

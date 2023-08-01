@@ -1,0 +1,6 @@
+- if @actor.parent
+  = turbo_stream.update 'actors-table' do
+    = render 'actors/actors_table', actor: @actor.root
+- else
+  = turbo_stream.append 'actors' do
+    = render 'exercises/actor', actor: @actor, tree: {}

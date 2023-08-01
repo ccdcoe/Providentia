@@ -1,0 +1,56 @@
+%article[actor]
+  = render ColumnFormSectionComponent.new do |c|
+    - c.with_description do
+      %h3.text-lg.leading-6.text-gray-900.dark:text-gray-50 Identity
+      %p.mt-1.text-gray-600.dark:text-gray-400
+        Name and other identity information for this actor
+
+    - c.with_main do
+      .px-4.py-5.bg-white.dark:bg-gray-800.space-y-6.p-6
+        = simple_form_for([@exercise, actor], html: { autocomplete: "off", data: { controller: 'model', action: "change->model#update" } }) do |f|
+          = f.error_notification
+          = f.error_notification message: f.object.errors[:base].to_sentence if f.object.errors[:base].present?
+
+          .grid.gap-6.grid-cols-1.xl:grid-cols-2.py-1
+            = f.input :name
+            = f.input :abbreviation
+
+          .py-1= f.input :description
+          .py-1= f.input :number, hint: 'How many cloned instances this actor has'
+
+  = render ColumnFormSectionComponent.new do |c|
+    - c.with_description do
+      %h3.text-lg.leading-6.text-gray-900.dark:text-gray-50 Sub-actors
+      %p.mt-1.text-gray-600.dark:text-gray-400
+        Actors can be organized in hiearchies. Descendant actors use the same numbering logic as their root
+
+    - c.with_main do
+      .bg-white.dark:bg-gray-800
+        .flex.py-2.px-3.gap-2.items-center.bg-blue-200.dark:bg-gray-500
+          %h1.grow.text-2xl.font-bold.m-2 Descendant actors
+          = form_with(url: [@exercise, actor, :child], method: :post) do |_form|
+            %button.form-submit-add.text-sm.h-8{type: 'submit'}
+              %i.fas.fa-plus.self-center
+              Add sub-actor
+
+        #actors-table.divide-y-4.divide-double.divide-gray-200.dark:divide-gray-500
+          = render 'actors_table', actor:
+
+  - if actor.number?
+    = render ColumnFormSectionComponent.new do |c|
+      - c.with_description do
+        %h3.text-lg.leading-6.text-gray-900.dark:text-gray-50 Numbered configurations
+        %p.mt-1.text-gray-600.dark:text-gray-400
+          Cloned environments can have custom configurations attached for specific numbers. This can be useful for configuring different parameters for specific deployed clones, such as designating development teams.
+
+      - c.with_main do
+        .bg-white.dark:bg-gray-800
+          .flex.py-2.px-3.gap-2.items-center.bg-blue-200.dark:bg-gray-500
+            %h1.grow.text-2xl.font-bold.m-2 Configuration list
+            = form_with(url: [@exercise, actor, :actor_number_configs]) do |_form|
+              %button.form-submit-add.text-sm.h-8{type: 'submit'}
+                %i.fas.fa-plus.self-center
+                Add configuration
+
+          #config-table.divide-y-4.divide-double.divide-gray-200.dark:divide-gray-500
+            = render actor.actor_number_configs.sort

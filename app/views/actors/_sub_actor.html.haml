@@ -1,0 +1,16 @@
+%article.px-4.py-2{id: dom_id(actor,'sub')}
+  = form_with(model: actor, method: :patch, url: [@exercise, actor], data: { controller: 'model', action: "change->model#update" }) do |form|
+    .flex.grow.gap-x-2.place-items-center
+      = form.label :name, class: 'font-bold text-gray-700 dark:text-gray-200 text-right basis-1/6'
+      = form.text_field :name, class: 'form-input mb-1 basis-1/3'
+
+      = form.label :abbreviation, class: 'font-bold text-gray-700 dark:text-gray-200 text-right basis-1/4'
+      = form.text_field :abbreviation, class: 'form-input mb-1 basis-1/5'
+
+      = form.label :parent, class: 'font-bold text-gray-700 dark:text-gray-200 text-right basis-1/6'
+      .grow{class: 'basis-1/2'}
+        = form.collection_select :parent_id, sorted_tree_options(actor.root.subtree.without(actor)), :last, :first, { include_blank: false }, { class: 'form-input', data: { controller: 'select'} }
+
+      %div
+        = link_to 'javascript:;', data: { action: "model#delete", turbo_confirm: 'Are you sure?' } do
+          %i.fas.fa-times-circle.text-red-600

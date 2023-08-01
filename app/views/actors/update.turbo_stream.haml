@@ -1,0 +1,6 @@
+- if params.dig(:actor, :parent_id)
+  = turbo_stream.update 'actors-table' do
+    = render 'actors/actors_table', actor: @actor.root
+- else
+  = turbo_stream.replace dom_id(@actor) do
+    = render @actor

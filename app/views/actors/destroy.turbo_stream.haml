@@ -1,0 +1,3 @@
+= turbo_stream.remove dom_id(@actor)
+= turbo_stream.update 'actors-table' do
+  = render 'actors/actors_table', actor: @actor.root

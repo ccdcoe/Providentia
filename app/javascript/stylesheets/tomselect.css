@@ -377,12 +377,17 @@
   cursor: text;
 }
 
+.ts-wrapper.multi {
+  @apply leading-3;
+}
+
 .ts-wrapper.multi .ts-control {
   @apply gap-2;
 }
 
 .ts-wrapper.multi .ts-control [data-value] {
-  @apply inline-block align-middle rounded-md text-gray-900 bg-amber-300 border-amber-400 border px-3 py-1 break-all;
+  @apply inline-block rounded-md text-gray-900 bg-amber-300 border-amber-400 border px-3 py-0.5 break-all;
+  line-height: 18px;
 }
 .ts-wrapper.multi .ts-control [data-value].active {
   background-color: #0085d4;

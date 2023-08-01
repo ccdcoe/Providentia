@@ -9,7 +9,10 @@ Rails.application.routes.draw do
 
   resources :exercises, only: %i[new create show edit update] do
     resource :map, only: %i[show]
-    resources :actors, only: %i[edit update]
+    resources :actors, only: %i[create show update destroy] do
+      resource :child, only: %i[create], controller: :actors
+      resources :actor_number_configs, path: 'config'
+    end
     resources :virtual_machines, except: %i[edit] do
       resources :customization_specs
       resources :network_interfaces, path: 'nics', only: %i[new create update destroy] do

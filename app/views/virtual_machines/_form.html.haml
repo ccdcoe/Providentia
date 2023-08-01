@@ -54,7 +54,9 @@
       - c.with_description do
         %h3.text-lg.leading-6.text-gray-900.dark:text-gray-50 Deployment
         %p.mt-1.text-gray-600.dark:text-gray-400
-          Strategy and count of VM-s to be deployed
+          The strategy for deployment can be individiual or numbered by an root level actor. Numbered actor configurations can also be chosen - in this scenario, the host is enabled for the selected configuration
+        %p.mt-1.text-gray-600.dark:text-gray-400
+          Additionally, sequential or clustered instances can be set
 
       - c.with_main do
         .px-4.py-5.bg-white.dark:bg-gray-800.space-y-6.p-6#deployment_section

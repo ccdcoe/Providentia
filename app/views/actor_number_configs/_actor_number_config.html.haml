@@ -1,0 +1,24 @@
+.px-4.py-5.sm:p-6[actor_number_config]
+  = render ModalComponent.new(header: "Configuration map") do |c|
+    - c.with_body do
+      = form_with(model: ConfigMapForm.new(actor_number_config), url: [@exercise, actor_number_config.actor, actor_number_config], id: dom_id(actor_number_config, 'config_map_form'), data: { controller: 'model', action: "change->model#update"}) do |form|
+        = form.text_area :config_map_as_yaml, data: {controller: 'editor'}
+
+    = form_with(model: actor_number_config, url: [@exercise, actor_number_config.actor, actor_number_config], data: { controller: 'model', action: "change->model#update"}) do |form|
+      .flex.flex-row.flex-wrap.gap-x-4.gap-y-2.relative
+        .grow
+          = form.label :name, class: 'block font-bold text-gray-700 dark:text-gray-200'
+          = form.text_field :name, class: 'form-input'
+
+        %div{class: 'basis-1/3'}
+          = form.label :matcher, class: 'block font-bold text-gray-700 dark:text-gray-200'
+          = form.collection_select :matcher, actor_number_config.actor.all_numbers, :to_s, :to_s, { include_blank: true }, { class: 'form-input mt-1', multiple: true, data: { controller: 'select'} }
+
+        .pt-9
+          = link_to 'javascript:;', class: 'text-white bg-gradient-to-r from-cyan-400 via-cyan-500 to-cyan-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-cyan-300 dark:focus:ring-cyan-800 font-medium rounded-lg text-sm text-center px-5 py-2.5', data: { action: "click->modal#open" } do
+            Config map
+            %i.fas.fa-up-right-from-square
+
+        .absolute.right-0.top-0
+          = link_to 'javascript:;', data: { action: "model#delete", turbo_confirm: 'Are you sure?' } do
+            %i.fas.fa-times-circle.text-red-600

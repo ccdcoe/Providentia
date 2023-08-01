@@ -42,7 +42,7 @@ class ExercisesController < ApplicationController
     end
 
     def load_actors
-      @actors = OrderedTree.result_for(policy_scope(@exercise.actors))
+      @actors = policy_scope(@exercise.actors).arrange(order: :name)
     end
 
     def exercise_params

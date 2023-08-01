@@ -68,27 +68,14 @@
                 %dd.mt-1.text-sm.text-gray-900.dark:text-white.mt-0
                   %span{title: "#{resource_usage.primary_disk_size} GB"}= number_to_human_size resource_usage.primary_disk_size*1024*1024*1024
 
-%h1.text-2xl.font-bold.py-3.pb-6 Actors
+.flex.flex-row.items-center.py-3.pb-6
+  %h1.text-2xl.font-bold.grow Actors
+  = form_with(url: [@exercise, :actors], method: :post) do |_form|
+    %button.form-submit-add.text-sm.h-8{type: 'submit'}
+      %i.fas.fa-plus.self-center
+      Add actor
 
-= render TableComponent.new do |c|
-  - c.with_column { Actor.human_attribute_name(:name) }
-  - c.with_column { Actor.human_attribute_name(:abbreviation) }
-  - c.with_column { Actor.human_attribute_name(:entries) }
-  - c.with_column { Actor.human_attribute_name(:ui_color) }
 
-  - @actors.each do |actor, sub|
-    - c.with_table_row do
-      %td.px-6.py-4= "#{'-' * actor.depth} #{actor.name}"
-      %td.px-6.py-4= actor.abbreviation
-      %td.px-6.py-4
-        - if actor.numbering
-          Numbering:
-          %strong= actor.prefs.dig('numbered', 'count').to_i
-          = "#{'team'.pluralize(actor.prefs.dig('numbered', 'count'))}, "
-          %strong= actor.prefs.dig('numbered', 'dev_count').to_i
-          = 'development team'.pluralize(actor.prefs.dig('numbered', 'dev_count'))
-
-        - else
-          %em (None)
-      %td.px-6.py-4
-        = render ActorChipComponent.new(actor:, text: 'Example') if actor.is_root?
+#actors.grid.gap-4.grid-cols-1.lg:grid-cols-2
+  - @actors.each do |actor, tree|
+    = render 'actor', actor:, tree:

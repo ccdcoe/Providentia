@@ -18,6 +18,10 @@ class Actor < ApplicationRecord
 
   before_save :set_exercise_from_parent
 
+  def self.to_icon
+    'fa-building-shield'
+  end
+
   ### TEMPORARY: until migrated
   def self.migrate_from_teams
     Exercise.find_each do |ex|

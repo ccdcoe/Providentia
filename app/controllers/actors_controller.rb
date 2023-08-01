@@ -1,25 +1,47 @@
 # frozen_string_literal: true
 
 class ActorsController < ApplicationController
-  before_action :get_exercise, :get_actor
+  before_action :get_exercise
+  before_action :get_actor, except: %i[create]
 
   respond_to :turbo_stream
 
-  def edit
-    authorize @exercise, :update?
-    @form = ActorNumberingForm.new(@actor)
-    render partial: 'actors/numbering/edit', locals: { actor: @actor }
+  def create
+    authorize @exercise.actors, :create?
+    new_actor_params = {
+      name: 'New actor',
+      abbreviation: 'na'
+    }
+    if params[:actor_id]
+      parent = policy_scope(@exercise.actors).find(params[:actor_id])
+      new_actor_params[:parent] = parent
+    end
+    @actor = @exercise.actors.create(new_actor_params)
+  end
+
+  def show
+    authorize @actor, :update?
   end
 
   def update
-    authorize @exercise, :update?
-    ActorNumberingForm.new(@actor, params[:numbering]).save
-    @actor.reload
-    render partial: 'actors/numbering/show', locals: { actor: @actor }
+    authorize @actor, :update?
+    @actor.update(actor_params)
+  end
+
+  def destroy
+    authorize @actor
+    @actor.destroy
   end
 
   private
     def get_actor
-      @actor = @exercise.actors.find(params[:id])
+      @actor = policy_scope(@exercise.actors).find(params[:id])
+    end
+
+    def actor_params
+      params.require(:actor).permit(
+        :name, :abbreviation, :description, :number,
+        :parent_id
+      )
     end
 end
