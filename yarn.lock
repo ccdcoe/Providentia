@@ -93,6 +93,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@codemirror/state@npm:^6.2.1":
+  version: 6.2.1
+  resolution: "@codemirror/state@npm:6.2.1"
+  checksum: d12a321d0471b264b9d3259042bff913a8b939e8d28d408ff452004538a71ca9d5329df3f8a1d8a9183f5b42a7ef5b200737bcab1065714f5ae8e0a5ba9d59d3
+  languageName: node
+  linkType: hard
+
 "@codemirror/view@npm:^6.0.0, @codemirror/view@npm:^6.6.0":
   version: 6.11.0
   resolution: "@codemirror/view@npm:6.11.0"
@@ -101,6 +108,17 @@ __metadata:
     style-mod: ^4.0.0
     w3c-keyname: ^2.2.4
   checksum: 42a64e54366991c9bd6c9ca9355c497eb67766ab124cc839c122bd34808defaa9042eebb06f1bd9217593c897b1a5df35d42d72ef2d906e9ee4f6daab3a15b44
+  languageName: node
+  linkType: hard
+
+"@codemirror/view@npm:^6.16.0":
+  version: 6.16.0
+  resolution: "@codemirror/view@npm:6.16.0"
+  dependencies:
+    "@codemirror/state": ^6.1.4
+    style-mod: ^4.0.0
+    w3c-keyname: ^2.2.4
+  checksum: 54d412b5159716c8a1a9c46fa04ff083e68a663cb887e6e2a4ca86fe9c3930d5255200fe84c65620e0a442f62dc2c13df277bcd1d4eef2e11e3c4e124fcf9d38
   languageName: node
   linkType: hard
 
@@ -789,6 +807,15 @@ __metadata:
   dependencies:
     "@lezer/common": ^1.0.0
   checksum: 30e848c02839bfcd9472fcd6e74d71cba12379cef38f27d0c6cab0e6831f92150cfc629d267a40cc31f84cf46ac0a935400163fdf931b2672c516bec29417485
+  languageName: node
+  linkType: hard
+
+"@lezer/highlight@npm:^1.1.6":
+  version: 1.1.6
+  resolution: "@lezer/highlight@npm:1.1.6"
+  dependencies:
+    "@lezer/common": ^1.0.0
+  checksum: 411a702394c4c996b7d7f145a38f3a85a8cc698b3918acc7121c629255bb76d4ab383753f69009e011dc415210c6acbbb5b27bde613259ab67e600b29397b03b
   languageName: node
   linkType: hard
 
@@ -3310,11 +3337,14 @@ __metadata:
   dependencies:
     "@codemirror/language": ^6.6.0
     "@codemirror/legacy-modes": ^6.3.2
+    "@codemirror/state": ^6.2.1
+    "@codemirror/view": ^6.16.0
     "@fortawesome/fontawesome-svg-core": ^6.4.0
     "@fortawesome/free-brands-svg-icons": ^6.4.0
     "@fortawesome/free-solid-svg-icons": ^6.4.0
     "@hotwired/stimulus": ^3.2.1
     "@hotwired/turbo-rails": ^7.3.0
+    "@lezer/highlight": ^1.1.6
     "@rails/actioncable": ^7.0.6
     "@rails/activestorage": ^7.0.6
     "@tailwindcss/aspect-ratio": ^0.4.2
