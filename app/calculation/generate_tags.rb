@@ -20,6 +20,8 @@ class GenerateTags < Patterns::Calculation
         instance_result || []
       when Enumerable
         subject.map { |item| self.class.result_for(item, options) }.flatten
+      else
+        []
       end.flatten.compact
     end
 
