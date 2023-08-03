@@ -6,21 +6,21 @@ RSpec.describe VirtualMachine do
   subject { build(:virtual_machine) }
 
   context '#deploy_count' do
-    subject { build(:virtual_machine, numbered_actor:).deploy_count }
-    let(:numbered_actor) { nil }
+    subject { build(:virtual_machine, numbered_by:).deploy_count }
+    let(:numbered_by) { nil }
 
     it { is_expected.to eq 1 }
 
     context 'with non-numbered actor' do
-      let(:numbered_actor) { build(:actor) }
+      let(:numbered_by) { build(:actor) }
 
       it { is_expected.to eq 1 }
     end
 
     context 'with numbered actor' do
-      let(:numbered_actor) { build(:actor, :numbered) }
+      let(:numbered_by) { build(:actor, :numbered) }
 
-      it { is_expected.to eq numbered_actor.number }
+      it { is_expected.to eq numbered_by.number }
     end
   end
 end

@@ -14,7 +14,7 @@ module API
         def configs
           actor
             .actor_number_configs
-            .where('matcher @> :nr::jsonb', nr: [number.to_s].to_json)
+            .for_number(number)
         end
     end
   end

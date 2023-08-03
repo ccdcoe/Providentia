@@ -1,9 +1,8 @@
 .grid.gap-6.grid-cols-2
   = f.input :numbered_by,
     as: :select,
-    collection: deploy_modes,
+    collection: NumberingOptions.result_for(@virtual_machine),
     include_blank: I18n.t('deploy_modes.single'),
-    selected: @virtual_machine.numbered_by,
-    disabled: @virtual_machine.forced_numbering?,
+    selected: @virtual_machine.numbered_by&.to_gid,
     input_html: { data: { controller: 'select' } }
   = f.input :custom_instance_count

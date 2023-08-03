@@ -53,7 +53,7 @@ en:
 
   deploy_modes:
     single: Independent
-    actor: "Instance for each of: %{actor}"
+    per_item: "Instance for each of: %{item}"
 
   visibility_modes:
     public: Public

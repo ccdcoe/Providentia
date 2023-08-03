@@ -344,7 +344,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_07_31_080628) do
     t.integer "primary_disk_size"
     t.integer "visibility", default: 1
     t.bigint "actor_id"
-    t.integer "numbered_by"
+    t.integer "numbered_by_id"
+    t.string "numbered_by_type"
     t.index ["actor_id"], name: "index_virtual_machines_on_actor_id"
     t.index ["exercise_id"], name: "index_virtual_machines_on_exercise_id"
     t.index ["name", "exercise_id"], name: "index_virtual_machines_on_name_and_exercise_id", unique: true

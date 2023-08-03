@@ -55,7 +55,9 @@ class VirtualMachinesController < ApplicationController
   end
 
   def update
-    @virtual_machine.update(virtual_machine_params)
+    @virtual_machine.numbered_by = get_numbered
+    @virtual_machine.assign_attributes(virtual_machine_params)
+    @virtual_machine.save
 
     preload_services
     preload_form_collections
@@ -89,8 +91,17 @@ class VirtualMachinesController < ApplicationController
       params.require(:virtual_machine).permit(
         :name, :actor_id, :visibility,
         :system_owner_id, :description,
-        :numbered_by, :custom_instance_count,
+        :custom_instance_count,
         :operating_system_id, :cpu, :ram, :primary_disk_size,
+      )
+    end
+
+    def get_numbered
+      authorize(
+        GlobalID::Locator.locate(
+          params[:virtual_machine].extract!(:numbered_by)[:numbered_by]
+        ),
+        :show?
       )
     end
 end

@@ -83,6 +83,39 @@ RSpec.describe GenerateTags do
 
         it { is_expected.to eq([default_result]) }
       end
+
+      context 'with number configs' do
+        let!(:config) {
+          create(:actor_number_config,
+            actor:,
+            matcher: actor.all_numbers.take(2),
+            config_map: { special: true }
+          )
+        }
+
+        let!(:config2) {
+          create(:actor_number_config,
+            actor:,
+            matcher: actor.all_numbers.take(2),
+            config_map: { really_special: false }
+          )
+        }
+
+        let(:numbered_results) {
+          actor.all_numbers.map do |nr|
+            map = config.config_map.merge(config2.config_map) if config.matcher.include?(nr.to_s)
+            {
+              id: ActorAPIName.result_for(actor, number: nr),
+              name: "#{actor.name} number #{nr}",
+              children: [],
+              config_map: map || {}
+            }
+          end
+        }
+
+        it { is_expected.to include(default_result.merge(children: numbered_results.map { |item| item[:id] })) }
+        it { is_expected.to include(*numbered_results) }
+      end
     end
 
     context 'as numbered actor for VM-s' do
@@ -124,6 +157,40 @@ RSpec.describe GenerateTags do
         subject { described_class.result_for(source_objects, spec: 'anything') }
 
         it { is_expected.to eq([default_result]) }
+      end
+
+      context 'with numbered configs' do
+        let!(:config) {
+          create(:actor_number_config,
+            actor:,
+            matcher: actor.all_numbers.take(2),
+            config_map: { special: true }
+          )
+        }
+
+        let!(:config2) {
+          create(:actor_number_config,
+            actor:,
+            matcher: actor.all_numbers.take(2),
+            config_map: { really_special: false }
+          )
+        }
+
+        let(:numbered_results) {
+          actor.all_numbers.map do |nr|
+            map = config.config_map.merge(config2.config_map) if config.matcher.include?(nr.to_s)
+
+            {
+              id: ActorAPIName.result_for(vm_primary_actor, numbered_by: actor, number: nr),
+              name: "#{vm_primary_actor.name}, numbered by #{actor.name} - number #{nr}",
+              children: [],
+              config_map: map || {}
+            }
+          end
+        }
+
+        it { is_expected.to include(main_result) }
+        it { is_expected.to include(*numbered_results) }
       end
     end
   end

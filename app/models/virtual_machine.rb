@@ -20,7 +20,7 @@ class VirtualMachine < ApplicationRecord
   belongs_to :actor
   belongs_to :operating_system, optional: true
   belongs_to :system_owner, class_name: 'User', inverse_of: :owned_systems, optional: true
-  belongs_to :numbered_actor, class_name: 'Actor', foreign_key: :numbered_by, inverse_of: :numbered_virtual_machines, optional: true
+  belongs_to :numbered_by, polymorphic: true, optional: true
   has_many :network_interfaces, dependent: :destroy
   has_many :customization_specs, dependent: :destroy
   has_one :connection_nic, -> { connectable },
@@ -56,6 +56,7 @@ class VirtualMachine < ApplicationRecord
   validates :custom_instance_count, numericality: { only_integer: true, greater_than_or_equal_to: 1 }, allow_blank: true
   validates_associated :network_interfaces
   validate :hostname_conflicts, :transfer_overlap_error
+  validates :numbered_by_type, inclusion: { in: %w(Actor ActorNumberConfig) }, if: :numbered_by
 
   before_validation :lowercase_fields
   after_create :create_default_spec
@@ -70,8 +71,13 @@ class VirtualMachine < ApplicationRecord
     "#{exercise.abbreviation}_#{actor.abbreviation}_#{name}".downcase
   end
 
-  def forced_numbering?
-    networks.any?(&:numbered?)
+  def numbered_actor
+    case numbered_by
+    when Actor
+      numbered_by
+    when ActorNumberConfig
+      numbered_by.actor
+    end
   end
 
   def single_network_instances(presenter)

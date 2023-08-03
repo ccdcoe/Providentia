@@ -54,7 +54,7 @@ class GenerateTags < Patterns::Calculation
         configs = subject
           .root
           .actor_number_configs
-          .where('matcher @> :nr::jsonb', nr: [number.to_s].to_json)
+          .for_number(number)
         {
           id: ActorAPIName.result_for(subject, number:),
           name: "#{subject.name} number #{number}",
@@ -76,7 +76,7 @@ class GenerateTags < Patterns::Calculation
           children = subject.all_numbers.map do |number|
             configs = subject
               .actor_number_configs
-              .where('matcher @> :nr::jsonb', nr: [number.to_s].to_json)
+              .for_number(number)
             {
               id: ActorAPIName.result_for(vm_actor, numbered_by: subject, number:),
               name: "#{vm_actor.name}, numbered by #{subject.name} - number #{number}",

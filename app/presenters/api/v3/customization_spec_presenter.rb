@@ -75,7 +75,7 @@ module API
         end
 
         def instances
-          spec.deployable_instances(InstancePresenter).map(&:as_json)
+          spec.deployable_instances(InstancePresenter).filter_map(&:as_json)
         end
 
         def capabilities

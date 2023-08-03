@@ -6,6 +6,7 @@ module API
       delegate :operating_system, to: :vm
 
       def as_json
+        return if skip_by_numbering
         {
           id: inventory_name,
           parent_id:,
@@ -37,6 +38,18 @@ module API
               hostname_team_suffix
             ].compact.join('_')
           )
+        end
+
+        def skip_by_numbering
+          team_number && vm.numbered_actor && !enabled_numbered_actors.include?(team_number)
+        end
+
+        def enabled_numbered_actors
+          if vm.numbered_by.is_a?(ActorNumberConfig)
+            vm.numbered_by.matcher.map(&:to_i)
+          else
+            vm.numbered_actor.all_numbers
+          end
         end
 
         def connection_namespec

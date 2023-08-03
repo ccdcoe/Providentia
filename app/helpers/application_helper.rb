@@ -111,12 +111,6 @@ module ApplicationHelper
     Rails.configuration.x.providentia_version
   end
 
-  def deploy_modes
-    @actors.select(&:numbering).map do |actor|
-      [I18n.t('deploy_modes.actor', actor: actor.name), actor.id]
-    end
-  end
-
   def actor_color_classes(actor)
     color = (actor || Actor.new).ui_color
     case color
