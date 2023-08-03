@@ -79,7 +79,7 @@ class CustomizationSpec < ApplicationRecord
   end
 
   def tenant_id
-    raise "No exercise!" unless exercise
+    raise 'No exercise!' unless exercise
     "exercise_#{exercise.id}"
   end
 

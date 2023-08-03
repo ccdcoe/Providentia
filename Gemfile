@@ -26,6 +26,7 @@ gem 'redis'
 gem 'hiredis', '~> 0.6.3'
 gem 'mail', '~> 2.8'
 gem 'nokogiri', '~> 1.14'
+gem 'stringex', '~> 2.8', require: 'stringex_lite'
 
 # functionality
 gem 'acts-as-taggable-on', '~> 9.0'

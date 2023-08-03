@@ -1,0 +1,3 @@
+require 'parameterized_tag_parser'
+
+ActsAsTaggableOn.default_parser = ParameterizedTagParser

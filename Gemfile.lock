@@ -406,6 +406,7 @@ GEM
       activemodel (>= 5.2)
     stackprof (0.2.25)
     stream (0.5.5)
+    stringex (2.8.6)
     swd (2.0.2)
       activesupport (>= 3)
       attr_required (>= 0.0.5)
@@ -516,6 +517,7 @@ DEPENDENCIES
   sentry-ruby
   simple_form (~> 5.0)
   stackprof
+  stringex (~> 2.8)
   turbo-rails (~> 1.0)
   view_component
   vite_rails (~> 3.0)
