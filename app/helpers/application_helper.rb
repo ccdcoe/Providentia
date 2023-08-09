@@ -9,6 +9,15 @@ module ApplicationHelper
     provide(:title) { page_title }
   end
 
+  def add_button_text
+    case controller_name
+    when 'dashboard'
+      'Add environment'
+    else
+      %Q(Add #{controller_name.classify.constantize.model_name.human})
+    end
+  end
+
   def link_for_model(model)
     return unless model
 
@@ -33,7 +42,7 @@ module ApplicationHelper
   def tailwind_classes_for(flash_type)
     {
       notice: 'bg-green-400 border-l-4 border-green-700 text-white',
-      error:   'bg-red-400 border-l-4 border-red-700 text-black',
+      error:  'bg-red-400 border-l-4 border-red-700 text-black',
     }.stringify_keys[flash_type.to_s] || flash_type.to_s
   end
 
@@ -87,10 +96,10 @@ module ApplicationHelper
       .map { |i| ["#{'-' * i.depth} #{i.name}", i.id] }
   end
 
-  def sidebar_cache_key
+  def nav_cache_key
     [
       @exercise.cache_key_with_version,
-      'sidebar',
+      'nav',
       policy_scope(@exercise.virtual_machines).cache_key_with_version,
       policy_scope(@exercise.networks).cache_key_with_version,
       policy_scope(@exercise.services).cache_key_with_version,

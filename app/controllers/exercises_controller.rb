@@ -51,7 +51,7 @@ class ExercisesController < ApplicationController
         :services_read_only,
         :root_domain,
         :archived,
-        :mode, :description
+        :description
       )
     end
 end

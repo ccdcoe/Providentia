@@ -1,0 +1,21 @@
+.w-full.px-4.py-3.mx-auto.bg-white.rounded-md.shadow-md.dark:bg-gray-800.flex.flex-col{class: environment.archived? && 'opacity-50'}
+  .flex.items-center.justify-between
+    %h1.mt-2.text-lg.font-semibold.text-gray-800.dark:text-white= link_to_if Pundit.policy(UserContext.new(current_user, environment), environment).show?, environment.name, environment
+    %span.px-3.py-1.text-xs.text-indigo-800.uppercase.bg-indigo-200.rounded-full.dark:bg-indigo-300.dark:text-indigo-900= environment.abbreviation
+  .flex-grow
+    %p.mt-2.text-sm.text-gray-600.dark:text-gray-300= environment.description
+  .justify-end
+    .flex.items-center.justify-center.mt-4
+      = link_to [environment, :networks], class: 'mr-2 text-gray-800 cursor-pointer dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300' do
+        %i.fas{class: Network.to_icon}
+
+      = link_to [environment, :virtual_machines], class: 'mr-2 text-gray-800 cursor-pointer dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300' do
+        %i.fas{class: VirtualMachine.to_icon}
+
+      - if environment.services.any?
+        = link_to [environment, :services], class: 'mr-2 text-gray-800 cursor-pointer dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300' do
+          %i.fas{class: Service.to_icon}
+
+      - if environment.capabilities.any?
+        = link_to [environment, :capabilities], class: 'mr-2 text-gray-800 cursor-pointer dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300' do
+          %i.fas{class: Capability.to_icon}

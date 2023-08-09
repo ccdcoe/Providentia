@@ -57,7 +57,6 @@
       - c.with_main do
         .px-4.py-5.bg-white.dark:bg-gray-800.space-y-6.sm:p-6
           .grid.grid-cols-3.gap-6
-            .col-span-3.sm:col-span-2= f.input :mode, collection: Exercise.modes.map { |a, b| [a.capitalize, a] }, default: 0
             .col-span-3.sm:col-span-2= f.input :root_domain, hint: 'Will be used as default for all machines'
             .col-span-3.sm:col-span-2= f.input :services_read_only
 

@@ -45,4 +45,8 @@
   select {
     @apply background-arrow;
   }
+
+  .static-width {
+    @apply max-w-9xl mx-auto px-4 sm:px-6 lg:px-8;
+  }
 }

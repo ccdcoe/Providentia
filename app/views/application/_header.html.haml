@@ -1,0 +1,75 @@
+%header.sticky.top-0.bg-white.dark:bg-gray-600.border-b.border-gray-200.dark:border-gray-500.z-30
+  %nav.static-width
+    .flex.items-center.h-16.-mb-px.gap-x-1
+      .flex-1.flex
+        .text-center
+          = link_to root_path, class: 'transition-colors hover:text-sky-400' do
+            %svg.inline.w-6.fill-current{:space => "preserve", :viewbox => "0 0 512 512", :xmlns => "http://www.w3.org/2000/svg"}
+              %path{:d => "M415.803 268.9c23.204-29.203 35.807-65.119 35.807-102.975 0-44.32-17.259-85.987-48.598-117.326C371.672 17.259 330.005 0 285.685 0c-37.858 0-73.773 12.603-102.975 35.807L153.444 6.541a19.19 19.19 0 0 0-27.14 0c-87.885 87.885-87.885 230.882 0 318.766 39.361 39.361 90.806 62.332 146.052 65.523v29.047h-2.678c-40.188 0-72.884 32.719-72.884 72.907 0 10.599 8.593 19.217 19.192 19.217h154.733c10.599 0 19.192-8.617 19.192-19.217 0-40.188-32.696-72.907-72.884-72.907h-6.287V389.85c50.778-5.563 97.767-27.98 134.329-64.543 7.495-7.495 7.495-19.647 0-27.142L415.803 268.9zm-98.775 189.361c11.925 0 22.455 6.397 28.654 15.354h-104.66c6.199-8.956 16.729-15.354 28.656-15.354h47.35zm-31.343-105.416c-50.017 0-96.981-19.419-132.241-54.679-68.338-68.338-72.634-176.837-12.879-250.221L155.57 62.95c-23.204 29.202-35.805 65.119-35.805 102.975 0 44.319 17.259 85.987 48.598 117.326 31.337 31.339 73.005 48.598 117.325 48.598 37.858 0 73.773-12.602 102.975-35.805l15.007 15.007c-33.21 27.076-74.439 41.794-117.985 41.794zm90.184-96.738c-24.089 24.089-56.116 37.355-90.184 37.355-34.067 0-66.094-13.266-90.183-37.355s-37.355-56.117-37.355-90.184 13.266-66.095 37.355-90.184c24.089-24.088 56.116-37.355 90.183-37.355 34.068 0 66.095 13.267 90.184 37.355 24.089 24.089 37.355 56.116 37.355 90.184 0 34.067-13.266 66.095-37.355 90.184z"}
+        - if @exercise&.persisted?
+          %hr.w-px.h-auto.bg-gray-200.dark:bg-gray-400.dark:border-gray-400.mx-3/
+          = link_to @exercise, class: 'font-medium text-lg' do
+            %i.fa{class: Exercise.to_icon}
+            = @exercise.name
+
+      .flex.justify-center.text-2xl.font-bold.font-lusitana.shrink= render HeaderTextComponent.new(text: content_for(:heading))
+      .flex-1.flex.items-center.justify-end
+        %button.w-8.h-8.flex.items-center.justify-center.bg-gray-200.hover:bg-gray-300.dark:bg-gray-100.dark:hover:bg-gray-200.transition.duration-150.rounded-full{data: { action: "click->search#open" }}
+          %svg.w-4.h-4{:viewbox => "0 0 16 16", :xmlns => "http://www.w3.org/2000/svg"}
+            %path.fill-current.text-gray-500{:d => "M7 14c-3.86 0-7-3.14-7-7s3.14-7 7-7 7 3.14 7 7-3.14 7-7 7zM7 2C4.243 2 2 4.243 2 7s2.243 5 5 5 5-2.243 5-5-2.243-5-5-5z"}
+            %path.fill-current.text-gray-400{:d => "M15.707 14.293L13.314 11.9a8.019 8.019 0 01-1.414 1.414l2.393 2.393a.997.997 0 001.414 0 .999.999 0 000-1.414z"}
+
+        %hr.w-px.h-6.bg-gray-200.dark:bg-gray-400.dark:border-gray-400.mx-3/
+        %div= render 'user_menu'
+
+  - if @exercise&.persisted? || content_for?(:new_url)
+    %nav.bg-gray-200.dark:bg-gray-700.font-medium.shadow-inner
+      %ul.flex.flex-col.md:flex-row.items-center.gap-x-8.text-sm.static-width
+        - if @exercise&.persisted?
+          - cache(nav_cache_key) do
+            %li.py-2
+              = link_to [@exercise, :networks], class: 'transition-colors hover:text-sky-400' do
+                .flex.items-center.justify-between
+                  .flex.flex-grow.items-center.gap-x-1
+                    %i.fas{class: Network.to_icon}
+                    %span.text-sm Networks
+
+                    - if policy_scope(@exercise.networks).size > 0
+                      %span.text-xs.text-white.bg-indigo-500.px-2.rounded-sm= policy_scope(@exercise.networks).size
+
+            %li.py-2
+              = link_to [@exercise, :virtual_machines], class: 'transition-colors hover:text-sky-400' do
+                .flex.items-center.justify-between
+                  .flex.flex-grow.items-center.gap-x-1
+                    %i.fas{class: VirtualMachine.to_icon}
+                    %span.text-sm Virtual machines
+
+                    - if policy_scope(@exercise.virtual_machines).size > 0
+                      %span.text-xs.text-white.bg-indigo-500.px-2.rounded-sm= policy_scope(@exercise.virtual_machines).size
+
+            %li.py-2
+              = link_to [@exercise, :services], class: 'transition-colors hover:text-sky-400' do
+                .flex.items-center.justify-between
+                  .flex.flex-grow.items-center.gap-x-1
+                    %i.fas{class: Service.to_icon}
+                    %span.text-sm Services
+
+                    - if @exercise.services.size > 0
+                      %span.text-xs.text-white.bg-indigo-500.px-2.rounded-sm= policy_scope(@exercise.services).size
+
+            %li.py-2
+              = link_to [@exercise, :capabilities], class: 'transition-colors hover:text-sky-400' do
+                .flex.items-center.justify-between
+                  .flex.flex-grow.items-center.gap-x-1
+                    %i.fas{class: Capability.to_icon}
+                    %span.text-sm Capabilities
+
+                    - if @exercise.capabilities.size > 0
+                      %span.text-xs.text-white.bg-indigo-500.px-2.rounded-sm= policy_scope(@exercise.capabilities).size
+
+
+        - if content_for?(:new_url)
+          %li.py-2.grow.text-right
+            = link_to content_for(:new_url), class: 'form-submit-add h-6' do
+              %i.fas.fa-plus.self-center
+              = add_button_text

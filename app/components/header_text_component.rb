@@ -1,18 +1,16 @@
 # frozen_string_literal: true
 
 class HeaderTextComponent < ViewComponent::Base
-  attr_reader :exercise, :text
+  attr_reader :text
 
-  def initialize(exercise:, text:)
-    @exercise = exercise
+  def initialize(text:)
     @text = text
   end
 
   private
     def breadcrumb_items
       [].tap do |items|
-        items << [Exercise.to_icon, exercise.name, exercise] if exercise&.persisted?
-        if !%w[exercises versions clones].include?(controller_name) || action_name == 'new'
+        if !%w[exercises versions clones docs].include?(controller_name) || action_name == 'new'
           items << [controller_class.to_icon, controller_action_text]
         end
       end

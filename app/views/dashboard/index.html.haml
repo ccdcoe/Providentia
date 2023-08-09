@@ -1,6 +1,5 @@
 - provide :heading do
-  %i.fas.mr-2.mt-1{class: Exercise.to_icon}
-  List of environments
+  Dashboard
 
 - if policy(:exercise).create?
   - provide :new_url do
@@ -10,9 +9,15 @@
   - if current_user.admin? && !params[:archived]
     = link_to 'Show archived', root_path(archived: true), class: 'form-submit h-10'
 
-- if @exercises.any?
-  .grid.grid-cols-4.gap-6.py-6
-    = render partial: 'shared/environment_card', collection: @exercises, as: :environment
+- if @my_exercises.any?
+  %h1.text-xl.py-2.font-bold My environments
+  .grid.grid-cols-3.gap-4.justify-items-stretch.pb-10
+    = render partial: 'environments/environment_card', collection: @my_exercises, as: :environment
+
+- if @other_exercises.any?
+  %h1.text-xl.py-2.font-medium Public environments
+  .grid.grid-cols-4.gap-6.justify-items-stretch.pb-10
+    = render partial: 'environments/environment_card_small', collection: @other_exercises, as: :environment
 
 - else
   = render 'shared/empty', klass: Exercise
