@@ -29,7 +29,7 @@ Authorization: Bearer agjvnY1GYqYHT8BcEi2Uv3C9
 
 It is also possible to use locally generated API tokens for testing purposes. This is is not a recommended way of using the API for long-term operation.
 
-The personal API tokens can be generated at <%= link_to api_tokens_path %>
+The personal API tokens can be generated at <%= link_to api_tokens_path, api_tokens_path %>
 
 The generated token is shown to user only once
 
