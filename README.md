@@ -12,7 +12,7 @@
 
 ## Project description
 
-Providentia manages the technical inventory of a cyber exercise environment: networks, hosts and more. This centralizes the information and provides a single source of truth, which can be used by other tools using its JSON API.
+Providentia manages the technical inventory of a cyber exercise environment: networks, hosts and more. This centralizes this information and provides a single source of truth via JSON API. It integrates best with [Catapult](https://github.com/ClarifiedSecurity/catapult) deployment app, also developed by Clarified Security, but has been adapted to work with other tools and applications.
 
 The main use case is consuming the API to create [Ansible](https://www.ansible.com/) inventory in order to deploy networks and hosts to a cyber range environment.
 
@@ -21,7 +21,7 @@ Since its creation in 2020, Providentia has been used to plan and deploy numerou
 ## Features
 
 - Can be used to manage infrastructure, defensive or offensive exercises
-  - Supports multiple identical environments for each actor
+  - Supports multiple identical cloned environments for each actor
 - Planning and design of exercise networking
   - Templating engine, allowing for value substitution in addresses, domains, etc.
   - Supports multiple address pool within same layer 2
@@ -29,9 +29,11 @@ Since its creation in 2020, Providentia has been used to plan and deploy numerou
   - Avoids address conflicts and overlaps
   - Supports static, dynamic, virtual addressing
 - Hosts inventory: virtual machines, containers and physical devices
-- Allows describing services on hosts, which can be used to perform automatic checks
+- Enabled describing detailed services, which can be used to perform automatic checks
+  - Powerful pattern matching to easily apply services to multiple hosts at once
+  - Flexible configuration for individual checks
 - Authentication handled by external SSO via OpenID Connect
-- JSON API, with accompanying Ansible inventory plugin (to be made public soon)
+- JSON API, with accompanying Ansible inventory plugin as part of [clarified.core](https://github.com/ClarifiedSecurity/clarified.core) collection
 
 ---
 
@@ -96,7 +98,6 @@ TODO
 ## Roadmap / upcoming features
 
 - Introduce actors and rework access control
-- Revamp services to be more flexible and powerful
 - Import/Export of environments
 - Cloning of hosts
 
