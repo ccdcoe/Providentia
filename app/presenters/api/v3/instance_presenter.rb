@@ -8,6 +8,7 @@ module API
       def as_json
         {
           id: inventory_name,
+          parent_id:,
           vm_name:,
           team_unique_id: name,
           hostname:,
@@ -24,6 +25,18 @@ module API
       private
         def vm
           spec.virtual_machine
+        end
+
+        def parent_id
+          return if spec.mode_host?
+
+          substitute(
+            [
+              host_spec.slug,
+              hostname_sequence_suffix,
+              hostname_team_suffix
+            ].compact.join('_')
+          )
         end
 
         def connection_namespec
