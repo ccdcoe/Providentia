@@ -4,7 +4,7 @@ module API
   module V3
     class CustomizationSpecPresenter < Struct.new(:spec)
       def as_json(_opts)
-        Rails.cache.fetch(['apiv3', vm.cache_key_with_version, spec.cache_key_with_version]) do
+        Rails.cache.fetch(cache_key) do
           preload_interfaces
           {
             id: spec.slug,
@@ -36,6 +36,16 @@ module API
       end
 
       private
+        def cache_key
+          [
+            'apiv3',
+            vm.cache_key_with_version,
+            spec.cache_key_with_version,
+            vm.actor&.cache_key_with_version,
+            vm.numbered_actor&.cache_key_with_version
+          ].compact
+        end
+
         def vm
           spec.virtual_machine
         end

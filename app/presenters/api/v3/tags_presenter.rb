@@ -18,6 +18,10 @@ module API
           @spec_scope ||= Pundit.policy_scope(scope, exercise.customization_specs)
         end
 
+        def vm_scope
+          @vm_scope ||= Pundit.policy_scope(scope, exercise.virtual_machines)
+        end
+
         def actor_scope
           @actor_scope ||= Pundit.policy_scope(scope, exercise.actors)
         end
@@ -47,7 +51,7 @@ module API
         end
 
         def spec_tags
-          Rails.cache.fetch(['apiv3', exercise.cache_key_with_version, 'spec_tags', spec_scope.cache_key_with_version]) do
+          Rails.cache.fetch(['apiv3', exercise.cache_key_with_version, 'spec_tags', spec_scope.cache_key_with_version, vm_scope.cache_key_with_version]) do
             GenerateTags.result_for(spec_scope.all).uniq
           end
         end
