@@ -26,6 +26,20 @@ class Exercise < ApplicationRecord
   validates :abbreviation, uniqueness: true
 
   scope :active, -> { where(archived: false) }
+  scope :search, ->(query) {
+    columns = %w{
+      exercises.name exercises.abbreviation
+      actors.name actors.abbreviation
+    }
+    left_outer_joins(:actors)
+      .where(
+        columns
+          .map { |c| "#{c} ilike :search" }
+          .join(' OR '),
+        search: "%#{query}%"
+      )
+      .group(:id)
+  }
 
   def self.to_icon
     'fa-project-diagram'

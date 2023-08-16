@@ -19,6 +19,10 @@ class SearchesController < ApplicationController
         policy_scope(OperatingSystem)
           .search(params[:query])
           .limit(5),
+        policy_scope(Exercise)
+          .active
+          .search(params[:query])
+          .limit(5),
       ].flatten
     else
       @results = []
