@@ -9,8 +9,7 @@ module API
             id: capability.slug,
             name: capability.name,
             description: capability.description,
-            virtual_machines: capability.customization_specs.pluck(:slug),
-            networks: capability.networks.pluck(:name)
+            virtual_machines: capability.customization_specs.pluck(:slug)
           }
         end
       end
