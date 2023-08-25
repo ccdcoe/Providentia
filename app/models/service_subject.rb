@@ -55,7 +55,7 @@ class ServiceSubject < ApplicationRecord
             .where(operating_systems: { id: OperatingSystem.find(condition.matcher_id).subtree_ids })
         end
       when 'ActsAsTaggableOn::Tagging'
-        scope.tagged_with(condition.matcher_id)
+        scope.tagged_with(condition.matcher_id || "")
       else
         scope.none
       end
