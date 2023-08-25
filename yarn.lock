@@ -41,7 +41,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@codemirror/language@npm:^6.0.0, @codemirror/language@npm:^6.8.0":
+"@codemirror/language@npm:^6.0.0":
   version: 6.8.0
   resolution: "@codemirror/language@npm:6.8.0"
   dependencies:
@@ -52,6 +52,20 @@ __metadata:
     "@lezer/lr": ^1.0.0
     style-mod: ^4.0.0
   checksum: 64408d996641931fa4c6b892e17ee1fdaee0f63d3d84c019a6ea7b1e6d1c774f92357b95c2ebaed60545062b795b72d0a058c03578b2bf4023c87726e97b5d2f
+  languageName: node
+  linkType: hard
+
+"@codemirror/language@npm:^6.9.0":
+  version: 6.9.0
+  resolution: "@codemirror/language@npm:6.9.0"
+  dependencies:
+    "@codemirror/state": ^6.0.0
+    "@codemirror/view": ^6.0.0
+    "@lezer/common": ^1.0.0
+    "@lezer/highlight": ^1.0.0
+    "@lezer/lr": ^1.0.0
+    style-mod: ^4.0.0
+  checksum: 9a897fb0f569159eeafb7dce83061b425af7244bbeae2649e0e677488548b2a02eaf0c13c0c5b4d59da55e8866e6f4dc7abe3dfaa09c13749a2fa2c0dbc0c565
   languageName: node
   linkType: hard
 
@@ -632,7 +646,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@fortawesome/fontawesome-svg-core@npm:^6.4.0":
+"@fortawesome/fontawesome-svg-core@npm:^6.4.2":
   version: 6.4.2
   resolution: "@fortawesome/fontawesome-svg-core@npm:6.4.2"
   dependencies:
@@ -641,7 +655,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@fortawesome/free-brands-svg-icons@npm:^6.4.0":
+"@fortawesome/free-brands-svg-icons@npm:^6.4.2":
   version: 6.4.2
   resolution: "@fortawesome/free-brands-svg-icons@npm:6.4.2"
   dependencies:
@@ -650,7 +664,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@fortawesome/free-solid-svg-icons@npm:^6.4.0":
+"@fortawesome/free-solid-svg-icons@npm:^6.4.2":
   version: 6.4.2
   resolution: "@fortawesome/free-solid-svg-icons@npm:6.4.2"
   dependencies:
@@ -659,7 +673,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@hotwired/stimulus@npm:>=3.0.0, @hotwired/stimulus@npm:^3.2.1":
+"@hotwired/stimulus@npm:>=3.0.0, @hotwired/stimulus@npm:^3.2.2":
   version: 3.2.2
   resolution: "@hotwired/stimulus@npm:3.2.2"
   checksum: e0c13469df89f760f35cce0fd7af5f7eeabd4ff79c4ad2b05fe7d8d7b845818c6736c3cd515c1906e144aa27529d5a60377647937b756950b4f709be329c9046
@@ -837,19 +851,26 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@rails/actioncable@npm:^7.0, @rails/actioncable@npm:^7.0.6":
+"@rails/actioncable@npm:^7.0":
   version: 7.0.6
   resolution: "@rails/actioncable@npm:7.0.6"
   checksum: e05b67dbd6dc1317fb57efa171ca83dc19b8062223140ff3d4e12f5c1dee33a5ba82b96962dbe4359a038a9d8ba5cbb2cfd1f94c90226954a3524fe43b81e6a1
   languageName: node
   linkType: hard
 
-"@rails/activestorage@npm:^7.0.6":
-  version: 7.0.6
-  resolution: "@rails/activestorage@npm:7.0.6"
+"@rails/actioncable@npm:^7.0.7-2":
+  version: 7.0.7
+  resolution: "@rails/actioncable@npm:7.0.7"
+  checksum: c0e71b7153b508f65748b7538d1a9461295ce84fc2bf8daacbea8d4903b32271e7b099df1774644eb02ae0636dde5d4e7ffa6d77f96ef7bad5ab89b7078eb265
+  languageName: node
+  linkType: hard
+
+"@rails/activestorage@npm:^7.0.7-2":
+  version: 7.0.7
+  resolution: "@rails/activestorage@npm:7.0.7"
   dependencies:
     spark-md5: ^3.0.1
-  checksum: 69005cd36ca552d4c6f30b27c281c322b9361dd6412fcc94ae3a2f6b78fa8af7799ce8c57c2509c104aae9fdf239c4dfad9cd564e048b7cb6238ccff7147dfee
+  checksum: ea61161cd3f4cbd6879ea2b32cf6c1e700c8e19776caa2821b3394d9c8c6d2fd90fbf127da637c5d8c4c59f467c355ed77e0afd8c215237966b2125225109517
   languageName: node
   linkType: hard
 
@@ -862,14 +883,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@tailwindcss/forms@npm:^0.5.4":
-  version: 0.5.4
-  resolution: "@tailwindcss/forms@npm:0.5.4"
+"@tailwindcss/forms@npm:^0.5.5":
+  version: 0.5.5
+  resolution: "@tailwindcss/forms@npm:0.5.5"
   dependencies:
     mini-svg-data-uri: ^1.2.3
   peerDependencies:
     tailwindcss: ">=3.0.0 || >= 3.0.0-alpha.1"
-  checksum: 3b8c6fe6fd02bf0e346a8c7a7386b6a7df2052ba36292037ce79db3ce51562ef34fee43798984a06c0626c041d9b8de5e3b89fa81790f9b8927594d0da72a53d
+  checksum: 2748699d2d182e6c565afc38f927cc86544f349e6ab939cda9a97952f405fed00152cb00454a0c586f41ff0dc6854f1044c59523f31564b5f8027facbd2302e9
   languageName: node
   linkType: hard
 
@@ -1427,7 +1448,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"cytoscape-elk@npm:^2.1.0":
+"cytoscape-elk@npm:^2.2.0":
   version: 2.2.0
   resolution: "cytoscape-elk@npm:2.2.0"
   dependencies:
@@ -1451,7 +1472,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"cytoscape@npm:^3.25.0":
+"cytoscape@npm:^3.26.0":
   version: 3.26.0
   resolution: "cytoscape@npm:3.26.0"
   dependencies:
@@ -1908,7 +1929,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"hotkeys-js@npm:^3.11.2":
+"hotkeys-js@npm:^3.12.0":
   version: 3.12.0
   resolution: "hotkeys-js@npm:3.12.0"
   checksum: b359d32cf926a3b4723ee4cd0978639dbad0b0b33e4d0ff75861906ea54d19c9ff2aa7cffde7fdb1bf2718a7eab2bfa326edb3974f5e4182feec5591cb23632d
@@ -2949,7 +2970,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"postcss-nesting@npm:^12.0.0, postcss-nesting@npm:^12.0.1":
+"postcss-nesting@npm:^12.0.1":
   version: 12.0.1
   resolution: "postcss-nesting@npm:12.0.1"
   dependencies:
@@ -3111,7 +3132,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"postcss-preset-env@npm:^9.0.0":
+"postcss-preset-env@npm:^9.1.1":
   version: 9.1.1
   resolution: "postcss-preset-env@npm:9.1.1"
   dependencies:
@@ -3282,7 +3303,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"postcss@npm:^8.4.23, postcss@npm:^8.4.26, postcss@npm:^8.4.27":
+"postcss@npm:^8.4.23, postcss@npm:^8.4.27":
   version: 8.4.27
   resolution: "postcss@npm:8.4.27"
   dependencies:
@@ -3290,6 +3311,17 @@ __metadata:
     picocolors: ^1.0.0
     source-map-js: ^1.0.2
   checksum: 1cdd0c298849df6cd65f7e646a3ba36870a37b65f55fd59d1a165539c263e9b4872a402bf4ed1ca1bc31f58b68b2835545e33ea1a23b161a1f8aa6d5ded81e78
+  languageName: node
+  linkType: hard
+
+"postcss@npm:^8.4.28":
+  version: 8.4.28
+  resolution: "postcss@npm:8.4.28"
+  dependencies:
+    nanoid: ^3.3.6
+    picocolors: ^1.0.0
+    source-map-js: ^1.0.2
+  checksum: f605c24a36f7e400bad379735fbfc893ccb8d293ad6d419bb824db77cdcb69f43d614ef35f9f7091f32ca588d130ec60dbcf53b366e6bf88a8a64bbeb3c05f6d
   languageName: node
   linkType: hard
 
@@ -3307,33 +3339,33 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "providentia@workspace:."
   dependencies:
-    "@codemirror/language": ^6.8.0
+    "@codemirror/language": ^6.9.0
     "@codemirror/legacy-modes": ^6.3.3
     "@codemirror/state": ^6.2.1
     "@codemirror/view": ^6.16.0
-    "@fortawesome/fontawesome-svg-core": ^6.4.0
-    "@fortawesome/free-brands-svg-icons": ^6.4.0
-    "@fortawesome/free-solid-svg-icons": ^6.4.0
-    "@hotwired/stimulus": ^3.2.1
+    "@fortawesome/fontawesome-svg-core": ^6.4.2
+    "@fortawesome/free-brands-svg-icons": ^6.4.2
+    "@fortawesome/free-solid-svg-icons": ^6.4.2
+    "@hotwired/stimulus": ^3.2.2
     "@hotwired/turbo-rails": ^7.3.0
     "@lezer/highlight": ^1.1.6
-    "@rails/actioncable": ^7.0.6
-    "@rails/activestorage": ^7.0.6
+    "@rails/actioncable": ^7.0.7-2
+    "@rails/activestorage": ^7.0.7-2
     "@tailwindcss/aspect-ratio": ^0.4.2
-    "@tailwindcss/forms": ^0.5.4
+    "@tailwindcss/forms": ^0.5.5
     "@tailwindcss/typography": ^0.5.9
     codemirror: ^6.0.1
     cssnano: ^6.0.1
-    cytoscape: ^3.25.0
-    cytoscape-elk: ^2.1.0
+    cytoscape: ^3.26.0
+    cytoscape-elk: ^2.2.0
     cytoscape-node-html-label: ^1.2.2
     debounce: ^1.2.1
     element-matches-polyfill: ^1.0.0
-    hotkeys-js: ^3.11.2
-    postcss: ^8.4.26
+    hotkeys-js: ^3.12.0
+    postcss: ^8.4.28
     postcss-import: ^15.1.0
-    postcss-nesting: ^12.0.0
-    postcss-preset-env: ^9.0.0
+    postcss-nesting: ^12.0.1
+    postcss-preset-env: ^9.1.1
     stimulus-use: ^0.52.0
     stimulus-vite-helpers: ^3.0.1
     tailwindcss: ^3.3.3
@@ -3342,7 +3374,7 @@ __metadata:
     throttleit: ^1.0.0
     tippy.js: ^6.3.7
     tom-select: ^2.2.2
-    vite: ^4.4.4
+    vite: ^4.4.9
     vite-plugin-ruby: ^3.2.2
     vite-plugin-stimulus-hmr: ^3.0.0
     web-worker: ^1.2.0
@@ -3888,7 +3920,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"vite@npm:^4.4.4":
+"vite@npm:^4.4.9":
   version: 4.4.9
   resolution: "vite@npm:4.4.9"
   dependencies:
