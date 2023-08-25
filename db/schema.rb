@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_08_03_122706) do
+ActiveRecord::Schema[7.0].define(version: 2023_08_25_085618) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -83,6 +83,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_03_122706) do
     t.bigint "exercise_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "actor_id"
+    t.index ["actor_id"], name: "index_capabilities_on_actor_id"
     t.index ["exercise_id"], name: "index_capabilities_on_exercise_id"
   end
 
@@ -360,6 +362,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_03_122706) do
   add_foreign_key "addresses", "address_pools"
   add_foreign_key "addresses", "network_interfaces"
   add_foreign_key "api_tokens", "users"
+  add_foreign_key "capabilities", "actors"
   add_foreign_key "capabilities", "exercises"
   add_foreign_key "checks", "services"
   add_foreign_key "customization_specs", "virtual_machines"

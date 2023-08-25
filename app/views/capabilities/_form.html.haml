@@ -4,14 +4,25 @@
   = f.error_notification
   = f.error_notification message: f.object.errors[:base].to_sentence if f.object.errors[:base].present?
 
-  .px-4.py-5.space-y-6.sm:p-6
-    = f.input :name
-    = f.input :slug, readonly: true if f.object.persisted?
+  = render ColumnFormSectionComponent.new do |c|
+    - c.with_description do
+      %h3.text-lg.leading-6.text-gray-900.dark:text-gray-50 Identity
+      %p.mt-1.text-sm.text-gray-600.dark:text-gray-400
+        Name, actor and description for this capability
 
-    %hr
+    - c.with_main do
+      .px-4.py-5.bg-white.dark:bg-gray-800.space-y-6.sm:p-6
+        .grid.grid-cols-6.gap-6
+          .col-span-2= f.input :name
+          .col-span-2= f.association :actor, collection: sorted_tree_options(policy_scope(@exercise.actors)), input_html: { data: { controller: 'select' } }
+          - if f.object.persisted?
+            .col-span-2
+              %div
+                %span.block.font-bold.text-gray-700.dark:text-gray-200 API ID
+                %p.my-3= @capability.slug
 
-    = f.input :description
+        = f.input :description
 
-    - if policy(@capability).update?
-      .px-4.py-3.bg-slate-200.dark:bg-gray-500.text-right.sm:px-6
-        = f.button :submit, class: 'form-submit'
+      - if policy(@capability).update?
+        .px-4.py-3.bg-slate-200.dark:bg-gray-500.text-right.sm:px-6
+          = f.button :submit, 'Save', class: 'form-submit'

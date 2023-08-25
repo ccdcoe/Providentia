@@ -5,6 +5,7 @@ class CapabilitiesController < ApplicationController
   before_action :get_capability, only: %i[show edit update destroy]
 
   def index
+    @actors = OrderedTree.result_for(policy_scope(@exercise.actors))
     @capabilities = policy_scope(@exercise.capabilities).order(:name)
   end
 
@@ -42,7 +43,7 @@ class CapabilitiesController < ApplicationController
 
   private
     def capability_params
-      params.require(:capability).permit(:name, :description)
+      params.require(:capability).permit(:name, :description, :actor_id)
     end
 
     def get_capability

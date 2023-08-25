@@ -9,6 +9,7 @@ class Actor < ApplicationRecord
   has_many :virtual_machines
   has_many :actor_number_configs
   has_many :numbered_virtual_machines, class_name: 'VirtualMachine', as: :numbered_by
+  has_many :capabilities
 
   scope :numbered, -> {
     where.not(number: nil)

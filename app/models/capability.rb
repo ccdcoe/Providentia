@@ -4,6 +4,7 @@ class Capability < ApplicationRecord
   extend FriendlyId
 
   belongs_to :exercise, touch: true
+  belongs_to :actor, touch: true
   has_and_belongs_to_many :virtual_machines
   has_and_belongs_to_many :customization_specs
 

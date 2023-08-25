@@ -67,7 +67,6 @@
                     - if @exercise.capabilities.size > 0
                       %span.text-xs.text-white.bg-indigo-500.px-2.rounded-sm= policy_scope(@exercise.capabilities).size
 
-
         - if content_for?(:new_url)
           %li.grow.text-right.flex.items-center.justify-end
             = link_to content_for(:new_url), class: 'form-submit-add h-6' do
