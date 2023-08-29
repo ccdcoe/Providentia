@@ -5,34 +5,192 @@ require 'rails_helper'
 RSpec.describe GenerateTags do
   subject { described_class.result_for(source_objects) }
 
+  context 'for Network' do
+    let(:source_objects) { [network] }
+    let(:network) { create(:network, domain: 'yahoo') }
+
+    let(:default_result) {
+      {
+        id: network.api_short_name,
+        name: network.name,
+        config_map: {
+          domain: network.full_domain
+        },
+        children: [],
+        priority: 40
+      }
+    }
+
+    it { is_expected.to eq([default_result]) }
+  end
+
+  context 'for OS' do
+    let(:source_objects) { [operating_system] }
+    let(:operating_system) { create(:operating_system) }
+
+    let(:default_result) {
+      {
+        id: operating_system.api_short_name,
+        name: operating_system.name,
+        config_map: {},
+        children: [],
+        priority: 10
+      }
+    }
+
+    it { is_expected.to eq([default_result]) }
+
+    context 'with children' do
+      let!(:another_os) { create(:operating_system, parent: operating_system) }
+
+      it { is_expected.to include(default_result.merge(children: [another_os.api_short_name])) }
+    end
+  end
+
+  context 'for Capability' do
+    let(:source_objects) { [capability] }
+    let(:capability) { build(:capability) }
+
+    let(:default_result) {
+      {
+        id: "capability_#{capability.slug}".to_url.tr('-', '_'),
+        name: capability.name,
+        config_map: {},
+        children: [],
+        priority: 20
+      }
+    }
+
+    it { is_expected.to eq([default_result]) }
+  end
+
+  context 'for customization specs' do
+    let(:source_objects) { [customization_spec] }
+    let(:customization_spec) { build(:customization_spec) }
+
+    it { is_expected.to eq([]) }
+
+    context 'as non-host spec' do
+      let(:customization_spec) { build(:customization_spec, mode: :container) }
+      let(:result) {
+        [
+          {
+            id: 'customization_container',
+            name: 'customization_container',
+            config_map: {},
+            children: [],
+            priority: 45
+          }
+        ]
+      }
+
+      it { is_expected.to eq(result) }
+    end
+
+
+    context 'overarching group of all instances (sequential)' do
+      let(:customization_spec) { create(:customization_spec, virtual_machine:) }
+      let(:virtual_machine) { create(:virtual_machine, custom_instance_count: 10) }
+
+      let(:overarching) {
+        [
+          {
+            id: customization_spec.slug.tr('-', '_'),
+            name: "All instances of #{customization_spec.slug}",
+            config_map: {},
+            children: [],
+            priority: 40
+          }
+        ]
+      }
+
+      it { is_expected.to eq(overarching) }
+    end
+
+    context 'overarching group of all instances (numbered)' do
+      let(:customization_spec) { create(:customization_spec, virtual_machine:) }
+      let(:virtual_machine) { create(:virtual_machine, numbered_by: create(:actor, :numbered)) }
+
+      let(:overarching) {
+        [
+          {
+            id: customization_spec.slug.tr('-', '_'),
+            name: "All instances of #{customization_spec.slug}",
+            config_map: {},
+            children: [],
+            priority: 40
+          }
+        ]
+      }
+
+      it { is_expected.to eq(overarching) }
+    end
+
+    context 'custom tags' do
+      let(:customization_spec) { build(:customization_spec, tag_list: 'Steinway & Sons, regular') }
+
+      it 'should return with entry for each custom tag' do
+        expect(subject.length).to eq 2
+        expect(subject).to include({
+          id: 'custom_steinway_and_sons',
+          name: 'Custom tag steinway_and_sons',
+          config_map: {},
+          children: [],
+          priority: 50
+        })
+        expect(subject).to include({
+          id: 'custom_regular',
+          name: 'Custom tag regular',
+          config_map: {},
+          children: [],
+          priority: 50
+        })
+      end
+    end
+  end
+
   context 'for Actor' do
     let(:source_objects) { [actor] }
-    let(:actor) { build(:actor) }
+    let(:actor) { create(:actor) }
 
     let(:default_result) {
       {
         name: actor.name,
         id: ActorAPIName.result_for(actor),
         config_map: {},
-        children: []
+        children: [],
+        priority: 30
       }
     }
 
     it { is_expected.to eq([default_result]) }
 
+    context 'with actor tree' do
+      let!(:child_actor) { create(:actor, parent: actor) }
+
+      it { is_expected.to eq([default_result.merge(children: [ActorAPIName.result_for(child_actor)])]) }
+    end
+
+    context 'with networks belongign to the actor' do
+      let!(:networks) { create_list(:network, 2, actor:) }
+
+      it { is_expected.to eq([default_result.merge(children: networks.map(&:api_short_name))]) }
+    end
+
     context 'with legacy team id' do
-      let(:actor) { build(:actor, abbreviation: 'gt') }
+      let(:actor) { create(:actor, abbreviation: 'gt') }
 
       it { is_expected.to eq([default_result, {
         id: 'team_green',
         name: 'Green',
         config_map: { team_color: 'Green' },
-        children: []
+        children: [],
+        priority: 30
       }])}
     end
 
     context 'if numbered' do
-      let(:actor) { build(:actor, :numbered) }
+      let(:actor) { create(:actor, :numbered) }
 
       it {
         numbered_results = actor.all_numbers.map do |nr|
@@ -40,7 +198,8 @@ RSpec.describe GenerateTags do
             id: ActorAPIName.result_for(actor, number: nr),
             name: "#{actor.name} number #{nr}",
             children: [],
-            config_map: {}
+            config_map: {},
+            priority: 30
           }
         end
         is_expected.to eq(
@@ -60,7 +219,8 @@ RSpec.describe GenerateTags do
             children: [],
             config_map: {
               'hello' => 'world'
-            }
+            },
+            priority: 30
           })
         end
 
@@ -73,7 +233,8 @@ RSpec.describe GenerateTags do
             config_map: {
               'hello' => 'world',
               'another' => 'one'
-            }
+            },
+            priority: 30
           })
         end
       end
@@ -108,7 +269,8 @@ RSpec.describe GenerateTags do
               id: ActorAPIName.result_for(actor, number: nr),
               name: "#{actor.name} number #{nr}",
               children: [],
-              config_map: map || {}
+              config_map: map || {},
+              priority: 30
             }
           end
         }
@@ -119,7 +281,7 @@ RSpec.describe GenerateTags do
     end
 
     context 'as numbered actor for VM-s' do
-      let(:actor) { build(:actor, :numbered, numbered_virtual_machines: numbered_vms) }
+      let(:actor) { create(:actor, :numbered, numbered_virtual_machines: numbered_vms) }
       let(:vm_primary_actor) { build(:actor, name: 'Primary', abbreviation: 'pr') }
       let(:numbered_vms) {
         build_list(:virtual_machine, 2, actor: vm_primary_actor)
@@ -130,7 +292,8 @@ RSpec.describe GenerateTags do
           id: ActorAPIName.result_for(vm_primary_actor, numbered_by: actor),
           name: "#{vm_primary_actor.name}, numbered by #{actor.name}",
           config_map: {},
-          children: numbered_results.map { |item| item[:id] }
+          children: numbered_results.map { |item| item[:id] },
+          priority: 35
         }
       }
       let(:numbered_results) {
@@ -139,7 +302,8 @@ RSpec.describe GenerateTags do
             id: ActorAPIName.result_for(vm_primary_actor, numbered_by: actor, number: nr),
             name: "#{vm_primary_actor.name}, numbered by #{actor.name} - number #{nr}",
             config_map: {},
-            children: []
+            children: [],
+            priority: 35
           }
         end
       }
@@ -148,7 +312,7 @@ RSpec.describe GenerateTags do
       it { is_expected.to include(*numbered_results) }
 
       context 'if not numbered' do
-        let(:actor) { build(:actor) }
+        let(:actor) { create(:actor) }
 
         pending
       end
@@ -184,7 +348,8 @@ RSpec.describe GenerateTags do
               id: ActorAPIName.result_for(vm_primary_actor, numbered_by: actor, number: nr),
               name: "#{vm_primary_actor.name}, numbered by #{actor.name} - number #{nr}",
               children: [],
-              config_map: map || {}
+              config_map: map || {},
+              priority: 35
             }
           end
         }

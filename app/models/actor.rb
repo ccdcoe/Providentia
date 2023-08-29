@@ -111,7 +111,8 @@ class Actor < ApplicationRecord
         config_map: {
           team_color: 'Green'
         },
-        children: []
+        children: [],
+        priority: 30
       }
     when 'rt'
       {
@@ -120,7 +121,8 @@ class Actor < ApplicationRecord
         config_map: {
           team_color: 'Red'
         },
-        children: []
+        children: [],
+        priority: 30
       }
     when 'yt'
       {
@@ -129,7 +131,8 @@ class Actor < ApplicationRecord
         config_map: {
           team_color: 'Yellow'
         },
-        children: []
+        children: [],
+        priority: 30
       }
     when 'bt'
       {
@@ -138,7 +141,8 @@ class Actor < ApplicationRecord
         config_map: {
           team_color: 'Blue'
         },
-        children: []
+        children: [],
+        priority: 30
       }
     end
   end

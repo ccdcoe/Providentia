@@ -30,17 +30,24 @@ class GenerateTags < Patterns::Calculation
         id: subject.api_short_name,
         name: subject.name,
         config_map: {},
-        children: subject.children.map(&:api_short_name)
+        children: subject.children.map(&:api_short_name),
+        priority: 10
       }]
     end
 
     def actor_result
+      children = numbered_actors.map { |h| h[:id] }
+      children += subject.networks.map(&:api_short_name)
+      children += subject.children.map do |actor|
+        ActorAPIName.result_for(actor)
+      end
       [
         {
           id: ActorAPIName.result_for(subject),
           name: subject.name,
           config_map: {},
-          children: numbered_actors.map { |h| h[:id] },
+          children:,
+          priority: 30
         },
         subject.as_team_api,
         numbered_actors,
@@ -60,6 +67,7 @@ class GenerateTags < Patterns::Calculation
           name: "#{subject.name} number #{number}",
           config_map: configs.map(&:config_map).reduce(&:merge) || {},
           children: [],
+          priority: 30
         }
       end
     end
@@ -82,6 +90,7 @@ class GenerateTags < Patterns::Calculation
               name: "#{vm_actor.name}, numbered by #{subject.name} - number #{number}",
               config_map: configs.map(&:config_map).reduce(&:merge) || {},
               children: [],
+              priority: 35
             }
           end
 
@@ -90,6 +99,7 @@ class GenerateTags < Patterns::Calculation
             name: "#{vm_actor.name}, numbered by #{subject.name}",
             config_map: {},
             children: children.map { |entry| entry[:id] },
+            priority: 35
           }] + children
         end
     end
@@ -101,7 +111,8 @@ class GenerateTags < Patterns::Calculation
         config_map: {
           domain: subject.full_domain
         },
-        children: []
+        children: [],
+        priority: 40
       }]
     end
 
@@ -122,20 +133,22 @@ class GenerateTags < Patterns::Calculation
           id: "custom_#{custom_tag}",
           name: "Custom tag #{custom_tag}",
           config_map: {},
-          children: []
+          children: [],
+          priority: 50
         }
       end + [
-        ({ id: subject.slug.tr('-', '_'), name: "All instances of #{subject.slug}", config_map: {}, children: [] } if many_items),
-        ({ id: 'customization_container', name: 'customization_container', config_map: {}, children: [] } if subject.mode_container?),
+        ({ id: subject.slug.tr('-', '_'), name: "All instances of #{subject.slug}", config_map: {}, children: [], priority: 40 } if many_items),
+        ({ id: 'customization_container', name: 'customization_container', config_map: {}, children: [], priority: 45 } if subject.mode_container?),
       ]
     end
 
     def capability_result
       [{
-        id: "capability_#{subject.slug}".downcase.tr('-', '_'),
+        id: "capability_#{subject.slug}".to_url.tr('-', '_'),
         name: subject.name,
         config_map: {},
         children: [],
+        priority: 20
       }]
     end
 

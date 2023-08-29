@@ -20,7 +20,7 @@ FactoryBot.define do
   factory :capability do
     name { 'MyString' }
     slug { 'MyString' }
-    exercise { '' }
+    exercise
   end
 
   factory :address do
@@ -51,8 +51,12 @@ FactoryBot.define do
   end
 
   factory :operating_system do
-    name { 'DoorOs' }
-    cloud_id { 'door_os' }
+    name { Faker::Computer.os }
+    cloud_id { name.to_url }
+
+    cpu { 2 }
+    ram { 4 }
+    primary_disk_size { 20 }
   end
 
   factory :actor do
