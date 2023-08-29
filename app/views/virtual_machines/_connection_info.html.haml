@@ -2,7 +2,7 @@
   .border.shadow-lg.p-4.bg-zinc-100.dark:bg-gray-600
     .flex.items-center.mb-3
       %h2.text-xl.grow Connection information
-      = render ModalComponent.new(header: "Network addresses") do |c|
+      = render ModalComponent.new(only_body: true) do |c|
         - c.with_body do
           = render 'virtual_machines/address_preview', vm: vm
         = link_to 'Preview', 'javascript:;', class: 'form-submit text-sm', data: { action: "click->modal#open" }

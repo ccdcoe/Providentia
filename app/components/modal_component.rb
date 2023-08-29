@@ -3,9 +3,10 @@
 class ModalComponent < ViewComponent::Base
   renders_one :body
 
-  def initialize(header:, full_screen: false)
+  def initialize(header: nil, full_screen: false, only_body: false)
     @header = header
     @full_screen = full_screen
+    @only_body = only_body
   end
 
   private

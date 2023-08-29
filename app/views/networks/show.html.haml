@@ -33,7 +33,7 @@
       .px-6.py-5
         %h3
           %span.text-lg Addressing
-          = render ModalComponent.new(header: "Network addresses") do |c|
+          = render ModalComponent.new(only_body: true) do |c|
             - c.with_body do
               = render 'address_preview', network: @network
             = link_to 'Preview', 'javascript:;', class: 'text-xs text-indigo-600 hover:text-indigo-900 dark:text-indigo-400', data: { action: "click->modal#open" }
