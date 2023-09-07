@@ -359,4 +359,57 @@ RSpec.describe GenerateTags do
       end
     end
   end
+
+  context 'for InstancePresenter', focus: true do
+    let(:source_objects) { [presenter] }
+    let(:presenter) { API::V3::InstancePresenter.new(customization_spec) }
+    let(:customization_spec) { build(:customization_spec) }
+
+    it { is_expected.to eq([]) }
+
+    context 'with numbered spec and team number' do
+      let(:numbered_actor) { build(:actor, number: 3) }
+      let(:vm) { build(:virtual_machine, numbered_by: numbered_actor)}
+      let(:customization_spec) { create(:customization_spec, virtual_machine: vm) }
+      let(:presenter) { API::V3::InstancePresenter.new(customization_spec, nil, 1) }
+
+      let(:result) {
+        {
+          id: ActorAPIName.result_for(vm.actor, number: 1, numbered_by: numbered_actor),
+          name: "#{vm.actor.name}, numbered by #{numbered_actor.name} - number 1",
+          children: [],
+          config_map: {}
+        }
+      }
+
+      it { is_expected.to eq([result]) }
+
+      context 'if numbered within subtree of vm actor' do
+        let(:root_actor) { create(:actor) }
+        let(:actor) { create(:actor, number: 3, parent: root_actor) }
+        let(:vm) { create(:virtual_machine, numbered_by: root_actor, actor:)}
+
+        let(:result) {
+          {
+            id: ActorAPIName.result_for(actor, number: 1),
+            name: "#{actor.name} number 1",
+            children: [],
+            config_map: {}
+          }
+        }
+
+        let(:root_result) {
+          {
+            id: ActorAPIName.result_for(root_actor, number: 1),
+            name: "#{root_actor.name} number 1",
+            children: [],
+            config_map: {}
+          }
+        }
+
+        it { is_expected.to include(root_result) }
+        it { is_expected.to include(result) }
+      end
+    end
+  end
 end

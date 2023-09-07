@@ -159,12 +159,14 @@ class GenerateTags < Patterns::Calculation
       nr_actor = subject.spec.virtual_machine.numbered_actor
 
       if nr_actor.subtree.include?(actor)
-        [{
-          id: ActorAPIName.result_for(actor, number: subject.team_number),
-          name: "#{actor.name} number #{subject.team_number}",
-          config_map: {},
-          children: [],
-        }]
+        actor.path.map do |node|
+          {
+            id: ActorAPIName.result_for(node, number: subject.team_number),
+            name: "#{node.name} number #{subject.team_number}",
+            config_map: {},
+            children: [],
+          }
+        end
       else
         [{
           id: ActorAPIName.result_for(actor, numbered_by: nr_actor, number: subject.team_number),
