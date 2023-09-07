@@ -4,11 +4,11 @@
 
 
 - if @capabilities.any?
-  - blah = @capabilities.group_by(&:actor)
-  = render 'result_set', actor: nil, capabilities: blah[nil]
+  - grouped_caps = @capabilities.group_by(&:actor)
+  = render 'result_set', actor: nil, capabilities: grouped_caps[nil] if grouped_caps[nil]
   - @actors.each do |actor|
-    - next unless blah[actor]
-    = render 'result_set', actor:, capabilities: blah[actor]
+    - next unless grouped_caps[actor]
+    = render 'result_set', actor:, capabilities: grouped_caps[actor]
 
 - else
   = render 'shared/empty', klass: Capability
