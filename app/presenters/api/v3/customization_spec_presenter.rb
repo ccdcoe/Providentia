@@ -42,7 +42,10 @@ module API
             vm.cache_key_with_version,
             spec.cache_key_with_version,
             vm.actor&.cache_key_with_version,
-            vm.numbered_actor&.cache_key_with_version
+            vm.actor&.root&.cache_key_with_version,
+            'numbering',
+            vm.numbered_actor&.cache_key_with_version,
+            vm.numbered_actor&.root&.cache_key_with_version
           ].compact
         end
 
