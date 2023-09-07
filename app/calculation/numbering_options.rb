@@ -20,6 +20,7 @@ class NumberingOptions < Patterns::Calculation
     def available_actors
       scope = subject.exercise.actors.roots.numbered
       scope = scope.where(id: numbered_networks.map(&:actor_id)) if forced_numbering?
+      scope
     end
 
     def numbered_networks
