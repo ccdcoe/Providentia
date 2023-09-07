@@ -37,7 +37,7 @@ class GenerateTags < Patterns::Calculation
 
     def actor_result
       children = numbered_actors.map { |h| h[:id] }
-      children += subject.networks.map(&:api_short_name)
+      # children += subject.networks.map(&:api_short_name)
       children += subject.children.map do |actor|
         ActorAPIName.result_for(actor)
       end

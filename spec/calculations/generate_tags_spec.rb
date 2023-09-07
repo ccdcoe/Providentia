@@ -171,11 +171,11 @@ RSpec.describe GenerateTags do
       it { is_expected.to eq([default_result.merge(children: [ActorAPIName.result_for(child_actor)])]) }
     end
 
-    context 'with networks belongign to the actor' do
-      let!(:networks) { create_list(:network, 2, actor:) }
+    # context 'with networks belongign to the actor' do
+    #   let!(:networks) { create_list(:network, 2, actor:) }
 
-      it { is_expected.to eq([default_result.merge(children: networks.map(&:api_short_name))]) }
-    end
+    #   it { is_expected.to eq([default_result.merge(children: networks.map(&:api_short_name))]) }
+    # end
 
     context 'with legacy team id' do
       let(:actor) { create(:actor, abbreviation: 'gt') }
