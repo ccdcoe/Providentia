@@ -97,11 +97,10 @@ class VirtualMachinesController < ApplicationController
     end
 
     def get_numbered
-      authorize(
-        GlobalID::Locator.locate(
-          params[:virtual_machine].extract!(:numbered_by)[:numbered_by]
-        ),
-        :show?
+      numbered_by = GlobalID::Locator.locate(
+        params[:virtual_machine].extract!(:numbered_by)[:numbered_by]
       )
+      return unless numbered_by
+      authorize(numbered_by, :show?)
     end
 end
