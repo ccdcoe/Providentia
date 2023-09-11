@@ -88,7 +88,7 @@ module API
         def sequence_info
           if vm.custom_instance_count.to_i > 1
             {
-              sequence_tag: "sequential_#{spec.slug}".tr('-', '_'),
+              sequence_tag: spec.slug.tr('-', '_'),
               sequence_total: vm.custom_instance_count
             }
           else
