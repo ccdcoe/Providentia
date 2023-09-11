@@ -30,24 +30,19 @@ class GenerateTags < Patterns::Calculation
         id: subject.api_short_name,
         name: subject.name,
         config_map: {},
-        children: subject.children.map(&:api_short_name),
-        priority: 10
+        children: [],
+        priority: 10 + subject.depth
       }]
     end
 
     def actor_result
-      children = numbered_actors.map { |h| h[:id] }
-      # children += subject.networks.map(&:api_short_name)
-      children += subject.children.map do |actor|
-        ActorAPIName.result_for(actor)
-      end
       [
         {
           id: ActorAPIName.result_for(subject),
           name: subject.name,
           config_map: {},
-          children:,
-          priority: 30
+          children: [],
+          priority: 30 + subject.depth*3
         },
         subject.as_team_api,
         numbered_actors,
@@ -67,7 +62,7 @@ class GenerateTags < Patterns::Calculation
           name: "#{subject.name} number #{number}",
           config_map: configs.map(&:config_map).reduce(&:merge) || {},
           children: [],
-          priority: 30
+          priority: 31 + subject.depth*3
         }
       end
     end
@@ -90,7 +85,7 @@ class GenerateTags < Patterns::Calculation
               name: "#{vm_actor.name}, numbered by #{subject.name} - number #{number}",
               config_map: configs.map(&:config_map).reduce(&:merge) || {},
               children: [],
-              priority: 35
+              priority: 32 + vm_actor.depth*3
             }
           end
 
@@ -98,8 +93,8 @@ class GenerateTags < Patterns::Calculation
             id: ActorAPIName.result_for(vm_actor, numbered_by: subject),
             name: "#{vm_actor.name}, numbered by #{subject.name}",
             config_map: {},
-            children: children.map { |entry| entry[:id] },
-            priority: 35
+            children: [],
+            priority: 32 + vm_actor.depth*3
           }] + children
         end
     end
@@ -112,7 +107,7 @@ class GenerateTags < Patterns::Calculation
           domain: subject.full_domain
         },
         children: [],
-        priority: 40
+        priority: 80
       }]
     end
 
@@ -134,11 +129,11 @@ class GenerateTags < Patterns::Calculation
           name: "Custom tag #{custom_tag}",
           config_map: {},
           children: [],
-          priority: 50
+          priority: 100
         }
       end + [
-        ({ id: subject.slug.tr('-', '_'), name: "All instances of #{subject.slug}", config_map: {}, children: [], priority: 40 } if many_items),
-        ({ id: 'customization_container', name: 'customization_container', config_map: {}, children: [], priority: 45 } if subject.mode_container?),
+        ({ id: subject.slug.tr('-', '_'), name: "All instances of #{subject.slug}", config_map: {}, children: [], priority: 90 } if many_items),
+        ({ id: 'customization_container', name: 'customization_container', config_map: {}, children: [], priority: 95 } if subject.mode_container?),
       ]
     end
 

@@ -3,7 +3,7 @@
 module API
   module V3
     class CustomizationSpecPresenter < Struct.new(:spec)
-      def as_json(_opts)
+      def as_json(_opts = nil)
         Rails.cache.fetch(cache_key) do
           preload_interfaces
           {
@@ -66,7 +66,7 @@ module API
           GenerateTags.result_for([
             Current.interfaces_cache[vm.id].detect(&:connection?)&.network,
             vm.operating_system&.path,
-            vm.actor,
+            vm.actor.path,
             vm,
             spec,
             spec.capabilities

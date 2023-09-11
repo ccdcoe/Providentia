@@ -17,7 +17,7 @@ RSpec.describe GenerateTags do
           domain: network.full_domain
         },
         children: [],
-        priority: 40
+        priority: 80
       }
     }
 
@@ -43,7 +43,13 @@ RSpec.describe GenerateTags do
     context 'with children' do
       let!(:another_os) { create(:operating_system, parent: operating_system) }
 
-      it { is_expected.to include(default_result.merge(children: [another_os.api_short_name])) }
+      it { is_expected.to include(default_result) }
+    end
+
+    context 'as child' do
+      let!(:operating_system) { create(:operating_system, parent: create(:operating_system)) }
+
+      it { is_expected.to include(default_result.merge(priority: 11)) }
     end
   end
 
@@ -79,7 +85,7 @@ RSpec.describe GenerateTags do
             name: 'customization_container',
             config_map: {},
             children: [],
-            priority: 45
+            priority: 95
           }
         ]
       }
@@ -99,7 +105,7 @@ RSpec.describe GenerateTags do
             name: "All instances of #{customization_spec.slug}",
             config_map: {},
             children: [],
-            priority: 40
+            priority: 90
           }
         ]
       }
@@ -118,7 +124,7 @@ RSpec.describe GenerateTags do
             name: "All instances of #{customization_spec.slug}",
             config_map: {},
             children: [],
-            priority: 40
+            priority: 90
           }
         ]
       }
@@ -136,14 +142,14 @@ RSpec.describe GenerateTags do
           name: 'Custom tag steinway_and_sons',
           config_map: {},
           children: [],
-          priority: 50
+          priority: 100
         })
         expect(subject).to include({
           id: 'custom_regular',
           name: 'Custom tag regular',
           config_map: {},
           children: [],
-          priority: 50
+          priority: 100
         })
       end
     end
@@ -165,17 +171,35 @@ RSpec.describe GenerateTags do
 
     it { is_expected.to eq([default_result]) }
 
-    context 'with actor tree' do
+    context 'with child actors present' do
       let!(:child_actor) { create(:actor, parent: actor) }
 
-      it { is_expected.to eq([default_result.merge(children: [ActorAPIName.result_for(child_actor)])]) }
+      it { is_expected.to eq([default_result]) }
     end
 
-    # context 'with networks belongign to the actor' do
-    #   let!(:networks) { create_list(:network, 2, actor:) }
+    context 'as child actor' do
+      let(:actor) { create(:actor, parent: create(:actor)) }
 
-    #   it { is_expected.to eq([default_result.merge(children: networks.map(&:api_short_name))]) }
-    # end
+      it { is_expected.to eq([{
+          name: actor.name,
+          id: ActorAPIName.result_for(actor),
+          config_map: {},
+          children: [],
+          priority: 33
+        }]) }
+    end
+
+    context 'as child actor (multiple)' do
+      let(:actor) { create(:actor, parent: create(:actor, parent: create(:actor))) }
+
+      it { is_expected.to eq([{
+          name: actor.name,
+          id: ActorAPIName.result_for(actor),
+          config_map: {},
+          children: [],
+          priority: 36
+        }]) }
+    end
 
     context 'with legacy team id' do
       let(:actor) { create(:actor, abbreviation: 'gt') }
@@ -199,13 +223,10 @@ RSpec.describe GenerateTags do
             name: "#{actor.name} number #{nr}",
             children: [],
             config_map: {},
-            priority: 30
+            priority: 31
           }
         end
-        is_expected.to eq(
-          [default_result.merge(children: numbered_results.map { |item| item[:id] })] +
-          numbered_results
-        )
+        is_expected.to eq([default_result] + numbered_results)
       }
 
       context 'actor numbered config exists' do
@@ -220,7 +241,7 @@ RSpec.describe GenerateTags do
             config_map: {
               'hello' => 'world'
             },
-            priority: 30
+            priority: 31
           })
         end
 
@@ -234,7 +255,7 @@ RSpec.describe GenerateTags do
               'hello' => 'world',
               'another' => 'one'
             },
-            priority: 30
+            priority: 31
           })
         end
       end
@@ -270,13 +291,30 @@ RSpec.describe GenerateTags do
               name: "#{actor.name} number #{nr}",
               children: [],
               config_map: map || {},
-              priority: 30
+              priority: 31
             }
           end
         }
 
-        it { is_expected.to include(default_result.merge(children: numbered_results.map { |item| item[:id] })) }
+        it { is_expected.to include(default_result) }
         it { is_expected.to include(*numbered_results) }
+      end
+
+      context 'when nested' do
+        let(:actor) { create(:actor, parent: create(:actor, :numbered)) }
+
+        it {
+          numbered_results = actor.parent.all_numbers.map do |nr|
+            {
+              id: ActorAPIName.result_for(actor, number: nr),
+              name: "#{actor.name} number #{nr}",
+              children: [],
+              config_map: {},
+              priority: 34
+            }
+          end
+          is_expected.to eq([default_result.merge(priority: 33)] + numbered_results)
+        }
       end
     end
 
@@ -292,8 +330,8 @@ RSpec.describe GenerateTags do
           id: ActorAPIName.result_for(vm_primary_actor, numbered_by: actor),
           name: "#{vm_primary_actor.name}, numbered by #{actor.name}",
           config_map: {},
-          children: numbered_results.map { |item| item[:id] },
-          priority: 35
+          children: [],
+          priority: 32
         }
       }
       let(:numbered_results) {
@@ -303,7 +341,7 @@ RSpec.describe GenerateTags do
             name: "#{vm_primary_actor.name}, numbered by #{actor.name} - number #{nr}",
             config_map: {},
             children: [],
-            priority: 35
+            priority: 32
           }
         end
       }
@@ -349,7 +387,7 @@ RSpec.describe GenerateTags do
               name: "#{vm_primary_actor.name}, numbered by #{actor.name} - number #{nr}",
               children: [],
               config_map: map || {},
-              priority: 35
+              priority: 32
             }
           end
         }
@@ -360,7 +398,7 @@ RSpec.describe GenerateTags do
     end
   end
 
-  context 'for InstancePresenter', focus: true do
+  context 'for InstancePresenter' do
     let(:source_objects) { [presenter] }
     let(:presenter) { API::V3::InstancePresenter.new(customization_spec) }
     let(:customization_spec) { build(:customization_spec) }
