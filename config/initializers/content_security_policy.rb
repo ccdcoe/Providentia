@@ -13,7 +13,7 @@ Rails.application.configure do
     policy.base_uri    :none
     policy.font_src    :self
     policy.font_src(*policy.font_src, "http://#{ ViteRuby.config.host_with_port }") if Rails.env.development?
-    policy.style_src   :self, :unsafe_inline # needed for codemirror
+    policy.style_src :self, :unsafe_inline # needed for codemirror
     # Allow @vite/client to hot reload style changes in development
     policy.style_src(*policy.style_src, "http://#{ ViteRuby.config.host_with_port }") if Rails.env.development?
 

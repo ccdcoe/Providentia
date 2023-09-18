@@ -14,7 +14,7 @@ module ApplicationHelper
     when 'dashboard'
       'Add environment'
     else
-      %Q(Add #{controller_name.classify.constantize.model_name.human})
+      "Add #{controller_name.classify.constantize.model_name.human}"
     end
   end
 

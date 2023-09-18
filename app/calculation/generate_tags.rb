@@ -42,7 +42,7 @@ class GenerateTags < Patterns::Calculation
           name: subject.name,
           config_map: {},
           children: [],
-          priority: 30 + subject.depth*3
+          priority: 30 + subject.depth * 3
         },
         subject.as_team_api,
         numbered_actors,
@@ -62,7 +62,7 @@ class GenerateTags < Patterns::Calculation
           name: "#{subject.name} number #{number}",
           config_map: configs.map(&:config_map).reduce(&:merge) || {},
           children: [],
-          priority: 31 + subject.depth*3
+          priority: 31 + subject.depth * 3
         }
       end
     end
@@ -85,7 +85,7 @@ class GenerateTags < Patterns::Calculation
               name: "#{vm_actor.name}, numbered by #{subject.name} - number #{number}",
               config_map: configs.map(&:config_map).reduce(&:merge) || {},
               children: [],
-              priority: 32 + vm_actor.depth*3
+              priority: 32 + vm_actor.depth * 3
             }
           end
 
@@ -94,7 +94,7 @@ class GenerateTags < Patterns::Calculation
             name: "#{vm_actor.name}, numbered by #{subject.name}",
             config_map: {},
             children: [],
-            priority: 32 + vm_actor.depth*3
+            priority: 32 + vm_actor.depth * 3
           }] + children
         end
     end

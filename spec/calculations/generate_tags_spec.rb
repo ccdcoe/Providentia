@@ -407,7 +407,7 @@ RSpec.describe GenerateTags do
 
     context 'with numbered spec and team number' do
       let(:numbered_actor) { build(:actor, number: 3) }
-      let(:vm) { build(:virtual_machine, numbered_by: numbered_actor)}
+      let(:vm) { build(:virtual_machine, numbered_by: numbered_actor) }
       let(:customization_spec) { create(:customization_spec, virtual_machine: vm) }
       let(:presenter) { API::V3::InstancePresenter.new(customization_spec, nil, 1) }
 
@@ -425,7 +425,7 @@ RSpec.describe GenerateTags do
       context 'if numbered within subtree of vm actor' do
         let(:root_actor) { create(:actor) }
         let(:actor) { create(:actor, number: 3, parent: root_actor) }
-        let(:vm) { create(:virtual_machine, numbered_by: root_actor, actor:)}
+        let(:vm) { create(:virtual_machine, numbered_by: root_actor, actor:) }
 
         let(:result) {
           {
