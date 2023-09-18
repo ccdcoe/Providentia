@@ -1,3 +1,5 @@
+- title @capability.name
+
 - if policy(Capability.new(exercise: @exercise)).create?
   - provide :new_url do
     = url_for [:new, @exercise, :capability]

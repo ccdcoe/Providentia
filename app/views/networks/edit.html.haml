@@ -2,6 +2,8 @@
   - provide :new_url do
     = url_for [:new, @exercise, :network]
 
+- title @network.name
+
 = render 'form'
 - if @network.persisted?
   = render 'addressing'
