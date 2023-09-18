@@ -22,11 +22,6 @@ class Address < ApplicationRecord
     ipv6_vip: 9
   }, _prefix: :mode, _default: 'ipv4_static'
 
-  scope :for_used_addresses, ->() {
-    includes({ virtual_machine: [:exercise] }, :network).
-      where.not(offset: nil)
-  }
-
   scope :all_ip_objects, -> {
     includes(:virtual_machine, :network)
       .flat_map(&:all_ip_objects)

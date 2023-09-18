@@ -1,4 +1,4 @@
-%h1.text-2xl.font-bold.py-3.pb-6 Used addresses
+%h1.text-2xl.font-bold.py-3.pb-6 Attached network interfaces
 
 = render TableComponent.new do |c|
   - c.with_column { VirtualMachine.model_name.human }
@@ -12,7 +12,10 @@
         %td.px-6.py-4
           - address_list&.each do |address|
             .block
-              = render LiquidAddressComponent.new(object: address)
-              - if address.vip?
-                %span.text-xs.rounded-full.mx-1.py-1.px-2.bg-cyan-100.text-cyan-500 Virtual IP
-              = render SegmentDeployCountChipComponent.new(vm: vm, network: @network)
+              - if address.offset
+                = render LiquidAddressComponent.new(object: address)
+                - if address.vip?
+                  %span.text-xs.rounded-full.mx-1.py-1.px-2.bg-cyan-100.text-cyan-500 Virtual IP
+                = render SegmentDeployCountChipComponent.new(vm: vm, network: @network)
+              - else
+                %em No assigned address

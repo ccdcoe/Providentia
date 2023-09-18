@@ -2,7 +2,10 @@
 
 module NetworkHelper
   def sorted_used_addresses(network)
-    network.addresses.for_used_addresses.group_by(&:virtual_machine).map do |vm, addresses|
+    network
+      .addresses
+      .includes({ virtual_machine: [:exercise] }, :network)
+      .group_by(&:virtual_machine).map do |vm, addresses|
       [
         vm,
         addresses
