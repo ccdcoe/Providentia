@@ -63,9 +63,9 @@ class AddressPool < ApplicationRecord
     ip_network(team).allocate(gateway - (ip_v6? ? 1 : 0))
   end
 
-  def ip_network(team = nil)
-    return unless network_address
-    base = network_address.dup
+  def ip_network(team = nil, base = network_address.dup)
+    return unless base
+
     if last_octet_is_dynamic?
       first_net = IPAddress(StringSubstituter.result_for(base, { team_nr: 1 })).network
       IPAddress::IPv4.parse_u32(
@@ -109,15 +109,31 @@ class AddressPool < ApplicationRecord
     end
 
     def clear_dangling_ipv4
-      if network_address
-        all_hosts = available_range.map(&:to_u32).to_set
-        addresses.mode_ipv4_static.where.not(offset: nil).each do |address|
-          used_addresses = address.all_ip_objects.map(&:to_u32).to_set
-          next if all_hosts > used_addresses # no "overflowing" addresses
-          address.update(offset: nil)
+      return if !network_address
+      available_range.map(&:to_u32).to_set
+
+      clear_dangling_ipv4_gateway
+      clear_dangling_ipv4_addresses
+    end
+
+    def clear_dangling_ipv4_gateway
+      return if !gateway
+
+      all_hosts = available_range.map(&:to_u32).to_set
+      previous_gateway = ip_network(nil, network_address_was.dup).allocate(gateway)
+      self.gateway = nil if !all_hosts.include?(previous_gateway.to_u32)
+    end
+
+    def clear_dangling_ipv4_addresses
+      all_hosts = available_range.map(&:to_u32).to_set
+      addresses.mode_ipv4_static.where.not(offset: nil).each do |address|
+        used_addresses = begin
+          address.all_ip_objects.map(&:to_u32).to_set
+       rescue StopIteration
+         Set.new([-1])
         end
-      else
-        addresses.where(mode: %i(ipv4_static ipv4_vip))
+        next if all_hosts > used_addresses # no "overflowing" addresses
+        address.update(offset: nil)
       end
     end
 
@@ -142,7 +158,12 @@ class AddressPool < ApplicationRecord
     rescue Liquid::SyntaxError => e
       errors.add(:network_address, "Invalid template syntax: #{e.message}")
     rescue ArgumentError => e
-      errors.add(:network_address, "Parses to invalid address: #{e.message.match(/\A(?:Invalid IP|Unknown IP Address) "?(.*)"?\z/)[1]}")
+      case e.message
+      when /\A(?:Invalid IP|Unknown IP Address) "?(.*)"?\z/
+        errors.add(:network_address, "parses to invalid address: #{$1}")
+      else
+        errors.add(:network_address, e.message.downcase)
+      end
     end
 
     def revert_invalid_network_values
