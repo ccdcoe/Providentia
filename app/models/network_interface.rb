@@ -51,6 +51,6 @@ class NetworkInterface < ApplicationRecord
     end
 
     def update_numbered_actor
-      virtual_machine.update numbered_actor: network.actor if network.numbered?
+      virtual_machine.update numbered_by: network.actor if network.numbered?
     end
 end
