@@ -80,6 +80,7 @@ services:
       caddy: providentia.localhost:80
       caddy.reverse_proxy: "{{upstreams 3000}}"
     environment:
+      SECRET_KEY_BASE: 0 # don't care in development mode
       VITE_RUBY_HOST: vite.localhost
       VITE_RUBY_PORT: 80
       VITE_RUBY_SKIP_PROXY: true
