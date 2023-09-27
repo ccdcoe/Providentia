@@ -117,7 +117,7 @@ class AddressPool < ApplicationRecord
     end
 
     def clear_dangling_ipv4_gateway
-      return if !gateway
+      return if !gateway || network_address_was.blank?
 
       all_hosts = available_range.map(&:to_u32).to_set
       previous_gateway = ip_network(nil, network_address_was.dup).allocate(gateway)
