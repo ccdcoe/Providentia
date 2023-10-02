@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-if Rails.env.development?
+if ENV.fetch('OIDC_ENABLE_HTTP', 'false') == 'true'
   Module.new do
     attr_reader :scheme
 

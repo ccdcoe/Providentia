@@ -90,6 +90,7 @@ services:
       OIDC_CLIENT_ID: Providentia
       OIDC_CLIENT_SECRET: 00000000-0000-0000-0000-000000000000
       OIDC_RESOURCE_PREFIX: Providentia_
+      OIDC_ENABLE_HTTP: true
       BASE_URI: http://providentia.localhost
       RUBY_GC_HEAP_INIT_SLOTS: 10000000
       RUBY_HEAP_SLOTS_INCREMENT: 1000000
