@@ -33,7 +33,7 @@ Since its creation in 2020, Providentia has been used to plan and deploy numerou
   - Powerful pattern matching to easily apply services to multiple hosts at once
   - Flexible configuration for individual checks
 - Authentication handled by external SSO via OpenID Connect
-- JSON API, with accompanying Ansible inventory plugin as part of [clarified.core](https://github.com/ClarifiedSecurity/clarified.core) collection
+- JSON API, with accompanying Ansible inventory plugin as part of [nova.core](https://github.com/novateams/nova.core) collection
 
 ---
 
