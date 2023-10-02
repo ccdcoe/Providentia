@@ -39,20 +39,44 @@ Since its creation in 2020, Providentia has been used to plan and deploy numerou
 
 ## Getting started
 
-While it is possible to run Providentia on a host directly, the recommended approach is to use Docker containers. The only requirement for this is Docker and Docker Compose version > 2.
+While it is possible to run Providentia on a host directly, the recommended approach is to use Docker containers. The requirements on the host are: make, Python 3, Docker, and Docker Compose version > 2.
 
-The easiest way is to run Providentia locally, in development mode. The accompanying Makefile is designed to be used for development and is the recommended way of getting up and running.
+The bundled Makefile can be used to set the environment (development or production) by using `make config` command. The configurator script is automatically launched if no config has been set before.
 
-TL;DR:
+To quickly launch Providentia locally, it is recommended to use development mode. TL;DR:
 
 ```sh
 git clone https://github.com/ClarifiedSecurity/Providentia.git
 cd Providentia
+make config # choose dev
 make build
 make start
 ```
 
-This will build the app image, start keycloak (used for SSO) and finally start Providentia. After bootup, Providentia can be accessed at [http://providentia.localhost](http://providentia.localhost) and Keycloak will be running at [http://keycloak.localhost](http://keycloak.localhost). You may need to trust the self-signed TLS certificate.
+### Running in production
+
+> The default make-based production configuration is insecure! Be warned!
+
+The make based bootstrap can be used to start the application in production mode as well. It is primarily meant to be inspiration on how a production environment might look like - it is **not** meant to be used without altering it first.
+
+The steps for setting up are similar to dev instructions above, except answer 'prod' when prompted for environment. Have a look at `docker/prod` directory on how the setup works and adapt it to your needs using configuration files:
+
+- web.env
+- db.env
+- docker-compose.yml
+- initdb.sql
+
+## Default setup
+
+This applies to development and production environment, when ran with default Makefile and configuration. The app is deployed using local containers:
+
+- Keycloak for authentication (SSO)
+- Redis for caching and session storage
+- Postgres for database
+- App container
+- Caddy as reverse proxy
+
+After bootup, Providentia can be accessed at [http://providentia.localhost](http://providentia.localhost) and Keycloak will be running at [http://keycloak.localhost](http://keycloak.localhost). You may need to trust the self-signed TLS certificate if running production mode.
 
 ### Credentials
 
@@ -68,24 +92,6 @@ On first development mode boot, a sample exercise is created for you - "Test exe
 - u: `providentia.rt` p: `providentia.rt-pass` - has access to Test Exercise as RT member (can see RT virtual machines).
 - u: `providentia.gt` p: `providentia.gt-pass` - has access to Test Exercise as GT member (cannot see RT virtual machines)
 - u: `providentia.teadmin` p: `providentia.teadmin-pass` - has access to Test Exercise as environment administrator
-
-## Running in production
-
-There is an incomplete example on how to run Providentia in production in `docker/prod` directory.
-The `docker-compose.yml` file by itself does not include ingress or reverse proxy, there is an example provided in `proxy.yml`, but you can substitute with any reverse proxy.
-
-There are multiple example files, which need to be customized based on the environment:
-
-- web.env.sample
-- db.env.sample
-- proxy.yml
-
-The example can then be run with:
-
-```sh
-cd docker/prod
-docker compose -f docker-compose.yml -f proxy.yml up -d
-```
 
 ## Data model
 

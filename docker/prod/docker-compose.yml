@@ -1,12 +1,30 @@
-version: "3"
+version: "3.7"
 
 name: providentia
 services:
+  caddy:
+    image: lucaslorentz/caddy-docker-proxy:ci-alpine
+    ports:
+      - 80:80
+      - 443:443
+      - 443:443/udp
+    volumes:
+      - /etc/ssl/certs/ca-certificates.crt:/etc/ssl/certs/ca-certificates.crt:ro
+      - /var/run/docker.sock:/var/run/docker.sock
+      - caddy_data:/data
+    restart: unless-stopped
+    networks:
+      default:
+        aliases:
+          - caddy
+          - keycloak.localhost
+
   db:
-    image: "postgres:14-alpine"
+    image: "postgres:15-alpine"
     restart: unless-stopped
     volumes:
-      - "${DB_VOLUME_PATH:-/srv/providentia_db}:/var/lib/postgresql/data"
+      - ./initdb_keycloak.sql:/docker-entrypoint-initdb.d/001-initdb.sql
+      - "providentia_db:/var/lib/postgresql/data"
     env_file:
       - db.env
 
@@ -33,6 +51,45 @@ services:
       - 3000
     env_file:
       - web.env
+    labels:
+      caddy: "providentia.localhost"
+      caddy.tls: internal
+      caddy.reverse_proxy: "{{upstreams 3000}}"
+
+  keycloak:
+    image: bitnami/keycloak:21.1.1
+    depends_on:
+      - db
+    environment:
+      - KEYCLOAK_PROXY_ADDRESS_FORWARDING=true
+      - KEYCLOAK_ADMIN_USER=admin
+      - KEYCLOAK_ADMIN_PASSWORD=adminsecret
+      - KEYCLOAK_MANAGEMENT_USER=mgmt
+      - KEYCLOAK_MANAGEMENT_PASSWORD=mgmtsecret
+      - KEYCLOAK_DATABASE_HOST=db
+      - KEYCLOAK_DATABASE_PORT=5432
+      - KEYCLOAK_DATABASE_NAME=keycloak
+      - KEYCLOAK_DATABASE_USER=keycloak
+      - KEYCLOAK_DATABASE_PASSWORD=secret
+    labels:
+      caddy: keycloak.localhost:80
+      caddy.reverse_proxy: "{{upstreams 8080}}"
+
+  keycloak_config:
+    image: adorsys/keycloak-config-cli:latest-21.0.1
+    depends_on:
+      - keycloak
+    volumes:
+      - ./providentia.yaml:/config/providentia.yaml
+    environment:
+      - KEYCLOAK_URL=http://keycloak:8080/
+      - KEYCLOAK_USER=admin
+      - KEYCLOAK_PASSWORD=adminsecret
+      - KEYCLOAK_AVAILABILITYCHECK_ENABLED=true
+      - KEYCLOAK_AVAILABILITYCHECK_TIMEOUT=30s
+      - IMPORT_FILES='/config/*'
 
 volumes:
-  redis:
+  redis: {}
+  caddy_data: {}
+  providentia_db: {}
