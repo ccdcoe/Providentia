@@ -86,7 +86,7 @@ module API
         end
 
         def sequence_info
-          if vm.custom_instance_count.to_i > 1
+          if vm.clustered?
             {
               sequence_tag: spec.slug.tr('-', '_'),
               sequence_total: vm.custom_instance_count

@@ -30,4 +30,29 @@ RSpec.describe API::V3::CustomizationSpecPresenter do
       end
     end
   end
+
+  context 'clustered vm' do
+    it 'return nil fields if not clustered' do
+      expect(subject[:sequence_tag]).to be_nil
+      expect(subject[:sequence_total]).to be_nil
+    end
+
+    context 'with custom instance count = 1' do
+      let(:spec) { create(:customization_spec, virtual_machine: create(:virtual_machine, custom_instance_count: 1)) }
+
+      it 'return nil fields' do
+        expect(subject[:sequence_tag]).to eq spec.slug.to_url.tr('-', '_')
+        expect(subject[:sequence_total]).to eq 1
+      end
+    end
+
+    context 'with custom instance count = 2' do
+      let(:spec) { create(:customization_spec, virtual_machine: create(:virtual_machine, custom_instance_count: 2)) }
+
+      it 'return nil fields' do
+        expect(subject[:sequence_tag]).to eq spec.slug.to_url.tr('-', '_')
+        expect(subject[:sequence_total]).to eq 2
+      end
+    end
+  end
 end

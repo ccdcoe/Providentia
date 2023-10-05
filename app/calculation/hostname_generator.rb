@@ -3,7 +3,7 @@
 class HostnameGenerator < Patterns::Calculation
   private
     def result
-      hostname_sequence_suffix = '{{ seq }}' if virtual_machine.custom_instance_count.to_i > 1
+      hostname_sequence_suffix = '{{ seq }}' if virtual_machine.clustered?
       hostname_team_suffix = '{{ team_nr_str }}' if virtual_machine.numbered_actor && (!nic || !nic.network&.numbered?)
 
       sequences = [

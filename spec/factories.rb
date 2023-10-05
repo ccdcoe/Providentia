@@ -52,7 +52,7 @@ FactoryBot.define do
 
   factory :operating_system do
     name { Faker::Computer.os }
-    cloud_id { name.to_url }
+    cloud_id { name.to_url+rand(999).to_s }
 
     cpu { 2 }
     ram { 4 }

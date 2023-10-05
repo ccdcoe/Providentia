@@ -75,13 +75,13 @@ module API
         end
 
         def sequence_info
-          return {} unless vm.custom_instance_count.to_i > 1
+          return {} unless vm.clustered?
 
           { sequence_index: sequential_number }
         end
 
         def hostname_sequence_suffix
-          '{{ seq }}' if vm.custom_instance_count.to_i > 1
+          '{{ seq }}' if vm.clustered?
         end
 
         def hostname_team_suffix

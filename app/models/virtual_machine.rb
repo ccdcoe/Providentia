@@ -94,6 +94,10 @@ class VirtualMachine < ApplicationRecord
     numbered_actor.presence&.number || 1
   end
 
+  def clustered?
+    custom_instance_count.to_i > 0
+  end
+
   private
     def lowercase_fields
       name.downcase! if name

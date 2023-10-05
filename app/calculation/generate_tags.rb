@@ -122,7 +122,7 @@ class GenerateTags < Patterns::Calculation
     end
 
     def spec_result
-      many_items = subject.virtual_machine.custom_instance_count.to_i > 1 || subject.virtual_machine.numbered_actor
+      many_items = subject.virtual_machine.clustered? || subject.virtual_machine.numbered_actor
       subject.tag_list.map do |custom_tag|
         {
           id: "custom_#{custom_tag}",
