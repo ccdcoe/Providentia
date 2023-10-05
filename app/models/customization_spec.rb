@@ -71,11 +71,22 @@ class CustomizationSpec < ApplicationRecord
   end
 
   def deployable_instances(presenter = API::V3::InstancePresenter)
-    generate_instance_array(:deploy_count)
-      .product(generate_instance_array(:custom_instance_count))
+    (team_numbers || [nil]).product(sequential_numbers || [nil])
       .map do |team_number, sequential_number|
         presenter.new(self, sequential_number, team_number)
       end
+  end
+
+  def team_numbers
+    if virtual_machine.numbered_by && virtual_machine.numbered_actor.number != 1
+      virtual_machine.numbered_actor.all_numbers
+    end
+  end
+
+  def sequential_numbers
+    if virtual_machine.custom_instance_count
+      1.upto(virtual_machine.custom_instance_count).to_a
+    end
   end
 
   def tenant_id
