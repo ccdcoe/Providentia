@@ -81,7 +81,7 @@ class Actor < ApplicationRecord
         next unless vm.team
         vm.update actor: ex.actors.find_by(abbreviation: abbreviation_for_team(vm.team)) || ex.actors.first
         if vm.deploy_mode_bt?
-          vm.update numbered_actor: bt
+          vm.update numbered_by: bt
         end
       end
     end
