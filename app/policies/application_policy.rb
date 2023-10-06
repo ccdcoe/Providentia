@@ -63,10 +63,11 @@ class ApplicationPolicy
 
       private
         def accessible_actors_for_user(ex_id = exercise.id)
+          ex = Exercise.find(ex_id)
           if (user.accessible_exercises[ex_id.to_s] & %w(rt local_admin)).any?
-            exercise.actors.pluck(:id)
+            ex.actors.pluck(:id)
           else
-            exercise.actors.where.not(abbreviation: 'rt').pluck(:id)
+            ex.actors.where.not(abbreviation: 'rt').pluck(:id)
           end
         end
 
