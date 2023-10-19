@@ -16,6 +16,7 @@ class NetworkInterfacesController < ApplicationController
   def create
     @network_interface = authorize(@virtual_machine.network_interfaces.build(nic_params), :create?)
     @network_interface.save
+    @virtual_machine.reload
   end
 
   def destroy
@@ -24,6 +25,7 @@ class NetworkInterfacesController < ApplicationController
 
   def update
     @network_interface.update(nic_params)
+    @virtual_machine.reload
   end
 
   private
