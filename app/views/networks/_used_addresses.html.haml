@@ -17,5 +17,7 @@
                 - if address.vip?
                   %span.text-xs.rounded-full.mx-1.py-1.px-2.bg-cyan-100.text-cyan-500 Virtual IP
                 = render SegmentDeployCountChipComponent.new(vm: vm, network: @network)
+              - elsif !address.fixed?
+                %em Dynamic addressing
               - else
                 %em No assigned address
