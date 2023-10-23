@@ -11,24 +11,30 @@ class LiquidRangeSubstitution < Patterns::Calculation
       end&.join(' - ') || 'N/A')
     end
 
-    def actor
+    def numbering_actor
       options[:actor] ||= case subject
                           when Address
                             if subject.virtual_machine
-                              case subject.virtual_machine.numbered_by
-                              when Actor
-                                subject.virtual_machine.numbered_by
-                              else
-                                subject.virtual_machine.numbered_by.actor
-                              end || subject.virtual_machine.actor
+                              vm_numbering_source(subject.virtual_machine)
                             else
                               subject.network.actor
                             end
                           when AddressPool
                             subject.network.actor
+                          when VirtualMachine
+                            vm_numbering_source(subject)
                           else
                             subject.actor
-      end
+                          end
+    end
+
+    def vm_numbering_source(vm)
+      case vm.numbered_by
+      when Actor
+        vm.numbered_by
+      when ActorNumberConfig
+        vm.numbered_by.actor
+      end || vm.actor
     end
 
     def replacement_ranges
@@ -49,8 +55,8 @@ class LiquidRangeSubstitution < Patterns::Calculation
     end
 
     def numbering_range
-      if actor.number
-        [1, actor.number]
+      if numbering_actor.number
+        [1, numbering_actor.number]
       end
     end
 end
