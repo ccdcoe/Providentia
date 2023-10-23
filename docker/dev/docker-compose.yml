@@ -2,7 +2,7 @@ version: "3"
 
 name: providentia-dev
 services:
-  db:
+  postgresql:
     image: "postgres:14-alpine"
     volumes:
       - "postgres_providentia:/var/lib/postgresql/data"
@@ -16,14 +16,14 @@ services:
   keycloak:
     image: bitnami/keycloak:21.1.1
     depends_on:
-      - db
+      - postgresql
     environment:
       - KEYCLOAK_PROXY_ADDRESS_FORWARDING=true
       - KEYCLOAK_ADMIN_USER=admin
       - KEYCLOAK_ADMIN_PASSWORD=adminsecret
       - KEYCLOAK_MANAGEMENT_USER=mgmt
       - KEYCLOAK_MANAGEMENT_PASSWORD=mgmtsecret
-      - KEYCLOAK_DATABASE_HOST=db
+      - KEYCLOAK_DATABASE_HOST=postgresql
       - KEYCLOAK_DATABASE_PORT=5432
       - KEYCLOAK_DATABASE_NAME=keycloak
       - KEYCLOAK_DATABASE_USER=keycloak
@@ -58,7 +58,7 @@ services:
 
   web:
     depends_on:
-      - "db"
+      - "postgresql"
       - "redis"
     build:
       context: ../../
@@ -84,7 +84,7 @@ services:
       VITE_RUBY_HOST: vite.localhost
       VITE_RUBY_PORT: 80
       VITE_RUBY_SKIP_PROXY: true
-      DATABASE_URL: postgres://providentia:secret@db/providentia?pool=5
+      DATABASE_URL: postgres://providentia:secret@postgresql/providentia?pool=5
       REDIS_URL: redis://redis:6379/0
       OIDC_ISSUER: http://keycloak.localhost/realms/Providentia
       OIDC_CLIENT_ID: Providentia

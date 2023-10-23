@@ -35,6 +35,12 @@ logs: .makerc-vars ## Tail all logs
 clear-redis: .makerc-vars ## Clear rails cache (by flushing redis)
 	sudo docker compose -f docker/$(DEPLOY_ENVIRONMENT)/docker-compose.yml exec redis redis-cli flushdb
 
+import-db:
+	sudo docker compose -f docker/$(DEPLOY_ENVIRONMENT)/docker-compose.yml up -d postgresql
+	sudo docker compose -f docker/$(DEPLOY_ENVIRONMENT)/docker-compose.yml cp $(DUMP) postgresql:/dump.sql
+	sudo docker compose -f docker/$(DEPLOY_ENVIRONMENT)/docker-compose.yml exec postgresql psql -Uprovidentia -c '\i /dump.sql'
+	sudo docker compose -f docker/$(DEPLOY_ENVIRONMENT)/docker-compose.yml stop postgresql
+
 CURRENT_VERSION:
 	git describe --tags >CURRENT_VERSION
 
