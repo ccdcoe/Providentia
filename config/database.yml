@@ -1,2 +1,2 @@
 test:
-  url: "postgres://providentia:secret@db/providentia_test?pool=5"
+  url: "postgres://providentia:secret@postgresql/providentia_test?pool=5"
