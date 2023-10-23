@@ -8,9 +8,11 @@ module API
           {
             id: ActorAPIName.result_for(actor),
             name: actor.name,
+            description: actor.description,
             instances:,
             config_map: actor.prefs,
-            children: children.map(&:as_json)
+            children: children.map(&:as_json),
+            numbered_configurations:
           }
         end
       end
@@ -21,6 +23,18 @@ module API
           actor.root.all_numbers
             .map { |number| ActorInstancePresenter.new(actor, number) }
             .map(&:as_json)
+        end
+
+        def numbered_configurations
+          return [] if !actor.root?
+
+          actor.actor_number_configs.map do |number_config|
+            {
+              id: number_config.name.to_url,
+              matcher: number_config.matcher,
+              config_map: number_config.config_map
+            }
+          end
         end
     end
   end

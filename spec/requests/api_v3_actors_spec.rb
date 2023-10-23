@@ -23,9 +23,11 @@ RSpec.describe 'API v3 specs', type: :request do
         {
           id: ActorAPIName.result_for(actor),
           name: actor.name,
+          description: actor.description,
           instances: [],
           config_map: actor.prefs,
-          children: []
+          children: [],
+          numbered_configurations: []
         }.deep_stringify_keys
       )
     end
@@ -50,6 +52,7 @@ RSpec.describe 'API v3 specs', type: :request do
         {
           id: ActorAPIName.result_for(numbered_actor),
           name: numbered_actor.name,
+          description: numbered_actor.description,
           instances: numbered_actor.all_numbers.map do |nr|
             map = config.config_map if config.matcher.include?(nr.to_s)
             {
@@ -58,7 +61,14 @@ RSpec.describe 'API v3 specs', type: :request do
             }
           end,
           config_map: numbered_actor.prefs,
-          children: []
+          children: [],
+          numbered_configurations: [
+            {
+              id: config.name.to_url,
+              matcher: config.matcher,
+              config_map: config.config_map
+            }
+          ]
         }.deep_stringify_keys
       )
     end
@@ -74,15 +84,19 @@ RSpec.describe 'API v3 specs', type: :request do
         {
           id: ActorAPIName.result_for(child_actor.parent),
           name: child_actor.parent.name,
+          description: child_actor.parent.description,
           instances: [],
           config_map: child_actor.parent.prefs,
           children: [{
             id: ActorAPIName.result_for(child_actor),
             name: child_actor.name,
+            description: child_actor.description,
             instances: [],
             config_map: child_actor.prefs,
-            children: []
-          }]
+            children: [],
+            numbered_configurations: []
+          }],
+          numbered_configurations: []
         }.deep_stringify_keys
       )
     end
@@ -97,6 +111,7 @@ RSpec.describe 'API v3 specs', type: :request do
           {
             id: ActorAPIName.result_for(child_actor.parent),
             name: child_actor.parent.name,
+            description: child_actor.parent.description,
             instances: child_actor.root.all_numbers.map do |nr|
               {
                 number: nr,
@@ -107,6 +122,7 @@ RSpec.describe 'API v3 specs', type: :request do
             children: [{
               id: ActorAPIName.result_for(child_actor),
               name: child_actor.name,
+              description: child_actor.description,
               instances: child_actor.root.all_numbers.map do |nr|
                 {
                   number: nr,
@@ -114,8 +130,10 @@ RSpec.describe 'API v3 specs', type: :request do
                 }
               end,
               config_map: child_actor.prefs,
-              children: []
-            }]
+              children: [],
+              numbered_configurations: []
+            }],
+            numbered_configurations: []
           }.deep_stringify_keys
         )
       end
