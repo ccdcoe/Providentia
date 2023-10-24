@@ -65,6 +65,7 @@ RSpec.describe 'API v3 specs', type: :request do
           numbered_configurations: [
             {
               id: config.name.to_url,
+              name: config.name,
               matcher: config.matcher,
               config_map: config.config_map
             }

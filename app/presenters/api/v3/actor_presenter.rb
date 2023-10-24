@@ -31,6 +31,7 @@ module API
           actor.actor_number_configs.map do |number_config|
             {
               id: number_config.name.to_url,
+              name: number_config.name,
               matcher: number_config.matcher,
               config_map: number_config.config_map
             }
