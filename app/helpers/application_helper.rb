@@ -71,7 +71,7 @@ module ApplicationHelper
   end
 
   def ip_families
-    ServiceCheck.ip_families.keys.map do |mode|
+    Check.ip_families.keys.map do |mode|
       [I18n.t("ip_families.#{mode}"), mode]
     end
   end
