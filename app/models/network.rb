@@ -6,7 +6,6 @@ class Network < ApplicationRecord
   has_paper_trail
 
   belongs_to :exercise
-  belongs_to :team, optional: true # TEMPORARY
   belongs_to :actor
   has_many :network_interfaces, dependent: :restrict_with_error
   has_many :address_pools, dependent: :destroy

@@ -16,7 +16,6 @@ class VirtualMachine < ApplicationRecord
   }, _prefix: :visibility
 
   belongs_to :exercise
-  belongs_to :team, optional: true # TEMPORARY, to be removed
   belongs_to :actor
   belongs_to :operating_system, optional: true
   belongs_to :system_owner, class_name: 'User', inverse_of: :owned_systems, optional: true
