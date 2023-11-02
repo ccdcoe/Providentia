@@ -54,9 +54,9 @@ class VirtualMachine < ApplicationRecord
   validates :ram, numericality: true, inclusion: 1..200, allow_blank: true
   validates :cpu, numericality: { only_integer: true }, inclusion: 1..100, allow_blank: true
   validates :custom_instance_count, numericality: { only_integer: true, greater_than_or_equal_to: 1 }, allow_blank: true
-  validates_associated :network_interfaces
-  validate :hostname_conflicts, :transfer_overlap_error
   validates :numbered_by_type, inclusion: { in: %w(Actor ActorNumberConfig) }, if: :numbered_by
+  validates_associated :network_interfaces
+  validate :hostname_conflicts, :transfer_overlap_error, :forced_numbered_by
 
   before_validation :lowercase_fields
   after_create :create_default_spec
@@ -152,5 +152,12 @@ class VirtualMachine < ApplicationRecord
 
     def create_default_spec
       customization_specs.create(mode: 'host', name:)
+    end
+
+    def forced_numbered_by
+      numbered_net = networks.detect(&:numbered?)
+      if numbered_net && numbered_actor != numbered_net.actor.root
+        errors.add(:numbered_by, :incoherent_numbering)
+      end
     end
 end
