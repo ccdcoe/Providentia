@@ -1,7 +1,7 @@
 import { application } from "./application";
 import { registerControllers } from "stimulus-vite-helpers";
 
-const controllers = import.meta.globEager("./**/*_controller.js");
+const controllers = import.meta.glob("./**/*_controller.js", { eager: true });
 registerControllers(application, controllers);
 
 import { Dropdown } from "tailwindcss-stimulus-components";
