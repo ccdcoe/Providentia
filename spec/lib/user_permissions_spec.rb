@@ -25,9 +25,9 @@ RSpec.describe UserPermissions do
   context 'default list' do
     let(:list) {
       [
-        'Providentia_CF_GT',
-        'Providentia_CF_RT',
-        'Providentia_Admin'
+        "#{ENV['OIDC_RESOURCE_PREFIX']}CF_GT",
+        "#{ENV['OIDC_RESOURCE_PREFIX']}CF_RT",
+        "#{ENV['OIDC_RESOURCE_PREFIX']}Admin"
       ]
     }
 
@@ -39,9 +39,9 @@ RSpec.describe UserPermissions do
       let(:exercise) { create(:exercise) }
       let(:list) {
         [
-          "Providentia_#{exercise.dev_red_resource_name}",
-          "Providentia_#{exercise.dev_resource_name}",
-          'Providentia_Admin'
+          "#{ENV['OIDC_RESOURCE_PREFIX']}#{exercise.dev_red_resource_name}",
+          "#{ENV['OIDC_RESOURCE_PREFIX']}#{exercise.dev_resource_name}",
+          "#{ENV['OIDC_RESOURCE_PREFIX']}Admin"
         ]
       }
 
@@ -60,8 +60,8 @@ RSpec.describe UserPermissions do
     let!(:xs) { create(:exercise, abbreviation: 'xs') }
     let(:list) {
       [
-        'Providentia_LS_GT',
-        'Providentia_XS_RT'
+        "#{ENV['OIDC_RESOURCE_PREFIX']}LS_GT",
+        "#{ENV['OIDC_RESOURCE_PREFIX']}XS_RT"
       ]
     }
 
