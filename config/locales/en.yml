@@ -13,6 +13,8 @@ en:
           attributes:
             name:
               invalid: is invalid (must not contain _)
+            numbered_by:
+              incoherent_numbering: would result in numbering incoherence
         address:
           attributes:
             offset:
