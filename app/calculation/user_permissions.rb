@@ -2,7 +2,6 @@
 
 class UserPermissions < Patterns::Calculation
   ADMIN_RESOURCE_NAME = 'Admin'
-  RESOURCE_REGEX = /^\/?#{Regexp.quote(Rails.configuration.resource_prefix)}/
 
   private
     def result
@@ -32,9 +31,13 @@ class UserPermissions < Patterns::Calculation
 
     def filtered_list
       (subject || []).filter_map do |resource|
-        if resource.match? RESOURCE_REGEX
-          resource.sub(RESOURCE_REGEX, '')
+        if resource.match? resource_regex
+          resource.sub(resource_regex, '')
         end
       end
+    end
+
+    def resource_regex
+      /^\/?#{Regexp.quote(Rails.configuration.resource_prefix)}/
     end
 end

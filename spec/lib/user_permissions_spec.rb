@@ -19,7 +19,7 @@ RSpec.describe UserPermissions do
       ]
     }
 
-    before(:example) {
+    before {
       allow(Rails.configuration).to receive(:resource_prefix).and_return('SOMEPREFIX')
     }
 
