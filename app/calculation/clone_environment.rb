@@ -86,8 +86,8 @@ class CloneEnvironment < Patterns::Calculation
 
       if combined_data[:capabilities].any?
         ActiveRecord::Base.connection.execute <<-SQL
-          INSERT INTO capabilities_customization_specs (#{combined_data[:capabilities].first.keys.join(",")}) VALUES
-          #{combined_data[:capabilities].map(&:values).map { |values| "(#{values.join(",")})" }.join(", ")}
+          INSERT INTO capabilities_customization_specs (#{ActiveRecord::Base.connection.quote(combined_data[:capabilities].first.keys.join(","))}) VALUES
+          #{ActiveRecord::Base.connection.quote(combined_data[:capabilities].map(&:values).map { |values| "(#{values.join(",")})" }.join(", "))}
         SQL
       end
     end

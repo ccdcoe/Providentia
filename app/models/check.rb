@@ -91,7 +91,7 @@ class Check < ApplicationRecord
     def relation_to_icon(relation)
       case relation
       when CustomCheckSubject
-        relation.base_class.constantize.to_icon
+        relation.safe_class.to_icon
       when Network, CustomizationSpec
         relation.class.to_icon
       end

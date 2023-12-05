@@ -12,4 +12,10 @@ class CustomCheckSubject < ApplicationRecord
   def type_for_api
     'custom'
   end
+
+  def safe_class
+    if %w(CustomizationSpec Network).include?(base_class)
+      base_class.to_s.constantize
+    end
+  end
 end
