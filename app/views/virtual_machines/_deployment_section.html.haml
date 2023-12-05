@@ -1,4 +1,4 @@
 .grid.gap-6.grid-cols-2
-  = f.hidden_field :numbered_by, value: @virtual_machine.numbered_by.to_gid
+  = f.hidden_field :numbered_by, value: @virtual_machine.numbered_by.to_gid if @virtual_machine.numbered_by
   = f.input :numbered_by, NumberingOptions.result_for(@virtual_machine, hash: { as: :select,input_html: { data: { controller: 'select' } }, selected: @virtual_machine.numbered_by&.to_gid })
   = f.input :custom_instance_count
