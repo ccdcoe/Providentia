@@ -11,9 +11,9 @@ FactoryBot.define do
 
   factory :customization_spec do
     virtual_machine
-    name { 'MyString' }
+    mode { 'host' }
+    sequence(:name) { |n| "CoolSpec#{n}" }
     role_name { 'MyString' }
-    dns_name { 'MyString' }
     description { 'MyText' }
   end
 
@@ -44,7 +44,7 @@ FactoryBot.define do
   end
 
   factory :virtual_machine do
-    name { 'CoolTarget' }
+    sequence(:name) { |n| "CoolTarget#{n}" }
     actor
     operating_system
     exercise
@@ -90,5 +90,14 @@ FactoryBot.define do
 
   factory :api_token do
     user
+  end
+
+  factory :service do
+    exercise
+    name { 'Some service' }
+  end
+
+  factory :service_subject do
+    service
   end
 end

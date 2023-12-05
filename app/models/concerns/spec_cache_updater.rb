@@ -4,14 +4,20 @@ module SpecCacheUpdater
   extend ActiveSupport::Concern
 
   included do
-    before_destroy :schedule_spec_cache_update
-    after_save :schedule_spec_cache_update
+    before_destroy :update_service_subject_spec_cache
+    around_save :update_service_subject_spec_cache_with_yield
   end
 
   private
-    def schedule_spec_cache_update(item_hint = nil)
+    def update_service_subject_spec_cache_with_yield
+      yield
+      update_service_subject_spec_cache
+    end
+
+    def update_service_subject_spec_cache(item_hint = nil)
       ServiceSubject.transaction do
         [self, item_hint].compact.flat_map(&method(:gather_subjects)).uniq.each do |subject|
+          next if subject.customization_spec_ids == subject.matched_spec_ids
           subject.update_columns(
             customization_spec_ids: subject.matched_spec_ids,
             updated_at: Time.current
