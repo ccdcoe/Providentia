@@ -25,7 +25,7 @@ class LiquidRangeSubstitution < Patterns::Calculation
                             vm_numbering_source(subject)
                           else
                             subject.actor
-                          end
+      end
     end
 
     def vm_numbering_source(vm)

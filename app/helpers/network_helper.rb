@@ -9,7 +9,7 @@ module NetworkHelper
       [
         vm,
         addresses
-          .sort_by {|a| a.offset.to_s }
+          .sort_by { |a| a.offset.to_s }
           .group_by(&:ip_family)
           .reverse_merge({ ipv4: [], ipv6: [] })
       ]

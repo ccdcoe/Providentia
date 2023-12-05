@@ -3,7 +3,6 @@
 require 'rails_helper'
 
 RSpec.describe ServiceSubject do
-
   context 'spec cache' do
     subject { create(:service_subject, service:) }
     let(:service) { create(:service) }

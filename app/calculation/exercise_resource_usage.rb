@@ -15,6 +15,6 @@ class ExerciseResourceUsage < Patterns::Calculation
         results[:cpu] += (vm.cpu || vm.operating_system&.applied_cpu).to_i * instance_count
         results[:primary_disk_size] += (vm.primary_disk_size || vm.operating_system&.applied_primary_disk_size).to_i * instance_count
       end
-      OpenStruct.new(results)
+      Struct.new(*results.keys).new(**results)
     end
 end

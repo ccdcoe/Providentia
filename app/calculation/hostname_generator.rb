@@ -13,11 +13,11 @@ class HostnameGenerator < Patterns::Calculation
       hostname = "#{subject.hostname}#{sequences.join('_')}"
       domain = nic&.network&.full_domain.to_s.gsub(/#+/, '{{ team_nr_str }}')
 
-      OpenStruct.new({
+      Struct.new(:hostname, :domain, :fqdn).new(
         hostname:,
         domain:,
         fqdn: "#{hostname}.#{domain}"
-      })
+      )
     end
 
     def virtual_machine
