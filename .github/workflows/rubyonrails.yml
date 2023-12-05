@@ -35,12 +35,14 @@ jobs:
           bundler-cache: true
       - name: Set version
         run: echo $GITHUB_HEAD_REF > CURRENT_VERSION
+      - name: Remove default database config so we will use the environment var
+        run: rm config/database.yml
       # Add or replace database setup steps here
       - name: Set up database schema
-        run: DATABASE_URL="postgres://rails:password@localhost:5432/rails_test" bin/rails db:schema:load
+        run: bin/rails db:schema:load
       # Add or replace test runners here
       - name: Run tests
-        run: DATABASE_URL="postgres://rails:password@localhost:5432/rails_test" bin/rake
+        run: bin/rake
 
   lint:
     runs-on: ubuntu-latest
