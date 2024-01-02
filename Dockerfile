@@ -109,6 +109,6 @@ RUN chown $CONTAINER_USER_NAME:$CONTAINER_USER_NAME $APP_PATH
 
 USER $CONTAINER_USER_NAME
 RUN yarn --immutable
-RUN DATABASE_URL=postgresql://db SECRET_KEY_BASE=`bin/rake secret` bundle exec rake assets:precompile
+RUN DATABASE_URL=postgresql://db SECRET_KEY_BASE=`bin/rails secret` bundle exec rails assets:precompile
 
 CMD ["bundle", "exec", "rails", "server", "-b", "0.0.0.0"]
