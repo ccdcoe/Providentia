@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'service_subject_match_condition'
-
 class ServiceSubject < ApplicationRecord
   include VmCacheBuster
   include SpecCacheUpdater

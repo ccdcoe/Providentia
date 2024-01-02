@@ -16,6 +16,9 @@ export default class extends Controller {
           wrapperClass: "ts-wrapper form-input",
           createOnBlur: true,
           create: true,
+          onChange: function () {
+            document.activeElement.blur();
+          },
         };
       } else {
         const hasEmptyOption =
@@ -27,6 +30,9 @@ export default class extends Controller {
           wrapperClass: "ts-wrapper form-input",
           onDelete: function (values, event) {
             return ismultiple || !(values.length == 1 && !hasEmptyOption);
+          },
+          onChange: function () {
+            document.activeElement.blur();
           },
         };
       }
