@@ -7,15 +7,6 @@ class SearchComponent < ViewComponent::Base
   end
 
   private
-    def data_tags
-      {
-        data: {
-          action: 'click->search#closeBackground keyup@window->search#closeWithKeyboard',
-          'search-target' => 'container',
-        }
-      }
-    end
-
     def query_classes
       %w(
         w-full border-0 focus:ring-transparent text-black

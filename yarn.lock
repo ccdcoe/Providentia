@@ -699,7 +699,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@hotwired/stimulus@npm:>=3.0.0, @hotwired/stimulus@npm:^3.2.2":
+"@hotwired/stimulus@npm:^3.2.2":
   version: 3.2.2
   resolution: "@hotwired/stimulus@npm:3.2.2"
   checksum: e0c13469df89f760f35cce0fd7af5f7eeabd4ff79c4ad2b05fe7d8d7b845818c6736c3cd515c1906e144aa27529d5a60377647937b756950b4f709be329c9046
@@ -3462,7 +3462,7 @@ __metadata:
     stimulus-use: ^0.52.2
     stimulus-vite-helpers: ^3.0.1
     tailwindcss: ^3.4.0
-    tailwindcss-stimulus-components: ^3.0.4
+    tailwindcss-stimulus-components: ^4.0.4
     thememirror: ^2.0.1
     throttleit: ^2.0.0
     tippy.js: ^6.3.7
@@ -3860,14 +3860,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"tailwindcss-stimulus-components@npm:^3.0.4":
-  version: 3.0.4
-  resolution: "tailwindcss-stimulus-components@npm:3.0.4"
-  dependencies:
-    "@hotwired/stimulus": ">=3.0.0"
+"tailwindcss-stimulus-components@npm:^4.0.4":
+  version: 4.0.4
+  resolution: "tailwindcss-stimulus-components@npm:4.0.4"
   peerDependencies:
-    "@hotwired/stimulus": ">=3.0.0"
-  checksum: aca0dfc4c7787111f27277b3dae2c64aecae202527dff32a564ae3638a58f3e4bc83e196e590c14cbbc3f8867c6a7b84539ca0d04394a0b9b6ee030a0808b377
+    "@hotwired/stimulus": ">= 3.0.0"
+  checksum: cbd1e54e15095506fb9e119d0294ce81cec03c8842f12478bb1b6d769a36766271a5acc92a6a167cbce4d8f409df61481e960d19b48d36711b71c55b8b834680
   languageName: node
   linkType: hard
 

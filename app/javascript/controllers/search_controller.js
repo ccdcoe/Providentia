@@ -8,8 +8,12 @@ const clamp = (value, min, max) => {
 };
 
 export default class extends Modal {
-  static targets = ["container", "input", "form", "list"];
-  static values = { focusIndex: Number };
+  static targets = ["container", "background", "input", "form", "list"];
+  static values = {
+    open: { type: Boolean, default: false },
+    restoreScroll: { type: Boolean, default: true },
+    focusIndex: Number,
+  };
 
   connect() {
     super.connect();
@@ -18,16 +22,18 @@ export default class extends Modal {
     });
   }
 
-  _backgroundHTML() {
-    return `<div id="${this.backgroundId}" class="fixed inset-0 z-40 bg-gray-900/50 dark:bg-gray-900/80"></div>`;
-  }
-
   open(e) {
     super.open(e);
     // custom stuff
+    e.preventDefault();
 
     this.inputTarget.value = "";
-    this.inputTarget.focus();
+    setTimeout(
+      function () {
+        this.inputTarget.focus({ focusVisible: true });
+      }.bind(this),
+      100
+    );
   }
 
   submit() {
