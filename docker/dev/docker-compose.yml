@@ -97,7 +97,7 @@ services:
       RUBY_HEAP_SLOTS_GROWTH_FACTOR: 1
       RUBY_GC_MALLOC_LIMIT: 100000000
       RUBY_HEAP_FREE_MIN: 5000000
-      # RUBY_YJIT_ENABLE: 1
+      RUBY_YJIT_ENABLE: 1
 
   vite:
     depends_on:
