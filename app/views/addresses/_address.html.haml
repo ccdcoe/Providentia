@@ -1,25 +1,26 @@
 %div[address]
   = form_with(model: address, url: [address.exercise, address.virtual_machine, address.network_interface, address], class: 'p-3', data: { action: "change->model#update"}) do |form|
-    .flex.gap-4.items-center
-      .order-1.flex-grow= form.select :mode, address_modes, { include_blank: false }, { data: { controller: 'select' } }
+    .gap-y-3.grid.grid-cols
+      .flex.gap-3.items-center
+        .flex-grow= form.select :mode, address_modes, { include_blank: false }, { data: { controller: 'select' } }
 
-      - if address.needs_pool?
-        - if address.network.address_pools.for_address(address).empty?
-          .order-1.text-center.text-gray-500 No address pools for this network
-        - else
-          .order-2= form.collection_select :address_pool_id, address.network.address_pools.for_address(address), :id, :name, { include_blank: address.address_pool.nil? }, { data: { controller: 'select' }, disabled: address.address_pool && address.network.address_pools.for_address(address).size == 1 }
+        - if address.needs_pool?
+          - if address.network.address_pools.for_address(address).empty?
+            .text-center.text-gray-500 No address pools for this network
+          - else
+            %div= form.collection_select :address_pool_id, address.network.address_pools.for_address(address), :id, :name, { include_blank: address.address_pool.nil? }, { data: { controller: 'select' }, disabled: address.address_pool && address.network.address_pools.for_address(address).size == 1 }
 
-      - elsif !address.fixed?
-        .order-1.text-center.text-gray-500 Automatic configuration
-        - if address.connection?
-          .order-4.shrink-0.self-center.inline-flex.items-center.justify-center.rounded-full.bg-orange-200.text-orange-800.w-7.h-7{title: Address.human_attribute_name(:connection)}
-            %i.fas.fa-cogs.text-sm
+        - elsif !address.fixed?
+          .text-center.text-gray-500 Automatic configuration
+          - if address.connection?
+            .shrink-0.self-center.inline-flex.items-center.justify-center.rounded-full.bg-orange-200.text-orange-800.w-7.h-7{title: Address.human_attribute_name(:connection)}
+              %i.fas.fa-cogs.text-sm
 
-      .order-last
         .relative.inline-flex{"data-controller" => "dropdown"}
           .inline-flex.justify-center.items-center.group.select-none{"data-action" => "click->dropdown#toggle click@window->dropdown#hide", "data-dropdown-target" => "button", :role => "button", :tabindex => "0"}
             %button.form-submit{type: :button}
               %i.fas.fa-ellipsis-vertical
+
           .z-10.absolute.top-full.right-0.mt-2.w-44.hidden{"data-dropdown-target" => "menu"}
             .bg-white.border.border-gray-200.rounded.shadow-lg.overflow-hidden
               %ul.text-gray-900
@@ -33,45 +34,40 @@
                     Remove
 
 
-    .mt-3.flex.flex-row.flex-wrap.empty:hidden<
-      - case address.mode
-      - when "ipv4_static"
-        - if address.address_pool.present? && address.address_pool.ip_network
-          - cache([address.virtual_machine.cache_key_with_version, address.cache_key_with_version, address.network.cache_key_with_version, address.address_pool.cache_key_with_version, 'ip_picker_static']) do
-            .grow= render IPPickerComponent.new(form: form, field: :offset, hosts: :available_for_object, label: false)
-          - if address.connection?
-            .shrink-0.ml-2.self-center.inline-flex.items-center.justify-center.rounded-full.bg-orange-200.text-orange-800.w-7.h-7{title: Address.human_attribute_name(:connection)}
-              %i.fas.fa-cogs.text-sm
-      - when "ipv4_vip"
-        - if address.address_pool.present? && address.address_pool.ip_network
-          - cache([address.cache_key_with_version, address.network.cache_key_with_version, 'ip_picker_vip']) do
-            .grow= render IPPickerComponent.new(form: form, field: :offset, hosts: :all, label: false)
-          - if address.connection?
-            .shrink-0.ml-2.self-center.inline-flex.items-center.justify-center.rounded-full.bg-orange-200.text-orange-800.w-7.h-7{title: Address.human_attribute_name(:connection)}
-              %i.fas.fa-cogs.text-sm
+      .flex.gap-3.items-center.empty:hidden<
+        - case address.mode
+        - when "ipv4_static"
+          - if address.address_pool.present? && address.address_pool.ip_network
+            - cache([address.virtual_machine.cache_key_with_version, address.cache_key_with_version, address.network.cache_key_with_version, address.address_pool.cache_key_with_version, 'ip_picker_static']) do
+              .grow= render IPPickerComponent.new(form: form, field: :offset, hosts: :available_for_object, label: false)
 
-      - when "ipv6_static", "ipv6_linklocal", "ipv6_uniqlocal", "ipv6_vip"
-        - if address.mode_ipv6_uniqlocal? || address.mode_ipv6_linklocal? || address.address_pool&.ip_network.present?
-          .flex.rounded-md.shadow-sm.grow
-            %span.inline-flex.items-center.px-3.rounded-l-md.border.border-r-0.border-gray-300.bg-gray-50.text-gray-500.dark:bg-gray-600.dark:text-current.dark:border-black.text-sm
-              = render LiquidNetworkAddressComponent.new(object: address.address_pool)
-            = form.text_field :parsed_ipv6, class: 'focus:ring-indigo-500 focus:border-indigo-500 flex-1 block w-full sm:text-sm border-gray-300 dark:bg-gray-500 dark:border-black', autocomplete: "off"
-            %span.inline-flex.items-center.px-3.rounded-r-md.border.border-l-0.border-gray-300.bg-gray-50.text-gray-500.dark:bg-gray-600.dark:text-current.dark:border-black.text-sm<
-              = "/#{address.ip_family_network&.prefix}"
+        - when "ipv4_vip"
+          - if address.address_pool.present? && address.address_pool.ip_network
+            - cache([address.cache_key_with_version, address.network.cache_key_with_version, 'ip_picker_vip']) do
+              .grow= render IPPickerComponent.new(form: form, field: :offset, hosts: :all, label: false)
 
-          - if address.errors[:parsed_ipv6].any? || address.errors[:offset].any?
-            .w-full
-              %span.text-red-600= address.errors.to_hash.values_at(:parsed_ipv6, :offset).join ', '
+        - when "ipv6_static", "ipv6_linklocal", "ipv6_uniqlocal", "ipv6_vip"
+          - if address.mode_ipv6_uniqlocal? || address.mode_ipv6_linklocal? || address.address_pool&.ip_network.present?
+            .flex.rounded-md.shadow-sm.grow
+              %span.inline-flex.items-center.px-3.rounded-l-md.border.border-r-0.border-gray-300.bg-gray-50.text-gray-500.dark:bg-gray-600.dark:text-current.dark:border-black.text-sm
+                = render LiquidAddressNetworkSansPrefixComponent.new(object: address)
+              = form.text_field :parsed_ipv6, class: 'focus:ring-indigo-500 focus:border-indigo-500 flex-1 block w-full sm:text-sm border-gray-300 dark:bg-gray-500 dark:border-black', autocomplete: "off"
+              %span.inline-flex.items-center.px-3.rounded-r-md.border.border-l-0.border-gray-300.bg-gray-50.text-gray-500.dark:bg-gray-600.dark:text-current.dark:border-black.text-sm<
+                = "/#{address.ip_family_network&.prefix}"
+
+            - if address.errors[:parsed_ipv6].any? || address.errors[:offset].any?
+              .w-full
+                %span.text-red-600= address.errors.to_hash.values_at(:parsed_ipv6, :offset).join ', '
 
         - if address.connection? && address.fixed?
-          .shrink-0.ml-2.self-center.inline-flex.items-center.justify-center.rounded-full.bg-orange-200.text-orange-800.w-7.h-7{title: Address.human_attribute_name(:connection)}
+          .self-center.inline-flex.items-center.justify-center.rounded-full.bg-orange-200.text-orange-800.w-7.h-7{title: Address.human_attribute_name(:connection)}
             %i.fas.fa-cogs.text-sm
 
-      - if address.needs_pool? && address.offset
-        .shrink-0.ml-2.self-center.flex.items-center.justify-center.rounded-full.bg-blue-200.text-blue-800.w-7.h-7{class: !address.dns_enabled ? 'opacity-70' : ''}
-          %label.cursor-pointer{title: address.dns_enabled? ? 'Address published to DNS' : 'Address not published to DNS'}
-            = form.check_box :dns_enabled, class: 'hidden'
-            %span.fa-layers.fa-fw.text-sm
-              %i.fas.fa-database
-              - unless address.dns_enabled?
-                %i.fas.fa-slash.fa-rotate-90.font-bold
+        - if address.needs_pool? && address.offset
+          .self-center.flex.items-center.justify-center.rounded-full.bg-blue-200.text-blue-800.w-7.h-7{class: !address.dns_enabled ? 'opacity-70' : ''}
+            %label.cursor-pointer{title: address.dns_enabled? ? 'Address published to DNS' : 'Address not published to DNS'}
+              = form.check_box :dns_enabled, class: 'hidden'
+              %span.fa-layers.fa-fw.text-sm
+                %i.fas.fa-database
+                - unless address.dns_enabled?
+                  %i.fas.fa-slash.fa-rotate-90.font-bold

@@ -26,7 +26,7 @@
         .flex-grow= form.grouped_collection_select :network_id, networks.for_grouped_select, :last, :first, :id, :abbreviation, {include_blank: true},  { data: { controller: 'select' }}
 
         - if network_interface.persisted?
-          %label.mt-1.text-sm.text-gray-900.dark:text-white{id: form.field_id(:connection, network_interface.id)}
+          %label.text-sm.text-gray-900.dark:text-white{id: form.field_id(:connection, network_interface.id)}
             %a.form-submit.text-xs= egress_toggle_text
             = form.check_box :egress, class: 'hidden'
 
