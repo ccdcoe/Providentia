@@ -10,5 +10,6 @@ if ENV['SENTRY_DSN']
     config.enabled_environments = ['production', ENV['SENTRY_ENV']]
 
     config.traces_sample_rate = 0.5
+    config.release = Rails.configuration.x.providentia_version
   end
 end
