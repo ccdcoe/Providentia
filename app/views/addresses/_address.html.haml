@@ -2,7 +2,7 @@
   = form_with(model: address, url: [address.exercise, address.virtual_machine, address.network_interface, address], class: 'p-3', data: { action: "change->model#update"}) do |form|
     .gap-y-3.grid.grid-cols
       .flex.gap-3.items-center
-        .flex-grow= form.select :mode, address_modes, { include_blank: false }, { data: { controller: 'select' } }
+        .flex-grow= form.select :mode, address_modes_for_network(address.network), { include_blank: false }, { data: { controller: 'select' } }
 
         - if address.needs_pool?
           - if address.network.address_pools.for_address(address).empty?

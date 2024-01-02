@@ -51,7 +51,7 @@ class Address < ApplicationRecord
     :clear_on_mode_change,
     :clear_offset, :set_to_connection_if_first_address,
     on: :update
-  before_validation :populate_first_pool_if_empty
+  before_validation :set_default_mode, :populate_first_pool_if_empty
   after_save :fix_connection_flag
 
   validate :check_ip_offset6, :check_ip_offset4, :check_overlap
@@ -215,6 +215,11 @@ class Address < ApplicationRecord
       self.connection = false
       self.dns_enabled = false if fixed?
       true
+    end
+
+    def set_default_mode
+      return if network.address_pools.ip_v4.any?
+      self.mode = :ipv4_dhcp
     end
 
     def populate_first_pool_if_empty
