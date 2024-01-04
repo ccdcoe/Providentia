@@ -115,7 +115,8 @@ class CustomizationSpec < ApplicationRecord
     def invalidate_capability_cache(capability)
       touch
       virtual_machine.touch
-      schedule_spec_cache_update(capability)
+      capability.touch
+      update_service_subject_spec_cache(capability)
     end
 
     def lowercase_fields
