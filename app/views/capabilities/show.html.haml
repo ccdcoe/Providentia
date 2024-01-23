@@ -27,13 +27,14 @@
         %dt.text-sm.text-gray-500.dark:text-gray-400= Capability.human_attribute_name(:description)
         %dd.mt-1.text-sm.text-gray-900.dark:text-white.mt-0.col-span-2= @capability.description
 
-%h1.text-2xl.font-bold.py-3.pb-6 Hosts
+- if @capability.customization_specs.any?
+  %h1.text-2xl.font-bold.py-3.pb-6 Customization specs
 
-= render TableComponent.new do |c|
-  - c.with_column { VirtualMachine.model_name.human }
-  - c.with_column { VirtualMachine.human_attribute_name(:description) }
+  = render TableComponent.new do |c|
+    - c.with_column { CustomizationSpec.model_name.human }
+    - c.with_column { VirtualMachine.human_attribute_name(:description) }
 
-  - @capability.customization_specs.each do |spec|
-    - c.with_table_row do
-      %td.px-6.py-4= link_to spec.virtual_machine.name, [spec.virtual_machine.exercise, spec.virtual_machine], class: 'text-indigo-600 hover:text-indigo-900 dark:text-indigo-400'
-      %td.px-6.py-4= spec.description
+    - @capability.customization_specs.order(:name).each do |spec|
+      - c.with_table_row do
+        %td.px-6.py-4= link_to spec.name, [spec.virtual_machine.exercise, spec.virtual_machine], class: 'text-indigo-600 hover:text-indigo-900 dark:text-indigo-400'
+        %td.px-6.py-4= spec.description
