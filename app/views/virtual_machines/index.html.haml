@@ -5,7 +5,7 @@
 = turbo_frame_tag :vm_search, disabled: true, data: { turbo_action: "advance" } do
   %section.relative.mb-4
     .flex{"data-controller" => "dropdown"}
-      %button#dropdown-button-2.flex-shrink-0.z-10.inline-flex.items-center.px-4.text-sm.font-medium.text-center.text-gray-500.bg-gray-100.border.border-gray-300.rounded-l-lg.hover:bg-gray-200.focus:ring-4.focus:outline-none.focus:ring-gray-100.dark:bg-gray-700.dark:hover:bg-gray-600.dark:focus:ring-gray-700.dark:text-white.dark:border-gray-600{"data-action" => "click->dropdown#toggle click@window->dropdown#hide", "data-dropdown-target" => "button", :role => "button", :tabindex => "0"}
+      %button#dropdown-button-2.flex-shrink-0.z-10.inline-flex.items-center.px-4.text-sm.font-medium.text-center.text-gray-500.bg-emerald-200.border.border-gray-300.rounded-l-lg.hover:bg-emerald-300.focus:ring-4.focus:outline-none.focus:ring-gray-100.dark:bg-emerald-600.dark:hover:bg-emerald-500.dark:focus:ring-gray-700.dark:text-white.dark:border-gray-600{"data-action" => "click->dropdown#toggle click@window->dropdown#hide", "data-dropdown-target" => "button", :role => "button", :tabindex => "0"}
         - if @filter_actor
           %span.inline-flex.w-4.h-4.mr-2.rounded-full{class: actor_color_classes(@filter_actor)}
 
