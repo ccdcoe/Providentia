@@ -2,16 +2,17 @@
   %section.p-6.pb-3
     .flex
       %h5.mb-2.text-2xl.font-bold.tracking-tight.grow.text-gray-900.dark:text-white
-        = link_to actor.name, [@exercise, actor], class: 'text-indigo-600 hover:text-indigo-900 dark:text-indigo-400'
+        = link_to_if policy(actor).edit?, actor.name, [@exercise, actor], class: 'text-indigo-600 hover:text-indigo-900 dark:text-indigo-400'
       %div
         - if actor.number
           %span.rounded-full.mx-2.py-1.px-2.bg-indigo-100.text-indigo-500.dark:bg-indigo-300.dark:text-indigo-700
             = actor.number
             clones
         = render ActorChipComponent.new(actor:, text: actor.abbreviation)
-        = form_with(model: actor, url: [@exercise, actor], method: :delete, class: 'inline ml-2') do
-          %button{data: { turbo_confirm: 'Are you sure?' }}
-            %i.fas.fa-times-circle.text-red-600
+        - if policy(actor).destroy?
+          = form_with(model: actor, url: [@exercise, actor], method: :delete, class: 'inline ml-2') do
+            %button{data: { turbo_confirm: 'Are you sure?' }}
+              %i.fas.fa-times-circle.text-red-600
 
     %p.font-normal.text-gray-700.dark:text-gray-400= actor.description
 
