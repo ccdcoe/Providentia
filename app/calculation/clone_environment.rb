@@ -2,10 +2,14 @@
 
 class CloneEnvironment < Patterns::Calculation
   def cloned_environment
-    @cloned_environment ||= source_environment.dup.tap do |dest|
-      dest.name = options[:name]
-      dest.abbreviation = options[:abbreviation]
-      dest.slug = nil
+    @cloned_environment ||= begin
+      Exercise.insert(
+        source_environment.attributes.merge(
+          name: options[:name],
+          abbreviation: options[:abbreviation],
+          slug: nil
+        ).except('id')
+      ).then { Exercise.find(_1.to_a.dig(0, 'id')) }
     end
   end
 
@@ -16,6 +20,7 @@ class CloneEnvironment < Patterns::Calculation
           cloned_environment.save!
           cloned_environment.reload
 
+          clone_actors(source_environment.actors.arrange)
           clone_capabilities
           clone_networks
           clone_vms
@@ -28,6 +33,27 @@ class CloneEnvironment < Patterns::Calculation
 
     def source_environment
       @source_environment ||= Exercise.find(subject)
+    end
+
+    def clone_actors(tree, parent: nil)
+      tree.each do |node, children|
+        new_actor = cloned_environment.actors.create(
+          node.attributes.merge(
+            'exercise_id' => cloned_environment.id,
+            'created_at' => Time.now,
+            'updated_at' => Time.now,
+            'parent' => parent
+          ).except('id')
+        )
+
+        ActorNumberConfig.insert_all(
+          node.actor_number_configs.map do |config|
+            config.attributes.merge('actor_id' => new_actor.id).except('id')
+          end
+        )
+
+        clone_actors(children, parent: new_actor)
+      end
     end
 
     def clone_networks
@@ -47,7 +73,13 @@ class CloneEnvironment < Patterns::Calculation
     def clone_vms
       source_environment.virtual_machines.includes(network_interfaces: [:addresses]).each do |vm|
         new_vm = VirtualMachine.insert(
-          vm.attributes.merge('exercise_id' => cloned_environment.id, 'created_at' => Time.now, 'updated_at' => Time.now).except('id')
+          vm.attributes.merge(
+            'exercise_id' => cloned_environment.id,
+            'actor_id' => find_actor_in_cloned_environment(vm.actor).id,
+            'numbered_by_id' => find_numerable_in_cloned_environment(vm.numbered_by)&.id,
+            'created_at' => Time.now,
+            'updated_at' => Time.now
+          ).except('id')
         )
 
         clone_customization_specs(
@@ -64,7 +96,7 @@ class CloneEnvironment < Patterns::Calculation
     def clone_customization_specs(current_specs:, vm_id:)
       new_specs = CustomizationSpec.insert_all(
         current_specs.map do |spec|
-          spec.attributes.merge('virtual_machine_id' => vm_id).except('id')
+          spec.attributes.merge('virtual_machine_id' => vm_id).except('id', 'tag_list')
         end
       )
 
@@ -72,6 +104,7 @@ class CloneEnvironment < Patterns::Calculation
         capabilities: []
       }
       current_specs.zip(new_specs).each_with_object(combined_data) do |(spec, new_spec), memo|
+        CustomizationSpec.find(new_spec['id']).update(tag_list: spec.tag_list.join(', '))
         cloned_environment
           .capabilities
           .where(slug: spec.capabilities.pluck(:slug))
@@ -201,14 +234,24 @@ class CloneEnvironment < Patterns::Calculation
     end
 
     def find_actor_in_cloned_environment(source_actor)
-      cloned_environment.actors.detect { |actor| actor.abbreviation == source_actor.abbreviation }
+      cloned_environment.actors.detect { _1.abbreviation == source_actor.abbreviation }
     end
 
     def find_spec_in_cloned_environment(source_spec)
-      cloned_environment.customization_specs.detect { |spec| spec.slug == source_spec.slug }
+      cloned_environment.customization_specs.detect { _1.slug == source_spec.slug }
     end
 
     def find_capability_in_cloned_environment(source_cap)
-      cloned_environment.capabilities.detect { |cap| cap.abbreviation == source_cap.abbreviation }
+      cloned_environment.capabilities.detect { _1.abbreviation == source_cap.abbreviation }
+    end
+
+    def find_numerable_in_cloned_environment(source_numberable)
+      case source_numberable
+      when Actor
+        find_actor_in_cloned_environment(source_numberable)
+      when ActorNumberConfig
+        find_actor_in_cloned_environment(source_numberable.actor)
+          .actor_number_configs.detect { _1.name == source_numberable.name }
+      end
     end
 end
