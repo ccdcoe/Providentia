@@ -2,15 +2,13 @@
 
 class CloneEnvironment < Patterns::Calculation
   def cloned_environment
-    @cloned_environment ||= begin
-      Exercise.insert(
+    @cloned_environment ||= Exercise.insert(
         source_environment.attributes.merge(
           name: options[:name],
           abbreviation: options[:abbreviation],
           slug: nil
         ).except('id')
       ).then { Exercise.find(_1.to_a.dig(0, 'id')) }
-    end
   end
 
   private
