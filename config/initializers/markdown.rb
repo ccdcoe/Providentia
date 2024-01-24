@@ -25,7 +25,7 @@ class MarkdownTemplateHandler
       tables:                       true,
       with_toc_data:                true,
       autolink:                     true
-    ).render(begin;#{compiled_source};end).html_safe"
+    ).render(begin;#{compiled_source};end.to_s).html_safe"
   end
 end
 
