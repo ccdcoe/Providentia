@@ -19,5 +19,5 @@
   .grid.grid-cols-4.gap-6.justify-items-stretch.pb-10
     = render partial: 'environments/environment_card_small', collection: @other_exercises, as: :environment
 
-- else
+- if @my_exercises.empty? && @other_exercises.empty?
   = render 'shared/empty', klass: Exercise
