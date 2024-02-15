@@ -28,7 +28,7 @@ module VmCacheBuster
     def get_service
       case self
       when Service
-        self
+        self.dup
       else
         service
       end.tap { |s| s.reload if s.persisted? }

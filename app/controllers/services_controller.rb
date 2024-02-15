@@ -34,7 +34,7 @@ class ServicesController < ApplicationController
   end
 
   def update
-    if @service.update service_params
+    if authorize(@service).update(service_params)
       redirect_to [@service.exercise, @service], notice: 'Service was successfully updated.'
     else
       render :show, status: 400
